@@ -6,9 +6,9 @@ const typingContainerStyle: React.CSSProperties = {
   backgroundColor: "black",
   color: "#e0e0e0", 
   textAlign: "center", 
-  fontSize: "6vh",
+  fontSize: "6.5vh",
   fontFamily: "monospace",
-  padding: "10vh 5vw ",
+  padding: "15vh 5vw ",
 };
 
 const HeaderContainer = () => {
@@ -16,7 +16,7 @@ const HeaderContainer = () => {
 
   return (
     <Container style={typingContainerStyle} fluid>
-      <TypingEffect prefix="Track Your" words={words} />
+      <TypingEffect prefix="Track All Your" words={words} />
     </Container>
   );
 };
