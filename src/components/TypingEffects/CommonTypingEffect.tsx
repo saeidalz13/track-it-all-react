@@ -13,7 +13,7 @@ const TypingEffect: React.FC<TypingEffectProps> = ({
   words,
   typingSpeed = 50,
   deletingSpeed = 50,
-  pauseTime = 1000,
+  pauseTime = 1500,
 }) => {
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState("");

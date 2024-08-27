@@ -49,3 +49,17 @@
   .details-link-text:hover {
     text-decoration: underline;
   }
+
+
+  /* styles.css */
+.card-container {
+  width: 100%;
+  overflow: hidden;
+  /* position: relative; */
+}
+
+.card-scroll {
+  display: flex;
+  white-space: nowrap;
+}
+
