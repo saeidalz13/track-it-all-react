@@ -1,0 +1,51 @@
+.job-example-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    text-align: center;
+    background-color: #fff;
+    transition: transform 0.6s;
+  }
+  
+  .job-example-card:hover {
+    transform: scale(1.03);
+  }
+  
+  .image-container {
+    margin-bottom: 12px;
+  }
+  
+  .company-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin: 8px 0;
+  }
+  
+  .position {
+    font-size: 1.2rem;
+    color: #666;
+    margin: 4px 0;
+  }
+  
+  .application-date {
+    font-size: 1rem;
+    color: #999;
+    margin: 4px 0;
+  }
+  
+  .details-link {
+    margin-top: 12px;
+  }
+  
+  .details-link-text {
+    font-size: 1rem;
+    color: #A78295;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .details-link-text:hover {
+    text-decoration: underline;
+  }

@@ -1,0 +1,23 @@
+.common-form-input {
+    background-color:  rgb(252, 232, 208);
+}
+
+.common-form-label {
+    color: rgb(69, 194, 208);
+    text-align: left;
+    display: block
+}
+
+.common-h1 {
+    margin-bottom: 20px;
+    color: bisque;
+}
+
+.common-container {
+    /* padding: 35px 50px; */
+    /* border-radius: 30px; */
+    /* max-width: 400px; */
+    margin-top: 20px;
+    /* box-shadow: 1px 1px 20px rgba(173, 230, 214, 0.239); */
+}
+
