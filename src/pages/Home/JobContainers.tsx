@@ -52,7 +52,7 @@ const JobContainers = () => {
     <Container style={jobsContainerStyle} fluid>
       <Row>
         <Col lg className="mb-4 ">
-          <span style={{ fontSize: "7vh", fontWeight: "bold" }}>Job Applications</span>
+          <span style={{ fontSize: "clamp(25px, 5vw, 45px)", fontWeight: "bold" }}>Job Applications</span>
           <div style={{ fontSize: "2.5vh" }}>
             Keep track of the jobs you applied with the relevant details
           </div>

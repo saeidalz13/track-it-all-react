@@ -6,7 +6,7 @@ const typingContainerStyle: React.CSSProperties = {
   backgroundColor: "black",
   color: "#e0e0e0", 
   textAlign: "center", 
-  fontSize: "6.5vh",
+  fontSize: "clamp(35px, 6vw, 70px)",
   fontFamily: "monospace",
   padding: "15vh 5vw ",
 };
