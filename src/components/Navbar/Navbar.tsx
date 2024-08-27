@@ -11,7 +11,7 @@ const BasicExample = () => {
         data-bs-theme="dark"
         style={{ backgroundColor: "black" }}
       >
-        <Container>
+        <Container className="mx-4" fluid>
           <Navbar.Brand className="text-info">Track It All</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
