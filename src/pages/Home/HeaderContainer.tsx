@@ -12,7 +12,7 @@ const typingContainerStyle: React.CSSProperties = {
 };
 
 const HeaderContainer = () => {
-  const words = ["Applications!", "Courses!", "Leetcode!"];
+  const words = ["Jobs!", "Courses!", "Leetcode!"];
 
   return (
     <Container style={typingContainerStyle} fluid>
