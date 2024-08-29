@@ -4,15 +4,22 @@ import { BtnType } from "../../types/Simples/Simples";
 
 interface CommonButtonProps {
   variant: string;
-  text: string;
+  text: React.ReactNode;
   type?: BtnType;
   style?: React.CSSProperties;
+  divStyle?: React.CSSProperties;
+  disabled?: boolean;
 }
 
 const CommonButton: React.FC<CommonButtonProps> = (props) => {
   return (
-    <div>
-      <Button type={props.type} variant={props.variant} style={props.style}>
+    <div style={props.divStyle}>
+      <Button
+        disabled={props.disabled}
+        type={props.type}
+        variant={props.variant}
+        style={props.style}
+      >
         {props.text}
       </Button>
     </div>
