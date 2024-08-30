@@ -8,6 +8,7 @@ interface NavigateButtonProps {
   style?: React.CSSProperties;
   divStyle?: React.CSSProperties;
   disabled?: boolean;
+  variant?: string;
 }
 
 const NavigateButton: React.FC<NavigateButtonProps> = (props) => {
@@ -20,8 +21,7 @@ const NavigateButton: React.FC<NavigateButtonProps> = (props) => {
   return (
     <div style={props.divStyle}>
       <Button
-        className="border border-warning"
-        variant="dark"
+        variant={props.variant ? props.variant : "dark"}
         onClick={handleClick}
         style={props.style}
         disabled={props.disabled}
