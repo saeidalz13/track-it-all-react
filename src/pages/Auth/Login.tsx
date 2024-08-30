@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, Container, Form, InputGroup } from "react-bootstrap";
 import CommonButton from "../../components/Buttons/CommonButton";
 import NavigateButton from "../../components/Buttons/NavigateButton";
-import { GeneralRoutes } from "../../routes/Routes";
+import { AuthRoutes, GeneralRoutes } from "../../routes/Routes";
 
 const btnStyle: React.CSSProperties = {
   marginTop: "15px",
@@ -56,10 +56,14 @@ const Login = () => {
           ></CommonButton>
         </Form>
 
+        <NavigateButton text="Home" url={GeneralRoutes.Home} style={btnStyle} />
+
         <NavigateButton
-          text="Home"
-          url={GeneralRoutes.Home}
-          style={btnStyle}
+          text="No account yet? Sign in here"
+          variant="link"
+          url={AuthRoutes.Signup}
+          divStyle={{marginTop: "10px"}}
+          style={{color: "#CDC2A5"}}
         />
       </Container>
     </>

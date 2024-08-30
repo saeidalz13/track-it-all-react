@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import {
   Col,
   Container,
@@ -10,8 +10,12 @@ import {
 } from "react-bootstrap";
 import CommonButton from "../../components/Buttons/CommonButton";
 import NavigateButton from "../../components/Buttons/NavigateButton";
-import { GeneralRoutes } from "../../routes/Routes";
+import { AuthRoutes, GeneralRoutes } from "../../routes/Routes";
 import { BACKEND_URL } from "../../constants/EnvConsts";
+import { ReqSignup, RespSignupPayload } from "../../models/Auth/Signup";
+import { ApiResp } from "../../models/Api/ApiResp";
+import { useAuthContext } from "../../contexts/Auth/useAuthContext";
+import { useNavigate } from "react-router-dom";
 
 const btnStyle: React.CSSProperties = {
   marginTop: "15px",
@@ -23,6 +27,9 @@ const btnDivStyle: React.CSSProperties = {
 };
 
 const Signup = () => {
+  const authParams = useAuthContext();
+  const navigate = useNavigate();
+
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [email, setEmail] = useState<string>("");
   const [emailErr, setEmailErr] = useState<string>("");
@@ -98,8 +105,6 @@ const Signup = () => {
       return;
     }
 
-    setSubmitBtnDisabled(true);
-
     if (pwErr !== "" || emailErr !== "" || pwConfErr !== "") {
       setSubmitBtnDisabled(false);
       setSubmitErr("Fix all the issues before submission");
@@ -109,18 +114,46 @@ const Signup = () => {
       }, 3000);
       return;
     }
-    // try {
-    //   const resp = await fetch(`${BACKEND_URL}/signup`, {
-    //     method: "POST",
-    //     body: JSON.stringify(""),
-    //     headers: { "Content-Type": "application/json" },
-    //   });
-    // } catch (err) {
-    //   console.log(err);
-    // }
-    await new Promise((r) => setTimeout(r, 2000));
-    console.log("here now");
-    setSubmitBtnDisabled(false);
+
+    setSubmitBtnDisabled(true);
+
+    const reqBody: ReqSignup = {
+      email: email,
+      password: pw,
+    };
+
+    try {
+      const resp = await fetch(`${BACKEND_URL}/signup`, {
+        method: "POST",
+        body: JSON.stringify(reqBody),
+        headers: { "Content-Type": "application/json" },
+        signal: AbortSignal.timeout(5000),
+      });
+
+      const apiResp: ApiResp<RespSignupPayload> = await resp.json();
+      navigate(GeneralRoutes.Home);
+
+      if (apiResp.error) {
+        setSubmitErr(apiResp.error);
+        setTimeout(() => {
+          setSubmitErr("");
+        }, 3000);
+      } else {
+        console.log(apiResp.payload);
+        authParams.login(apiResp.payload.email, apiResp.payload.user_id);
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        setSubmitErr(err.message);
+      } else {
+        setSubmitErr("An unexpected error occurred");
+      }
+      setTimeout(() => {
+        setSubmitErr("");
+      }, 3000);
+    } finally {
+      setSubmitBtnDisabled(false);
+    }
   };
 
   return (
@@ -244,6 +277,14 @@ const Signup = () => {
                 style={btnStyle}
                 divStyle={btnDivStyle}
                 disabled={submitBtnDisabled}
+              />
+
+              <NavigateButton
+                text="Already have an account? Log in here"
+                variant="link"
+                url={AuthRoutes.Login}
+                divStyle={{ marginTop: "10px", textAlign: "center" }}
+                style={{color: "#CDC2A5"}}
               />
             </div>
           </Col>
