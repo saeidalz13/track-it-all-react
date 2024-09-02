@@ -16,6 +16,8 @@ import { ReqSignup, RespSignupPayload } from "../../models/Auth/Signup";
 import { ApiResp } from "../../models/Api/ApiResp";
 import { useAuthContext } from "../../contexts/Auth/useAuthContext";
 import { useNavigate } from "react-router-dom";
+import { DataFetcher } from "../../utils/fetcherUtils";
+import { StatusCodes } from "http-status-codes";
 
 const btnStyle: React.CSSProperties = {
   marginTop: "15px",
@@ -123,34 +125,45 @@ const Signup = () => {
     };
 
     try {
-      const resp = await fetch(`${BACKEND_URL}/signup`, {
-        method: "POST",
-        body: JSON.stringify(reqBody),
-        headers: { "Content-Type": "application/json" },
-        signal: AbortSignal.timeout(5000),
-      });
-
+      const resp = await DataFetcher.withMethodPost(
+        `${BACKEND_URL}/signup`,
+        reqBody
+      );
       const apiResp: ApiResp<RespSignupPayload> = await resp.json();
-      navigate(GeneralRoutes.Home);
 
-      if (apiResp.error) {
-        setSubmitErr(apiResp.error);
-        setTimeout(() => {
-          setSubmitErr("");
-        }, 3000);
-      } else {
-        console.log(apiResp.payload);
+      if (resp.status === StatusCodes.OK) {
+        if (!apiResp.payload) {
+          setSubmitErr("Server Error! Please Try Again Later");
+          setTimeout(() => setSubmitErr(""), 5000);
+          return;
+        }
         authParams.login(apiResp.payload.email, apiResp.payload.user_id);
+        navigate(GeneralRoutes.Home);
+        return;
       }
+
+      if (
+        resp.status === StatusCodes.INTERNAL_SERVER_ERROR ||
+        resp.status == StatusCodes.NOT_FOUND
+      ) {
+        if (apiResp.error) {
+          setSubmitErr(apiResp.error);
+          setTimeout(() => setSubmitErr(""), 3000);
+          return;
+        }
+      }
+
+      console.error(resp);
+      setSubmitErr("Unexpected Error! Please Try Again Later");
+      setTimeout(() => setSubmitErr(""), 5000);
     } catch (err) {
       if (err instanceof Error) {
         setSubmitErr(err.message);
       } else {
         setSubmitErr("An unexpected error occurred");
       }
-      setTimeout(() => {
-        setSubmitErr("");
-      }, 3000);
+      setTimeout(() => setSubmitErr(""), 3000);
+      
     } finally {
       setSubmitBtnDisabled(false);
     }
@@ -284,7 +297,7 @@ const Signup = () => {
                 variant="link"
                 url={AuthRoutes.Login}
                 divStyle={{ marginTop: "10px", textAlign: "center" }}
-                style={{color: "#CDC2A5"}}
+                style={{ color: "#CDC2A5" }}
               />
             </div>
           </Col>
