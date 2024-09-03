@@ -8,10 +8,11 @@ import {
   createRoutesFromElements,
   RouterProvider,
 } from "react-router-dom";
-import { AuthRoutes, GeneralRoutes } from "./routes/Routes";
+import { AuthRoutes, GeneralRoutes, JobsRoutes } from "./routes/Routes";
 import Home from "./pages/Home/Home";
 import Navbar from "./components/Navbar/Navbar";
 import Login from "./pages/Auth/Login";
+import Jobs from "./pages/Jobs/Jobs";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -21,6 +22,7 @@ const router = createBrowserRouter(
 
       <Route element={<Navbar />} id="navbar">
         <Route path={GeneralRoutes.Home} element={<Home />} />
+        <Route path={JobsRoutes.Jobs} element={<Jobs />} />
       </Route>
     </Route>
   )

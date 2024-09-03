@@ -1,10 +1,8 @@
 import { Col, Container, Row, Image } from "react-bootstrap";
-import CommonButton from "../../components/Buttons/CommonButton";
 import { motion } from "framer-motion";
-import { useAuthContext } from "../../contexts/Auth/useAuthContext";
 import NavigateButton from "../../components/Buttons/NavigateButton";
-import { AuthRoutes } from "../../routes/Routes";
-// import { doubledCardData } from "../../constants/HomeConsts";
+import { AuthRoutes, JobsRoutes } from "../../routes/Routes";
+import { AuthStatus } from "../../constants/AuthConsts";
 
 const jobsContainerStyle: React.CSSProperties = {
   backgroundColor: "#EFE1D1", // Dark background to contrast with text
@@ -56,11 +54,11 @@ interface JobContainersProps {
     position: string;
     applicationDate: string;
   }[];
+
+  authStatus: AuthStatus.AUTH | AuthStatus.UNAUTH
 }
 
 const JobContainers: React.FC<JobContainersProps> = (props) => {
-  const authParams = useAuthContext();
-
   return (
     <Container style={jobsContainerStyle} fluid>
       <Row>
@@ -73,12 +71,13 @@ const JobContainers: React.FC<JobContainersProps> = (props) => {
           <div style={{ fontSize: "2.5vh" }}>
             Keep track of the jobs you applied with the relevant details
           </div>
-          {authParams.isAuthenticted ? (
-            <CommonButton
+          {props.authStatus === AuthStatus.AUTH ? (
+            <NavigateButton
+              url={JobsRoutes.Jobs}
               variant="dark"
               text="Track My Jobs Now ->"
               style={{ marginTop: "20px", padding: "20px" }}
-            ></CommonButton>
+            />
           ) : (
             <NavigateButton
               variant="warning"

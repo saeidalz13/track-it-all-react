@@ -125,10 +125,7 @@ const Signup = () => {
     };
 
     try {
-      const resp = await DataFetcher.withMethodPost(
-        `${BACKEND_URL}/signup`,
-        reqBody
-      );
+      const resp = await DataFetcher.postData(`${BACKEND_URL}/signup`, reqBody);
       const apiResp: ApiResp<RespSignupPayload> = await resp.json();
 
       if (resp.status === StatusCodes.OK) {
@@ -163,7 +160,6 @@ const Signup = () => {
         setSubmitErr("An unexpected error occurred");
       }
       setTimeout(() => setSubmitErr(""), 3000);
-      
     } finally {
       setSubmitBtnDisabled(false);
     }

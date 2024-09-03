@@ -6,3 +6,7 @@ export const AuthRoutes = {
 export const GeneralRoutes = {
     Home: "/"
 }
+
+export const JobsRoutes = {
+    Jobs: "/jobs"
+}

@@ -3,10 +3,10 @@ import { Navbar, Nav } from "react-bootstrap";
 import { Outlet, Link } from "react-router-dom";
 import { AuthRoutes } from "../../routes/Routes";
 import { useAuthContext } from "../../contexts/Auth/useAuthContext";
+import { AuthStatus } from "../../constants/AuthConsts";
 
 const BasicExample = () => {
   const authParams = useAuthContext();
-
 
   const handleSignOut = () => {
     authParams.logout();
@@ -23,7 +23,7 @@ const BasicExample = () => {
           <Navbar.Brand className="text-info">Track It All</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            {authParams.isAuthenticted ? (
+            {authParams.authStatus === AuthStatus.AUTH ? (
               <Nav className="me-auto">
                 <Nav.Link className="text-warning" onClick={handleSignOut}>
                   Sign Out

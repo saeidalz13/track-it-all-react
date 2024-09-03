@@ -1,9 +1,10 @@
 import { createContext } from "react";
+import { AuthStatus } from "../../constants/AuthConsts";
 
 export interface IAuthContext {
   userId: string;
   email: string;
-  isAuthenticted: boolean;
+  authStatus: AuthStatus;
   login: (email: string, userId: string) => void;
   logout: () => void;
 }
@@ -11,7 +12,7 @@ export interface IAuthContext {
 export const AuthContext = createContext<IAuthContext>({
   userId: "",
   email: "",
-  isAuthenticted: false,
+  authStatus: AuthStatus.LOADING,
   login: () => {},
   logout: () => {},
 });

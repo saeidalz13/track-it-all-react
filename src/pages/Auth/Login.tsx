@@ -47,9 +47,10 @@ const Login = () => {
     };
 
     try {
-      const resp = await DataFetcher.withMethodPost<ReqLogin>(
+      const resp = await DataFetcher.postData<ReqLogin>(
         `${BACKEND_URL}/login`,
-        loginData
+        loginData,
+        "include"
       );
 
       const apiResp: ApiResp<RespLoginPayload> = await resp.json();
