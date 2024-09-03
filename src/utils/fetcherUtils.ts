@@ -29,12 +29,14 @@ export class DataFetcher {
   public static getData(
     url: string,
     credentials: Credentials = "include",
-    timeout: number = 5000
+    timeout: number = 5000,
+    contentType: string = "application/json"
   ) {
     return fetch(url, {
       method: HttpMethods.GET,
-      signal: AbortSignal.timeout(timeout),
+      headers: { "Content-Type": contentType },
       credentials: credentials,
+      signal: AbortSignal.timeout(timeout),
     });
   }
 }

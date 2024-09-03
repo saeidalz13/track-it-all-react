@@ -40,6 +40,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
             setEmail(apiResp.payload.email);
             setUserId(apiResp.payload.user_id);
           }
+          return;
         }
 
         setEmail("");
