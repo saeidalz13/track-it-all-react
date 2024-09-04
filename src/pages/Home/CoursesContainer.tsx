@@ -1,4 +1,6 @@
 import { Col, Container, Row } from "react-bootstrap";
+import NavigateButton from "../../components/Buttons/NavigateButton";
+import { AuthRoutes } from "../../routes/Routes";
 
 const coursesContainerStyle: React.CSSProperties = {
   backgroundColor: "#F7B5CA", // Dark background to contrast with text
@@ -24,6 +26,12 @@ const CoursesContainer = () => {
           <div style={{ fontSize: "2.5vh" }}>
             Keep track of the courses you're enrolled in
           </div>
+          <NavigateButton
+            variant="info"
+            text="Log in to access"
+            style={{ marginTop: "20px", padding: "20px" }}
+            url={AuthRoutes.Login}
+          />
         </Col>
       </Row>
 

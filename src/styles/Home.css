@@ -5,11 +5,11 @@
     padding: 16px;
     text-align: center;
     background-color: #fff;
-    transition: transform 0.6s;
+    transition: transform 0.35s;
   }
   
   .job-example-card:hover {
-    transform: scale(1.03);
+    transform: scale(1.05);
   }
   
   .image-container {

@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 import CommonButton from "../../components/Buttons/CommonButton";
 import NavigateButton from "../../components/Buttons/NavigateButton";
-import { AuthRoutes, GeneralRoutes } from "../../routes/Routes";
+import { AuthRoutes, GeneralRoutes, ProfileRoutes } from "../../routes/Routes";
 import { BACKEND_URL } from "../../constants/EnvConsts";
 import { ReqSignup, RespSignupPayload } from "../../models/Auth/Signup";
 import { ApiResp } from "../../models/Api/ApiResp";
@@ -135,7 +135,8 @@ const Signup = () => {
           return;
         }
         authParams.login(apiResp.payload.email, apiResp.payload.user_id);
-        navigate(GeneralRoutes.Home);
+        navigate(ProfileRoutes.Profile);
+
         return;
       }
 

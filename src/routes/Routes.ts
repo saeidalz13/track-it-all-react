@@ -1,12 +1,17 @@
 export const AuthRoutes = {
-    Signup: "/signup",
-    Login: "/login"
-}
+  Signup: "/signup",
+  Login: "/login",
+};
 
 export const GeneralRoutes = {
-    Home: "/"
-}
+  Home: "/",
+};
 
 export const JobsRoutes = {
-    Jobs: "/jobs"
-}
+  Jobs: "/jobs",
+  SingleJob: "/job/:jobUlid",
+};
+
+export const ProfileRoutes = {
+  Profile: "/profile",
+};

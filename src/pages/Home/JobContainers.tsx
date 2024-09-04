@@ -1,11 +1,11 @@
 import { Col, Container, Row, Image } from "react-bootstrap";
 import { motion } from "framer-motion";
 import NavigateButton from "../../components/Buttons/NavigateButton";
-import { AuthRoutes, JobsRoutes } from "../../routes/Routes";
-import { AuthStatus } from "../../constants/AuthConsts";
+import { AuthRoutes } from "../../routes/Routes";
+import { doubledCardData } from "../../constants/HomeConsts";
 
 const jobsContainerStyle: React.CSSProperties = {
-  backgroundColor: "#EFE1D1", // Dark background to contrast with text
+  backgroundColor: "#EFE1D1",
   textAlign: "center", // Center-align the text
   fontFamily: "monospace",
   padding: "10vh 5vw ",
@@ -47,18 +47,8 @@ const JobCard: React.FC<JobCardProps> = (props) => {
   );
 };
 
-interface JobContainersProps {
-  doubledCardData: {
-    src: string;
-    companyName: string;
-    position: string;
-    applicationDate: string;
-  }[];
 
-  authStatus: AuthStatus.AUTH | AuthStatus.UNAUTH
-}
-
-const JobContainers: React.FC<JobContainersProps> = (props) => {
+const JobContainers = () => {
   return (
     <Container style={jobsContainerStyle} fluid>
       <Row>
@@ -71,21 +61,13 @@ const JobContainers: React.FC<JobContainersProps> = (props) => {
           <div style={{ fontSize: "2.5vh" }}>
             Keep track of the jobs you applied with the relevant details
           </div>
-          {props.authStatus === AuthStatus.AUTH ? (
-            <NavigateButton
-              url={JobsRoutes.Jobs}
-              variant="dark"
-              text="Track My Jobs Now ->"
-              style={{ marginTop: "20px", padding: "20px" }}
-            />
-          ) : (
-            <NavigateButton
-              variant="warning"
-              text="Log in to access"
-              style={{ marginTop: "20px", padding: "20px" }}
-              url={AuthRoutes.Login}
-            />
-          )}
+
+          <NavigateButton
+            variant="info"
+            text="Log in to access"
+            style={{ marginTop: "20px", padding: "20px" }}
+            url={AuthRoutes.Login}
+          />
         </Col>
       </Row>
 
@@ -97,7 +79,7 @@ const JobContainers: React.FC<JobContainersProps> = (props) => {
               animate={{ x: ["100%", "-100%"] }}
               transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
             >
-              {props.doubledCardData.map((card, index) => (
+              {doubledCardData.map((card, index) => (
                 <JobCard
                   key={index}
                   src={card.src}

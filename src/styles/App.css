@@ -6,13 +6,25 @@ body {
   margin: 0;
 }
 
-/* #root {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+.breadcrumb-item + .breadcrumb-item::before {
+  content: "/"; /* The divider */
+  color: #EFE1D1; /* Divider color */
 }
- */
+
+.breadcrumb-item.active {
+  color: #EFE1D1; /* Active item color */
+}
+
+.breadcrumb-item a {
+  color: #abf6fd; /* Change to your desired color */
+  text-decoration: none; /* Remove underline if needed */
+}
+
+.breadcrumb-item a:hover {
+  color: #EFE1D1; /* Change color on hover */
+  text-decoration: underline; /* Optional: Add underline on hover */
+}
+
 
 /* @keyframes logo-spin {
   from {
@@ -28,11 +40,3 @@ body {
     animation: logo-spin infinite 20s linear;
   }
 }
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-} */

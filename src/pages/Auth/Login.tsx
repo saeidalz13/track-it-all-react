@@ -2,7 +2,7 @@ import { FormEvent, useRef, useState } from "react";
 import { Button, Container, Form, InputGroup } from "react-bootstrap";
 import CommonButton from "../../components/Buttons/CommonButton";
 import NavigateButton from "../../components/Buttons/NavigateButton";
-import { AuthRoutes, GeneralRoutes } from "../../routes/Routes";
+import { AuthRoutes, GeneralRoutes, ProfileRoutes } from "../../routes/Routes";
 import { BACKEND_URL } from "../../constants/EnvConsts";
 import { DataFetcher } from "../../utils/fetcherUtils";
 import { StatusCodes } from "http-status-codes";
@@ -17,8 +17,8 @@ const btnStyle: React.CSSProperties = {
 };
 
 const Login = () => {
-  const navigate = useNavigate();
   const authParams = useAuthContext();
+  const navigate = useNavigate();
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [loginError, setLoginError] = useState<string>("");
@@ -73,7 +73,7 @@ const Login = () => {
           return;
         }
         authParams.login(apiResp.payload.email, apiResp.payload.user_id);
-        navigate(GeneralRoutes.Home);
+        navigate(ProfileRoutes.Profile);
         return;
       }
 
