@@ -4,11 +4,16 @@ import React, { useEffect, useState } from "react";
 import { DataFetcher } from "../../utils/fetcherUtils";
 import { BACKEND_URL } from "../../constants/EnvConsts";
 import { StatusCodes } from "http-status-codes";
-import { JobApplication, RespJobApplications } from "../../models/Job/Job";
+import {
+  JobApplication,
+  JobApplicationsState,
+  RespJobApplications,
+} from "../../models/Job/Job";
 import { ApiResp } from "../../models/Api/ApiResp";
 import Loading from "../../components/Misc/Loading";
 import { useNavigate } from "react-router-dom";
 import { AuthRoutes } from "../../routes/Routes";
+import { useJobContext } from "../../contexts/Job/useJobContext";
 
 // const jobs = [
 //   {
@@ -31,9 +36,8 @@ interface JobsApplicationsProps {
 
 const JobsApplications: React.FC<JobsApplicationsProps> = (props) => {
   const navigate = useNavigate();
-  const [jobs, setJobs] = useState<JobApplication[][] | "loading" | "error">(
-    "loading"
-  );
+  const jobContext = useJobContext();
+  const [jobs, setJobs] = useState<JobApplicationsState>("loading");
 
   useEffect(() => {
     const restructureJobs = (
@@ -76,10 +80,11 @@ const JobsApplications: React.FC<JobsApplicationsProps> = (props) => {
           const apiResp: ApiResp<RespJobApplications> = await resp.json();
           if (apiResp.payload) {
             const fetchedJobs = apiResp.payload.jobApplications;
+            jobContext.setJobs(fetchedJobs)
             setJobs(restructureJobs(fetchedJobs));
 
             // TODO: Set data to job context
-            return;
+            return; 
           }
         }
 
@@ -101,8 +106,14 @@ const JobsApplications: React.FC<JobsApplicationsProps> = (props) => {
       }
     };
 
-    getJobs();
-  }, [props.userUlid, navigate]);
+    if (jobContext.jobApplications === "loading") {
+      getJobs();
+    } else {
+      setJobs(restructureJobs(jobContext.jobApplications))
+    }
+
+
+  }, [props.userUlid, navigate, jobContext]);
 
   if (jobs === "error") {
     return <h1>Server Error!</h1>;
@@ -116,9 +127,19 @@ const JobsApplications: React.FC<JobsApplicationsProps> = (props) => {
     return (
       <div className="text-center mt-5">
         <h1 className="text-danger">
-          Nothing Found!<span role="img" aria-label="sad-face">😢</span>
+          Nothing Found!
+          <span role="img" aria-label="sad-face">
+            😢
+          </span>
         </h1>
-        <p style={{ color: '#6c757d', fontSize: '1.5rem', fontFamily: 'Arial', marginTop: '1rem' }}>
+        <p
+          style={{
+            color: "#6c757d",
+            fontSize: "1.5rem",
+            fontFamily: "Arial",
+            marginTop: "1rem",
+          }}
+        >
           Don't worry, the right opportunity is just around the corner!
         </p>
       </div>

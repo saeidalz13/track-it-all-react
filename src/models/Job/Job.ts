@@ -13,3 +13,5 @@ export interface JobApplication {
 export interface RespJobApplications {
   jobApplications: JobApplication[];
 }
+
+export type JobApplicationsState = JobApplication[][] | "loading" | "error"

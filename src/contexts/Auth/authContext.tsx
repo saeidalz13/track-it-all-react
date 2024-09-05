@@ -7,7 +7,7 @@ import { ApiResp } from "../../models/Api/ApiResp";
 import { RespLoginPayload } from "../../models/Auth/Login";
 import { AuthStatus } from "../../constants/AuthConsts";
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({
+const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [authStatus, setAuthStatus] = useState<AuthStatus>(AuthStatus.LOADING);
@@ -74,3 +74,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     </AuthContext.Provider>
   );
 };
+
+
+export default AuthProvider;
