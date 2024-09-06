@@ -5,13 +5,26 @@ export interface JobApplication {
   appliedDate: Date;
   description?: string;
   link?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  userUlid: string;
+  notes?: string;
 }
 
 export interface RespJobApplications {
   jobApplications: JobApplication[];
+  jobCount: number;
 }
 
-export type JobApplicationsState = JobApplication[][] | "loading" | "error"
+export type JobApplicationsState = JobApplication[][] | "loading" | "error";
+
+export interface RespPostJobApplication {
+  jobUlid: string;
+}
+
+export interface ReqJobApplication {
+  user_ulid: string;
+  position: string;
+  companyName: string;
+  appliedDate?: Date;
+  description?: string;
+  notes?: string;
+  link?: string;
+}

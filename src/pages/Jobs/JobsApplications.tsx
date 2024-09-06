@@ -15,21 +15,6 @@ import { useNavigate } from "react-router-dom";
 import { AuthRoutes } from "../../routes/Routes";
 import { useJobContext } from "../../contexts/Job/useJobContext";
 
-// const jobs = [
-//   {
-//     ulid: "af44535",
-//     position: "Software Engineer",
-//     companyName: "Rok't",
-//     dateApplied: new Date().toDateString(),
-//   },
-//   {
-//     ulid: "af4453d",
-//     position: "Software Developer",
-//     companyName: "Opla Energy",
-//     dateApplied: new Date().toDateString(),
-//   },
-// ];
-
 interface JobsApplicationsProps {
   userUlid: string;
 }
@@ -52,7 +37,7 @@ const JobsApplications: React.FC<JobsApplicationsProps> = (props) => {
       const modified: JobApplication[][] = [];
 
       for (let i = 0; i < fetchedJobs.length; i++) {
-        if (counter !== 3) {
+        if (counter !== 2) {
           eachRow.push(fetchedJobs[i]);
           counter++;
           continue;
@@ -78,13 +63,15 @@ const JobsApplications: React.FC<JobsApplicationsProps> = (props) => {
 
         if (resp.status === StatusCodes.OK) {
           const apiResp: ApiResp<RespJobApplications> = await resp.json();
+
           if (apiResp.payload) {
             const fetchedJobs = apiResp.payload.jobApplications;
-            jobContext.setJobs(fetchedJobs)
-            setJobs(restructureJobs(fetchedJobs));
+            jobContext.setJobs(fetchedJobs);
 
+            const modifiedJobs = restructureJobs(fetchedJobs);
+            setJobs(modifiedJobs);
             // TODO: Set data to job context
-            return; 
+            return;
           }
         }
 
@@ -106,17 +93,24 @@ const JobsApplications: React.FC<JobsApplicationsProps> = (props) => {
       }
     };
 
-    if (jobContext.jobApplications === "loading") {
-      getJobs();
-    } else {
-      setJobs(restructureJobs(jobContext.jobApplications))
+    try {
+      if (jobContext.jobApplications === "loading") {
+        getJobs();
+      } else {
+        setJobs(restructureJobs(jobContext.jobApplications));
+      }
+    } catch (error) {
+      console.log(error);
+      setJobs("error");
     }
-
-
   }, [props.userUlid, navigate, jobContext]);
 
   if (jobs === "error") {
-    return <h1>Server Error!</h1>;
+    return (
+      <h1 className="mt-4" style={{ color: "maroon" }}>
+        Server Error!
+      </h1>
+    );
   }
 
   if (jobs === "loading") {
@@ -147,18 +141,16 @@ const JobsApplications: React.FC<JobsApplicationsProps> = (props) => {
   }
 
   return (
-    <Container className="mt-5">
+    <Container className="mt-2">
       {jobs.map((eachRowJobs, i) => (
         <Row key={i}>
           {eachRowJobs.map((job, i2) => (
-            <Col key={i2} lg={4}>
+            <Col key={i2} lg={6}>
               <JobCard
                 ulid={job.jobUlid}
                 companyName={job.companyName}
                 position={job.position}
-                dateApplied={
-                  job.appliedDate ? job.appliedDate.toDateString() : "NA"
-                }
+                dateApplied={job.appliedDate}
               />
             </Col>
           ))}
@@ -169,3 +161,18 @@ const JobsApplications: React.FC<JobsApplicationsProps> = (props) => {
 };
 
 export default JobsApplications;
+
+// const jobs = [
+//   {
+//     ulid: "af44535",
+//     position: "Software Engineer",
+//     companyName: "Rok't",
+//     dateApplied: new Date().toDateString(),
+//   },
+//   {
+//     ulid: "af4453d",
+//     position: "Software Developer",
+//     companyName: "Opla Energy",
+//     dateApplied: new Date().toDateString(),
+//   },
+// ];

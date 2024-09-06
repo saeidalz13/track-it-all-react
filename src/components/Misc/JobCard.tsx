@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 
 interface JobCardProps {
   ulid: string;
-  companyName: string; 
+  companyName: string;
   position: string;
-  dateApplied: string;
+  dateApplied: Date;
   imageSrc?: string;
 }
 
@@ -25,7 +25,9 @@ const JobCard: React.FC<JobCardProps> = (props) => {
         <div className="job-details">
           <h3 className="company-name">{props.companyName}</h3>
           <p className="position">{props.position}</p>
-          <p className="application-date">Applied on: {props.dateApplied}</p>
+          <p className="application-date">
+            Applied on: {new Date(props.dateApplied).toDateString()}
+          </p>
         </div>
         <div className="details-link">
           <Nav.Link

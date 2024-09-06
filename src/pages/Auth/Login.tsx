@@ -82,6 +82,8 @@ const Login = () => {
       setTimeout(() => setLoginError(""), 5000);
     } catch (error) {
       console.error(error);
+      setLoginError("Unexpected Error! Please Try Again Later");
+      setTimeout(() => setLoginError(""), 5000);
       return;
     }
   };

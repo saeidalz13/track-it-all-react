@@ -1,10 +1,5 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useState } from "react";
 import { AuthContext } from "./authContext";
-import { DataFetcher } from "../../utils/fetcherUtils";
-import { BACKEND_URL } from "../../constants/EnvConsts";
-import { StatusCodes } from "http-status-codes";
-import { ApiResp } from "../../models/Api/ApiResp";
-import { RespLoginPayload } from "../../models/Auth/Login";
 import { AuthStatus } from "../../constants/AuthConsts";
 
 const AuthProvider: React.FC<{ children: ReactNode }> = ({
@@ -27,38 +22,6 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({
     setUserId("");
     return;
   };
-
-  useEffect(() => {
-    const authenticate = async () => {
-      try {
-        const resp = await DataFetcher.getData(`${BACKEND_URL}/auth`);
-        if (resp.status === StatusCodes.OK) {
-          const apiResp: ApiResp<RespLoginPayload> = await resp.json();
-
-          if (apiResp.payload) {
-            setAuthStatus(AuthStatus.AUTH);
-            setEmail(apiResp.payload.email);
-            setUserId(apiResp.payload.user_id);
-          }
-          return;
-        }
-
-        setEmail("");
-        setUserId("");
-        setAuthStatus(AuthStatus.UNAUTH);
-
-      } catch (error) {
-        console.log(error);
-
-        setEmail("");
-        setUserId("");
-        setAuthStatus(AuthStatus.UNAUTH);
-        return;
-      }
-    };
-
-    authenticate();
-  }, []);
 
   return (
     <AuthContext.Provider

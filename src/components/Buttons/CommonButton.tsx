@@ -9,12 +9,14 @@ interface CommonButtonProps {
   style?: React.CSSProperties;
   divStyle?: React.CSSProperties;
   disabled?: boolean;
+  onClick?: () => void;
 }
 
 const CommonButton: React.FC<CommonButtonProps> = (props) => {
   return (
     <div style={props.divStyle}>
       <Button
+        onClick={props.onClick}
         disabled={props.disabled}
         type={props.type}
         variant={props.variant}

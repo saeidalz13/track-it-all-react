@@ -1,15 +1,17 @@
 import Container from "react-bootstrap/Container";
 import { Navbar, Nav } from "react-bootstrap";
-import { Outlet, Link } from "react-router-dom";
-import { AuthRoutes } from "../../routes/Routes";
+import { Outlet, Link, useNavigate } from "react-router-dom";
+import { AuthRoutes, GeneralRoutes } from "../../routes/Routes";
 import { useAuthContext } from "../../contexts/Auth/useAuthContext";
 import { AuthStatus } from "../../constants/AuthConsts";
 
 const BasicExample = () => {
   const authParams = useAuthContext();
+  const navigate = useNavigate();
 
   const handleSignOut = () => {
     authParams.logout();
+    navigate(GeneralRoutes.Home);
   };
 
   return (

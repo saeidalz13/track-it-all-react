@@ -1,18 +1,17 @@
 import { Button, Modal } from "react-bootstrap";
-import CreateJobForm from "../Forms/CreateJobForm";
+import JobForm from "../Forms/JobForm";
 
 interface CreateJobModalProps {
-    show: boolean
-    onHide: () => void
+  show: boolean;
+  onHide: () => void;
 }
 
-
-const CreateJobModal: React.FC<CreateJobModalProps> = (props) => {
+const JobModal: React.FC<CreateJobModalProps> = (props) => {
   return (
     <Modal show={props.show} centered>
       <Modal.Title className="p-3 text-center">New Job Application</Modal.Title>
       <Modal.Body>
-        <CreateJobForm />
+        <JobForm />
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={props.onHide}>Close</Button>
@@ -21,4 +20,4 @@ const CreateJobModal: React.FC<CreateJobModalProps> = (props) => {
   );
 };
 
-export default CreateJobModal;
+export default JobModal;
