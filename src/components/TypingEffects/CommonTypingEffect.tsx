@@ -60,7 +60,7 @@ const TypingEffect: React.FC<TypingEffectProps> = ({
 
   return (
     <span>
-      {prefix} <br />goals.<span style={{ color: " #7DF9FF" }}>{displayedText}</span>
+      {prefix} <br /><span style={{color:"#00FF00"}}>{">"}_</span> goals.<span style={{ color: " #00FF00" }}>{displayedText}</span>
     </span>
   );
 };

@@ -6,9 +6,9 @@ import { doubledCardData } from "../../constants/HomeConsts";
 
 const jobsContainerStyle: React.CSSProperties = {
   backgroundColor: "#EFE1D1",
-  textAlign: "center", // Center-align the text
+  // textAlign: "center", 
   fontFamily: "Raleway",
-  padding: "10vh 5vw ",
+  padding: "5vh 5vw 10vh",
 };
 
 interface JobCardProps {
@@ -56,14 +56,14 @@ const JobContainers = () => {
           <span
             style={{ fontSize: "clamp(25px, 5vw, 45px)", fontWeight: "bold" }}
           >
-            Job Applications
+            {">_"} goals.Jobs
           </span>
           <div style={{ fontSize: "2.5vh" }}>
             Keep track of the jobs you applied with the relevant details
           </div>
 
           <NavigateButton
-            variant="info"
+            variant="success"
             text="Log in to access"
             style={{ marginTop: "20px", padding: "20px" }}
             url={AuthRoutes.Login}

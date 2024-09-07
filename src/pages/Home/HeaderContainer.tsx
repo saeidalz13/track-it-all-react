@@ -6,9 +6,9 @@ const typingContainerStyle: React.CSSProperties = {
   backgroundColor: "black",
   color: "#e0e0e0", 
   textAlign: "center", 
-  fontSize: "clamp(35px, 6vw, 70px)",
+  fontSize: "clamp(35px, 6vw, 100px)",
   fontFamily: "Raleway",
-  padding: "15vh 5vw ",
+  padding: "13vh 5vw ",
 };
 
 const HeaderContainer = () => {

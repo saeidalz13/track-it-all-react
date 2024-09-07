@@ -5,10 +5,12 @@ import { AuthRoutes } from "../../routes/Routes";
 const coursesContainerStyle: React.CSSProperties = {
   backgroundColor: "#F7B5CA", // Dark background to contrast with text
   color: "black", // Light text color for readability
-  textAlign: "center", // Center-align the text
+  textAlign: "right", // Center-align the text
   fontSize: "clamp(25px, 5vw, 45px)",
   fontFamily: "Raleway",
-  padding: "15vh 5vw ",
+  // padding: "15vh 5vw ",
+  padding: "5vh 5vw 10vh",
+
 };
 
 const CoursesContainer = () => {
