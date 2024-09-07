@@ -1,11 +1,10 @@
 .job-example-card {
-  border: 1px solid #ddd;
+  border: 1px groove #333;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 16px;
   text-align: center;
-  background-color: #fff;
-  transition: transform 0.35s;
+  background: linear-gradient(0deg, rgba(34,193,195,0.8) 0%, rgba(253,187,45,0.8) 100%);
 }
 
 .image-container {
@@ -13,22 +12,25 @@
 }
 
 .company-name {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: bold;
-  color: #333;
+  color: #000000;
   margin: 8px 0;
 }
 
 .position {
   font-size: 1.2rem;
-  color: #666;
+  font-weight: 600;
+  color: #3e3e3e;
   margin: 4px 0;
 }
 
 .application-date {
   font-size: 1rem;
-  color: #999;
+  font-weight: 500;
+  color: #051f7b;
   margin: 4px 0;
+  font-style: italic;
 }
 
 .details-link {
@@ -37,9 +39,9 @@
 
 .details-link-text {
   font-size: 1rem;
-  color: #52046aaf;
-  text-decoration: none;
-  font-weight: 500;
+  color: #000000af;
+  text-decoration: underline;
+  font-weight: 600;
 }
 
 .details-link-text:hover {
@@ -51,7 +53,6 @@
 .card-container {
   width: 100%;
   overflow: hidden;
-  /* position: relative; */
 }
 
 .card-scroll {

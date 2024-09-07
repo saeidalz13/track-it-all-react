@@ -35,7 +35,7 @@ const JobCard: React.FC<JobCardProps> = (props) => {
             as={Link}
             to={`/job/${props.ulid}`}
           >
-            See Details
+            See Details {"->"}
           </Nav.Link>
         </div>
       </div>

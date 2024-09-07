@@ -23,7 +23,7 @@ const Jobs = () => {
       <JobsApplications userUlid={authParams.userId} />
       <JobsCreate />
       <NavigateButton
-        variant="dark"
+        variant="info"
         text="Details & Analytics 📊"
         url=""
         style={{ width: "250px" }}
