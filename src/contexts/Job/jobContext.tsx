@@ -7,6 +7,9 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     JobApplication[] | "loading"
   >("loading");
   const [jobCount, setJobCount] = useState<number>(0);
+  const [fetchedSingleJobs, setFetchedSingleJobs] = useState<
+    Map<string, JobApplication>
+  >(new Map<string, JobApplication>());
 
   const setJobs = (ja: JobApplication[], jc: number) => {
     setJobApplications(ja);
@@ -18,8 +21,14 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     if (jobApplications !== "loading") {
       jobApplications.pop();
       setJobApplications([ja, ...jobApplications]);
-      return
+      return;
     }
+  };
+
+  const addFetchedSingleJobs = (ja: JobApplication) => {
+    setFetchedSingleJobs((fetchedSingleJobs) =>
+      fetchedSingleJobs.set(ja.jobUlid, ja)
+    );
   };
 
   return (
@@ -29,6 +38,8 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         setRecentJobs: setJobs,
         jobCount: jobCount,
         updateRecentJobs: updateRecentJobs,
+        fetchedSingleJobs: fetchedSingleJobs,
+        addFetchedSingleJobs: addFetchedSingleJobs,
       }}
     >
       {children}

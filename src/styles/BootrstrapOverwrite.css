@@ -1,33 +1,44 @@
 .btn-success {
-    background: linear-gradient(160deg, #00FF00, black, rgb(161, 143, 94));
-    border: 2px solid #000103;
-    padding: 10px 20px; 
-    border-radius: 15px; 
-    font-size: 16px;
-    font-weight: bold;
-    transition: all 0.3s ease;
-  }
-  
-  .btn-success:hover {
-    color: rgb(229, 254, 129);
-    border-color: #ffffff;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); 
-  }
-  
-  .btn-info {
-    background: linear-gradient(160deg, #00fbff, #060030, #9e7280);
-    border: 2px solid #000103;
-    padding: 10px 20px; 
-    border-radius: 15px; 
-    font-size: 16px;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    color: whitesmoke;
-  }
-  
-  .btn-info:hover {
-    color: rgb(148, 237, 255);
-    border-color: #ffffff;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); 
-  }
-  
+  background: linear-gradient(160deg, #00ff00, black, rgb(161, 143, 94));
+  padding: 10px 20px;
+  border-radius: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  color: whitesmoke;
+}
+
+.btn-success:hover {
+  color: rgb(229, 254, 129);
+  box-shadow: 0 5px 15px rgba(1, 131, 57, 0.5);
+}
+
+.btn-info {
+  background: linear-gradient(160deg, #00fbff, #060030, #9e7280);
+  padding: 10px 20px;
+  border-radius: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  color: whitesmoke;
+}
+
+.btn-info:hover {
+  color: rgb(148, 237, 255);
+  box-shadow: 0 5px 15px rgba(0, 111, 136, 0.5);
+}
+
+.btn-dark {
+  background: linear-gradient(160deg, #006a6c, #060030, #ff0051);
+  padding: 10px 20px;
+  border-radius: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  color: whitesmoke;
+}
+
+.btn-dark:hover {
+  color: rgb(255, 141, 200);
+  box-shadow: 0 5px 15px rgba(115, 2, 30, 0.5);
+}
