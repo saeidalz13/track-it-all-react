@@ -3,11 +3,12 @@ import { CSSProperties } from "react"
 const h1Style: CSSProperties = {
     color: "black",
     textAlign: "center",
+    fontWeight: "600"
 }
 
 const JobsHeader = () => {
   return (
-    <h1 style={h1Style}>Job Applications</h1>
+    <h1 style={h1Style}>Recent Applications</h1>
   )
 }
 

@@ -7,7 +7,7 @@ import { doubledCardData } from "../../constants/HomeConsts";
 const jobsContainerStyle: React.CSSProperties = {
   backgroundColor: "#EFE1D1",
   textAlign: "center", // Center-align the text
-  fontFamily: "monospace",
+  fontFamily: "Raleway",
   padding: "10vh 5vw ",
 };
 

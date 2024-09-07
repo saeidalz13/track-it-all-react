@@ -4,12 +4,18 @@ import { Outlet, Link, useNavigate } from "react-router-dom";
 import { AuthRoutes, GeneralRoutes } from "../../routes/Routes";
 import { useAuthContext } from "../../contexts/Auth/useAuthContext";
 import { AuthStatus } from "../../constants/AuthConsts";
+import { BACKEND_URL } from "../../constants/EnvConsts";
+import { DataFetcher } from "../../utils/fetcherUtils";
 
 const BasicExample = () => {
   const authParams = useAuthContext();
   const navigate = useNavigate();
 
   const handleSignOut = () => {
+    DataFetcher.deleteData(`${BACKEND_URL}/signout`)
+      .then(() => console.log("Deleted token in backend"))
+      .catch((error) => console.log(`failed to delete server token: ${error}`));
+
     authParams.logout();
     navigate(GeneralRoutes.Home);
   };
@@ -19,7 +25,7 @@ const BasicExample = () => {
       <Navbar
         expand="lg"
         data-bs-theme="dark"
-        style={{ backgroundColor: "black" }}
+        style={{ backgroundColor: "black", fontFamily: "Raleway" }}
       >
         <Container className="mx-3" fluid>
           <Navbar.Brand className="text-info">Track It All</Navbar.Brand>

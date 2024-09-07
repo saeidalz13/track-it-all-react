@@ -1,0 +1,11 @@
+.job-form-input {
+    background-color: rgb(211, 235, 233);
+    font-size: medium;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    height: 3.8vh;
+}
+
+.job-form-input:focus {
+    /* outline: none; */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Keep box-shadow */
+}

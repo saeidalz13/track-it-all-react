@@ -1,6 +1,7 @@
 import "./styles/App.css";
 import "./styles/Home.css";
 import "./styles/CommonClasses.css";
+import "./styles/Job.css";
 import Signup from "./pages/Auth/Signup";
 import {
   createBrowserRouter,

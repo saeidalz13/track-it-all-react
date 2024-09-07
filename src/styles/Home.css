@@ -1,57 +1,53 @@
 .job-example-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 16px;
-    text-align: center;
-    background-color: #fff;
-    transition: transform 0.35s;
-  }
-  
-  .job-example-card:hover {
-    transform: scale(1.05);
-  }
-  
-  .image-container {
-    margin-bottom: 12px;
-  }
-  
-  .company-name {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #333;
-    margin: 8px 0;
-  }
-  
-  .position {
-    font-size: 1.2rem;
-    color: #666;
-    margin: 4px 0;
-  }
-  
-  .application-date {
-    font-size: 1rem;
-    color: #999;
-    margin: 4px 0;
-  }
-  
-  .details-link {
-    margin-top: 12px;
-  }
-  
-  .details-link-text {
-    font-size: 1rem;
-    color: #A78295;
-    text-decoration: none;
-    font-weight: 500;
-  }
-  
-  .details-link-text:hover {
-    text-decoration: underline;
-  }
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  text-align: center;
+  background-color: #fff;
+  transition: transform 0.35s;
+}
 
+.image-container {
+  margin-bottom: 12px;
+}
 
-  /* styles.css */
+.company-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin: 8px 0;
+}
+
+.position {
+  font-size: 1.2rem;
+  color: #666;
+  margin: 4px 0;
+}
+
+.application-date {
+  font-size: 1rem;
+  color: #999;
+  margin: 4px 0;
+}
+
+.details-link {
+  margin-top: 12px;
+}
+
+.details-link-text {
+  font-size: 1rem;
+  color: #52046aaf;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.details-link-text:hover {
+  color: rgb(116, 0, 205);
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.322);
+}
+
+/* styles.css */
 .card-container {
   width: 100%;
   overflow: hidden;
@@ -63,13 +59,11 @@
   white-space: nowrap;
 }
 
-
-
 .sample-course-card-div {
   background: linear-gradient(0.25turn, #dedede, #ebf8e1, #ffdbb4);
   border-radius: 30px;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;
-  max-width:fit-content;
+  max-width: fit-content;
   margin: 0 auto;
   padding: 20px;
 }

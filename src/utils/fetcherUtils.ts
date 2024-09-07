@@ -39,4 +39,18 @@ export class DataFetcher {
       signal: AbortSignal.timeout(timeout),
     });
   }
+
+  public static deleteData(
+    url: string,
+    credentials: Credentials = "include",
+    timeout: number = 5000,
+    contentType: string = "application/json"
+  ) {
+    return fetch(url, {
+      method: HttpMethods.DELETE,
+      headers: { "Content-Type": contentType },
+      credentials: credentials,
+      signal: AbortSignal.timeout(timeout),
+    });
+  }
 }

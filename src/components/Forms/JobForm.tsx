@@ -12,10 +12,12 @@ import { StatusCodes } from "http-status-codes";
 import { ApiResp } from "../../models/Api/ApiResp";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../contexts/Auth/useAuthContext";
+import { useJobContext } from "../../contexts/Job/useJobContext";
 
 const JobForm = () => {
   const authParams = useAuthContext();
   const navigate = useNavigate();
+  const { updateRecentJobs } = useJobContext();
 
   const [notesChars, setNotesChars] = useState<number>(0);
   const [descChars, setDescChars] = useState<number>(0);
@@ -82,10 +84,18 @@ const JobForm = () => {
         const respData: ApiResp<RespPostJobApplication> = await resp.json();
 
         if (respData.payload) {
-          console.log(respData.payload.jobUlid);
+          updateRecentJobs({
+            jobUlid: respData.payload.jobUlid,
+            position: reqData.position,
+            companyName: reqData.companyName,
+            appliedDate: respData.payload.appliedDate,
+            link: reqData.link,
+            notes: reqData.notes,
+            description: reqData.description,
+          });
           setSendStatus("success");
           setTimeout(() => setSendStatus(undefined), 5000);
-          return
+          return;
         }
 
         setSendStatus("error");

@@ -17,6 +17,7 @@ export type JobApplicationsState = JobApplication[][] | "loading" | "error";
 
 export interface RespPostJobApplication {
   jobUlid: string;
+  appliedDate: Date;
 }
 
 export interface ReqJobApplication {

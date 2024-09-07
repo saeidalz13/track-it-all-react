@@ -7,7 +7,7 @@ const coursesContainerStyle: React.CSSProperties = {
   color: "black", // Light text color for readability
   textAlign: "center", // Center-align the text
   fontSize: "clamp(25px, 5vw, 45px)",
-  fontFamily: "monospace",
+  fontFamily: "Raleway",
   padding: "15vh 5vw ",
 };
 

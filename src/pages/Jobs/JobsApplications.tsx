@@ -23,6 +23,7 @@ const JobsApplications: React.FC<JobsApplicationsProps> = (props) => {
   const navigate = useNavigate();
   const jobContext = useJobContext();
   const [jobs, setJobs] = useState<JobApplicationsState>("loading");
+  const { setSearchValue, dbncValue } = useDebouncedSearch();
 
   useEffect(() => {
     const restructureJobs = (
@@ -37,7 +38,7 @@ const JobsApplications: React.FC<JobsApplicationsProps> = (props) => {
       const modified: JobApplication[][] = [];
 
       for (let i = 0; i < fetchedJobs.length; i++) {
-        if (counter !== 2) {
+        if (counter !== 3) {
           eachRow.push(fetchedJobs[i]);
           counter++;
           continue;
@@ -58,7 +59,7 @@ const JobsApplications: React.FC<JobsApplicationsProps> = (props) => {
     const getJobs = async () => {
       try {
         const resp = await DataFetcher.getData(
-          `${BACKEND_URL}/jobs?userUlid=${props.userUlid}`
+          `${BACKEND_URL}/jobs?userUlid=${props.userUlid}&recent=true`
         );
 
         if (resp.status === StatusCodes.OK) {
@@ -66,7 +67,7 @@ const JobsApplications: React.FC<JobsApplicationsProps> = (props) => {
 
           if (apiResp.payload) {
             const fetchedJobs = apiResp.payload.jobApplications;
-            jobContext.setJobs(fetchedJobs);
+            jobContext.setRecentJobs(fetchedJobs, apiResp.payload.jobCount);
 
             const modifiedJobs = restructureJobs(fetchedJobs);
             setJobs(modifiedJobs);
@@ -94,27 +95,26 @@ const JobsApplications: React.FC<JobsApplicationsProps> = (props) => {
     };
 
     try {
-      if (jobContext.jobApplications === "loading") {
+      if (jobContext.recentJobApplications === "loading") {
         getJobs();
       } else {
-        setJobs(restructureJobs(jobContext.jobApplications));
+        setJobs(restructureJobs(jobContext.recentJobApplications));
       }
     } catch (error) {
       console.log(error);
       setJobs("error");
     }
-  }, [props.userUlid, navigate, jobContext]);
+  }, [props.userUlid, navigate, jobContext, dbncValue]);
 
+  /*
+   Rendering Section 
+  */
   if (jobs === "error") {
     return (
       <h1 className="mt-4" style={{ color: "maroon" }}>
         Server Error!
       </h1>
     );
-  }
-
-  if (jobs === "loading") {
-    return <Loading />;
   }
 
   if (jobs.length === 0) {
@@ -141,38 +141,63 @@ const JobsApplications: React.FC<JobsApplicationsProps> = (props) => {
   }
 
   return (
-    <Container className="mt-2">
-      {jobs.map((eachRowJobs, i) => (
-        <Row key={i}>
-          {eachRowJobs.map((job, i2) => (
-            <Col key={i2} lg={6}>
-              <JobCard
-                ulid={job.jobUlid}
-                companyName={job.companyName}
-                position={job.position}
-                dateApplied={job.appliedDate}
-              />
-            </Col>
-          ))}
-        </Row>
-      ))}
-    </Container>
+    <>
+      {/* <InputGroup
+        className="mt-3 mb-3"
+        style={{ margin: "0 auto", maxWidth: "500px" }}
+      >
+        <Form.Control
+          className="job-form-input"
+          placeholder="Search... 🔍"
+          aria-label="Search..."
+          onChange={(e) => {
+            setSearchValue(e.target.value);
+            setJobs("loading");
+          }}
+        />
+      </InputGroup> */}
+
+      {jobs === "loading" ? (
+        <Loading />
+      ) : (
+        <>
+          <Container className="mt-4">
+            {jobs.map((eachRowJobs, i) => (
+              <Row key={i}>
+                {eachRowJobs.map((job, i2) => (
+                  <Col key={i2} lg={4}>
+                    <JobCard
+                      ulid={job.jobUlid}
+                      companyName={job.companyName}
+                      position={job.position}
+                      dateApplied={job.appliedDate}
+                    />
+                  </Col>
+                ))}
+              </Row>
+            ))}
+          </Container>
+        </>
+      )}
+    </>
   );
 };
 
-export default JobsApplications;
+const useDebouncedSearch = (delay: number = 1000) => {
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [dbncValue, setDbncValue] = useState<string>("");
 
-// const jobs = [
-//   {
-//     ulid: "af44535",
-//     position: "Software Engineer",
-//     companyName: "Rok't",
-//     dateApplied: new Date().toDateString(),
-//   },
-//   {
-//     ulid: "af4453d",
-//     position: "Software Developer",
-//     companyName: "Opla Energy",
-//     dateApplied: new Date().toDateString(),
-//   },
-// ];
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDbncValue(searchValue);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchValue, delay]);
+
+  return { searchValue, setSearchValue, dbncValue };
+};
+
+export default JobsApplications;

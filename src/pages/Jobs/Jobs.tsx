@@ -1,44 +1,34 @@
 import { useAuthContext } from "../../contexts/Auth/useAuthContext";
 import JobsApplications from "./JobsApplications";
 import JobsHeader from "./JobsHeader";
-import { useCallback, useState } from "react";
-import JobModal from "../../components/Modals/JobModal";
-import CommonButton from "../../components/Buttons/CommonButton";
-
+import JobsCreate from "./JobsCreate";
+import NavigateButton from "../../components/Buttons/NavigateButton";
 
 const JobSectionStyle: React.CSSProperties = {
-  backgroundColor: "lightblue",
+  backgroundColor: "#EFE1D1",
   color: "#e0e0e0",
   textAlign: "center",
-  fontSize: "clamp(35px, 6vw, 70px)",
-  fontFamily: "monospace",
+  fontSize: "clamp(35px, 6vw, 60px)",
+  fontFamily: "Raleway",
   padding: "6vh 5vw",
 };
 
 const Jobs = () => {
   const authParams = useAuthContext();
 
-  const [newJobModalShow, setNewJobModalShow] = useState(false);
-  const hideShow = useCallback(() => {
-    setNewJobModalShow(false);
-  }, []);
-
-
   return (
     <div style={JobSectionStyle}>
       {/* <JobsBreadcrumb /> */}
       <JobsHeader />
-
-      <CommonButton 
-        text="Create New Application"
-        variant="dark"
-        onClick={() => setNewJobModalShow(true)}
-        style={{height: "5vh"}}
-      />
-
       <JobsApplications userUlid={authParams.userId} />
-
-      <JobModal show={newJobModalShow} onHide={hideShow} />
+      <JobsCreate />
+      <NavigateButton
+        variant="dark"
+        text="Details & Analytics 📊"
+        url=""
+        style={{ width: "250px" }}
+        divStyle={{fontSize: "20px"}}
+      />
     </div>
   );
 };

@@ -7,12 +7,12 @@ const typingContainerStyle: React.CSSProperties = {
   color: "#e0e0e0", 
   textAlign: "center", 
   fontSize: "clamp(35px, 6vw, 70px)",
-  fontFamily: "monospace",
+  fontFamily: "Raleway",
   padding: "15vh 5vw ",
 };
 
 const HeaderContainer = () => {
-  const words = ["Jobs!", "Courses!", "Leetcode!"];
+  const words = ["Jobs", "Courses", "Leetcode"];
 
   return (
     <Container style={typingContainerStyle} fluid>

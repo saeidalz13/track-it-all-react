@@ -6,8 +6,8 @@ const ProfileHeaderStyle: React.CSSProperties = {
     color: "#e0e0e0", 
     textAlign: "center", 
     fontSize: "clamp(35px, 6vw, 70px)",
-    fontFamily: "monospace",
-    padding: "6vh 5vw ",
+    fontFamily: "Raleway",
+    padding: "5vh 5vw ",
   };
 
 const ProfileHeader = () => {
