@@ -27,7 +27,7 @@ const Login = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  useRedirectToProfile(authParams);
+  useRedirectToProfile();
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();

@@ -18,8 +18,8 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const logout = () => {
     setEmail("");
-    setAuthStatus(AuthStatus.UNAUTH);
     setUserId("");
+    setAuthStatus(AuthStatus.UNAUTH);
     return;
   };
 
