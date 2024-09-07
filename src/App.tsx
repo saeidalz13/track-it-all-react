@@ -2,6 +2,7 @@ import "./styles/App.css";
 import "./styles/Home.css";
 import "./styles/CommonClasses.css";
 import "./styles/Job.css";
+import "./styles/BootrstrapOverwrite.css";
 import Signup from "./pages/Auth/Signup";
 import {
   createBrowserRouter,
@@ -9,7 +10,12 @@ import {
   createRoutesFromElements,
   RouterProvider,
 } from "react-router-dom";
-import { AuthRoutes, GeneralRoutes, JobsRoutes, ProfileRoutes } from "./routes/Routes";
+import {
+  AuthRoutes,
+  GeneralRoutes,
+  JobsRoutes,
+  ProfileRoutes,
+} from "./routes/Routes";
 import Home from "./pages/Home/Home";
 import Navbar from "./components/Navbar/Navbar";
 import Login from "./pages/Auth/Login";

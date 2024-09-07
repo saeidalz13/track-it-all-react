@@ -1,28 +1,30 @@
 import { Col, Container, Row } from "react-bootstrap";
 import NavigateButton from "../../components/Buttons/NavigateButton";
-import { AuthRoutes } from "../../routes/Routes";
+import { AuthRoutes, ProfileRoutes } from "../../routes/Routes";
+import { useAuthContext } from "../../contexts/Auth/useAuthContext";
+import { AuthStatus } from "../../constants/AuthConsts";
 
 const coursesContainerStyle: React.CSSProperties = {
-  backgroundColor: "#F7B5CA", // Dark background to contrast with text
-  color: "black", // Light text color for readability
-  textAlign: "right", // Center-align the text
+  backgroundColor: "#F7B5CA",
+  color: "black",
+  textAlign: "center",
   fontSize: "clamp(25px, 5vw, 45px)",
   fontFamily: "Raleway",
-  // padding: "15vh 5vw ",
   padding: "5vh 5vw 10vh",
-
 };
 
 const CoursesContainer = () => {
+  const authParams = useAuthContext();
+
   return (
     <Container style={coursesContainerStyle} fluid>
       <Row>
         <Col lg className="mb-3">
           <div
-            style={{ fontWeight: "bold", fontSize: "clamp(35px, 5vw, 55px)" }}
+            style={{ fontWeight: "bold", fontSize: "clamp(25px, 5vw, 45px)" }}
             className="common-clickable-div"
           >
-            Courses
+            {">_"} goals.<span style={{ color: "darkblue" }}>Courses</span>
           </div>
 
           <div style={{ fontSize: "2.5vh" }}>
@@ -30,21 +32,27 @@ const CoursesContainer = () => {
           </div>
           <NavigateButton
             variant="info"
-            text="Log in to access"
+            text={
+              authParams.authStatus === AuthStatus.AUTH
+                ? "Go To Profile"
+                : "Log in to access"
+            }
             style={{ marginTop: "20px", padding: "20px" }}
-            url={AuthRoutes.Login}
+            url={
+              authParams.authStatus === AuthStatus.AUTH
+                ? ProfileRoutes.Profile
+                : AuthRoutes.Login
+            }
           />
         </Col>
-      </Row>
 
-      <Row>
         <Col lg>
           <div className="py-4 sample-course-card-div">
             <div
               className="mb-2"
               style={{
                 fontSize: "clamp(20px, 2vw, 30px)",
-                color: "#821131",
+                color: "darkblue",
                 fontWeight: "700",
               }}
             >

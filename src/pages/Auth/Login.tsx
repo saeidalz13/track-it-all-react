@@ -10,6 +10,7 @@ import { ReqLogin, RespLoginPayload } from "../../models/Auth/Login";
 import { ApiResp } from "../../models/Api/ApiResp";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../contexts/Auth/useAuthContext";
+import { useRedirectToProfile } from "../../hooks/AuthHooks";
 
 const btnStyle: React.CSSProperties = {
   marginTop: "15px",
@@ -25,6 +26,8 @@ const Login = () => {
 
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+
+  useRedirectToProfile(authParams);
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();

@@ -6,7 +6,6 @@ import { doubledCardData } from "../../constants/HomeConsts";
 
 const jobsContainerStyle: React.CSSProperties = {
   backgroundColor: "#EFE1D1",
-  // textAlign: "center", 
   fontFamily: "Raleway",
   padding: "5vh 5vw 10vh",
 };
@@ -47,7 +46,6 @@ const JobCard: React.FC<JobCardProps> = (props) => {
   );
 };
 
-
 const JobContainers = () => {
   return (
     <Container style={jobsContainerStyle} fluid>
@@ -56,7 +54,7 @@ const JobContainers = () => {
           <span
             style={{ fontSize: "clamp(25px, 5vw, 45px)", fontWeight: "bold" }}
           >
-            {">_"} goals.Jobs
+            {">_"} goals.<span style={{ color: "green" }}>Jobs</span>
           </span>
           <div style={{ fontSize: "2.5vh" }}>
             Keep track of the jobs you applied with the relevant details

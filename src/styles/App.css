@@ -26,40 +26,6 @@ body {
 }
 
 
-.btn-success {
-  background: linear-gradient(160deg, #00FF00, black, rgb(161, 143, 94));
-  border: 2px solid #000103;
-  padding: 10px 20px; 
-  border-radius: 15px; 
-  font-size: 16px;
-  font-weight: bold;
-  transition: all 0.3s ease;
-}
-
-.btn-success:hover {
-  color: rgb(204, 255, 0);
-  border-color: #ffffff;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); 
-}
-
-.btn-info {
-  background: linear-gradient(160deg, #00fbff, #060030, #9e7280);
-  border: 2px solid #000103;
-  padding: 10px 20px; 
-  border-radius: 15px; 
-  font-size: 16px;
-  font-weight: bold;
-  transition: all 0.3s ease;
-  color: whitesmoke;
-}
-
-.btn-info:hover {
-  color: rgb(0, 255, 191);
-  border-color: #ffffff;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); 
-}
-
-
 /* @keyframes logo-spin {
   from {
     transform: rotate(0deg);
