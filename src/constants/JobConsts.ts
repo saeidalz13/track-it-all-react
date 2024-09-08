@@ -6,5 +6,7 @@ export const JobImageSrcs = {
   stripe: "src/assets/stripe_logo.svg",
   airbnb: "src/assets/airbnb_logo.svg",
   github: "src/assets/github_logo.png",
+  rokt: "src/assets/rokt_logo.svg",
+  shopify: "src/assets/shopify_logo.png",
   generic: "src/assets/generic_job_logo.svg",
 };

@@ -7,13 +7,11 @@ import { ApiResp } from "../../models/Api/ApiResp";
 import { JobApplication } from "../../models/Job/Job";
 import { StatusCodes } from "http-status-codes";
 import Loading from "../../components/Misc/Loading";
-import { useAuthContext } from "../../contexts/Auth/useAuthContext";
 import { useJobContext } from "../../contexts/Job/useJobContext";
 
 const SingleJob = () => {
   const { jobUlid } = useParams();
   const navigate = useNavigate();
-  const authParams = useAuthContext();
   const jobParams = useJobContext();
   const [job, setjob] = useState<"loading" | JobApplication>("loading");
 
@@ -26,7 +24,7 @@ const SingleJob = () => {
     const fetchJob = async () => {
       try {
         const resp = await DataFetcher.getData(
-          `${BACKEND_URL}/job/${jobUlid}?userUlid=${authParams.userId}`
+          `${BACKEND_URL}/job/${jobUlid}`
         );
 
         if (resp.status === StatusCodes.UNAUTHORIZED) {
@@ -58,7 +56,7 @@ const SingleJob = () => {
     } else {
       setjob(cachedJob);
     }
-  }, [jobUlid, navigate, authParams.userId, jobParams]);
+  }, [jobUlid, navigate, jobParams]);
 
   if (job === "loading") {
     return <Loading />;

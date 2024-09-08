@@ -54,7 +54,7 @@ const JobContainers = () => {
           <span
             style={{ fontSize: "clamp(25px, 5vw, 45px)", fontWeight: "bold" }}
           >
-            {">_"} goals.<span style={{ color: "green" }}>Jobs</span>
+            <span style={{ color: "green" }}>Jobs</span>
           </span>
           <div style={{ fontSize: "2.5vh" }}>
             Keep track of the jobs you applied with the relevant details

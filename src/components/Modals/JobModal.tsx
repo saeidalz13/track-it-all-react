@@ -15,7 +15,7 @@ const JobModal: React.FC<CreateJobModalProps> = (props) => {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <JobForm />
+        <JobForm onHide={props.onHide} />
       </Modal.Body>
     </Modal>
   );

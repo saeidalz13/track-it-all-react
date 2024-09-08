@@ -19,7 +19,7 @@ import {
 import Home from "./pages/Home/Home";
 import Navbar from "./components/Navbar/Navbar";
 import Login from "./pages/Auth/Login";
-import SingleJob from "./pages/SingleJob/SingleJob";
+import SingleJob from "./pages/Jobs/SingleJob";
 import Profile from "./pages/Profile/Profile";
 
 const router = createBrowserRouter(

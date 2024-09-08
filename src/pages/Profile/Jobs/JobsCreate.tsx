@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
-import CommonButton from "../../components/Buttons/CommonButton";
-import JobModal from "../../components/Modals/JobModal";
+import CommonButton from "../../../components/Buttons/CommonButton";
+import JobModal from "../../../components/Modals/JobModal";
 
 const JobsCreate = () => {
   const [newJobModalShow, setNewJobModalShow] = useState(false);

@@ -24,7 +24,7 @@ const CoursesContainer = () => {
             style={{ fontWeight: "bold", fontSize: "clamp(25px, 5vw, 45px)" }}
             className="common-clickable-div"
           >
-            {">_"} goals.<span style={{ color: "darkblue" }}>Courses</span>
+           <span style={{ color: "darkblue" }}>Courses</span>
           </div>
 
           <div style={{ fontSize: "2.5vh" }}>

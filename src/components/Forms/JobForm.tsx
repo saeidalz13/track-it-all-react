@@ -14,7 +14,11 @@ import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../contexts/Auth/useAuthContext";
 import { useJobContext } from "../../contexts/Job/useJobContext";
 
-const JobForm = () => {
+interface JobFormProps {
+  onHide: () => void;
+}
+
+const JobForm: React.FC<JobFormProps> = (props) => {
   const authParams = useAuthContext();
   const navigate = useNavigate();
   const { updateRecentJobs } = useJobContext();
@@ -94,7 +98,8 @@ const JobForm = () => {
             description: reqData.description,
           });
           setSendStatus("success");
-          setTimeout(() => setSendStatus(undefined), 5000);
+          setTimeout(() => setSendStatus(undefined), 500);
+          setTimeout(() => props.onHide(), 500);
           return;
         }
 

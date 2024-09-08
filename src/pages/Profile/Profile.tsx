@@ -1,14 +1,16 @@
-import Jobs from "../Jobs/Jobs";
-import ProfileHeader from "./ProfileHeader";
+import Jobs from "./Jobs/Jobs";
 import { useCheckAuthStatus } from "../../hooks/AuthHooks";
+import PageHeader from "../../components/Headers/PageHeader";
+import Courses from "./Courses/Courses";
 
 const Profile = () => {
   useCheckAuthStatus();
 
   return (
     <>
-      <ProfileHeader />
+      <PageHeader text="Dashboard" />
       <Jobs />
+      <Courses />
     </>
   );
 };

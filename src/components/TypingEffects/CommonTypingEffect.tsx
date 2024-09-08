@@ -18,6 +18,7 @@ const TypingEffect: React.FC<TypingEffectProps> = ({
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  console.log(prefix);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -60,7 +61,8 @@ const TypingEffect: React.FC<TypingEffectProps> = ({
 
   return (
     <span>
-      {prefix} <br /><span style={{color:"#00FF00"}}>{">"}_</span> goals.<span style={{ color: " #00FF00" }}>{displayedText}</span>
+      <span style={{ color: "#00FF00" }}>{">"}_</span> trackItAll.
+      <span style={{ color: " #00FF00" }}>{displayedText}</span>
     </span>
   );
 };

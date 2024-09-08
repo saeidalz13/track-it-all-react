@@ -11,14 +11,25 @@ interface JobCardProps {
 }
 
 const JobCard: React.FC<JobCardProps> = (props) => {
+  function isKeyOfJobImageSrcs(key: string): key is keyof typeof JobImageSrcs {
+    return key in JobImageSrcs;
+  }
+  
+  let src = JobImageSrcs.generic;
+  if (props.imageSrc) {
+    if (isKeyOfJobImageSrcs(props.imageSrc)) {
+      src = JobImageSrcs[props.imageSrc];
+    }
+  }
+
   return (
     <Col lg>
       <div className="job-example-card mx-2 mb-2">
         <div className="image-container">
           <Image
-            src={props.imageSrc ? props.imageSrc : JobImageSrcs.generic}
-            height="100px"
-            width="100px"
+            src={src}
+            height="50px"
+            width="150px"
             alt={`${props.companyName} Logo`}
           />
         </div>
