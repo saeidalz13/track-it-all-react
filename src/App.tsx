@@ -19,8 +19,9 @@ import {
 import Home from "./pages/Home/Home";
 import Navbar from "./components/Navbar/Navbar";
 import Login from "./pages/Auth/Login";
-import SingleJob from "./pages/Jobs/SingleJob";
+import SingleJob from "./pages/Jobs/Single/SingleJob";
 import Profile from "./pages/Profile/Profile";
+import AllJobs from "./pages/Jobs/All/AllJobs";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,6 +33,7 @@ const router = createBrowserRouter(
         <Route path={GeneralRoutes.Home} element={<Home />} />
         <Route path={ProfileRoutes.Profile} element={<Profile />} />
         <Route path={JobsRoutes.SingleJob} element={<SingleJob />} />
+        <Route path={JobsRoutes.Jobs} element={<AllJobs />} />
       </Route>
     </Route>
   )

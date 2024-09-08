@@ -20,7 +20,7 @@ interface JobCardProps {
 const JobCard: React.FC<JobCardProps> = (props) => {
   return (
     <Col lg>
-      <div className="job-example-card ms-5">
+      <div className="job-example-card ms-5 p-4">
         <div className="image-container">
           <Image
             src={props.src}
@@ -35,11 +35,6 @@ const JobCard: React.FC<JobCardProps> = (props) => {
           <p className="application-date">
             Applied on: {props.applicationDate}
           </p>
-        </div>
-        <div className="details-link">
-          <a href="#" className="details-link-text">
-            See Details
-          </a>
         </div>
       </div>
     </Col>

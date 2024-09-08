@@ -62,7 +62,7 @@ const TypingEffect: React.FC<TypingEffectProps> = ({
   return (
     <span>
       <span style={{ color: "#00FF00" }}>{">"}_</span> trackItAll.
-      <span style={{ color: " #00FF00" }}>{displayedText}</span>
+      <span style={{ color: "#00FF00" }}>{displayedText}</span>
     </span>
   );
 };

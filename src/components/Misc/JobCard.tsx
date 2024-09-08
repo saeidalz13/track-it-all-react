@@ -1,6 +1,6 @@
-import { Col, Image, Nav } from "react-bootstrap";
+import { Col, Image } from "react-bootstrap";
 import { JobImageSrcs } from "../../constants/JobConsts";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface JobCardProps {
   ulid: string;
@@ -11,6 +11,8 @@ interface JobCardProps {
 }
 
 const JobCard: React.FC<JobCardProps> = (props) => {
+  const navigate = useNavigate()
+
   function isKeyOfJobImageSrcs(key: string): key is keyof typeof JobImageSrcs {
     return key in JobImageSrcs;
   }
@@ -24,7 +26,7 @@ const JobCard: React.FC<JobCardProps> = (props) => {
 
   return (
     <Col lg>
-      <div className="job-example-card mx-2 mb-2">
+      <div className="job-example-card mx-2 mb-2" onClick={() => navigate(`/job/${props.ulid}`)} >
         <div className="image-container">
           <Image
             src={src}
@@ -40,7 +42,7 @@ const JobCard: React.FC<JobCardProps> = (props) => {
             Applied on: {new Date(props.dateApplied).toDateString()}
           </p>
         </div>
-        <div className="details-link">
+        {/* <div className="details-link">
           <Nav.Link
             className="details-link-text"
             as={Link}
@@ -48,7 +50,7 @@ const JobCard: React.FC<JobCardProps> = (props) => {
           >
             See Details {"->"}
           </Nav.Link>
-        </div>
+        </div> */}
       </div>
     </Col>
   );

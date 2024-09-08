@@ -31,7 +31,7 @@ const CoursesContainer = () => {
             Keep track of the courses you're enrolled in
           </div>
           <NavigateButton
-            variant="info"
+            variant="success"
             text={
               authParams.authStatus === AuthStatus.AUTH
                 ? "Go To Profile"

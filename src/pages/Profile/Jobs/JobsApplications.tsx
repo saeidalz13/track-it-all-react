@@ -1,22 +1,10 @@
 import { Col, Container, Row } from "react-bootstrap";
 import JobCard from "../../../components/Misc/JobCard";
-import React, { useState } from "react";
-import { BACKEND_URL } from "../../../constants/EnvConsts";
-import { JobApplicationsState } from "../../../models/Job/Job";
 import Loading from "../../../components/Misc/Loading";
 import { useFetchJobs } from "../../../hooks/JobHooks";
 
-interface JobsApplicationsProps {
-  userUlid: string;
-}
-
-const JobsApplications: React.FC<JobsApplicationsProps> = (props) => {
-  const [jobs, setJobs] = useState<JobApplicationsState>("loading");
-
-  useFetchJobs(
-    `${BACKEND_URL}/jobs?userUlid=${props.userUlid}&recent=true`,
-    setJobs
-  );
+const JobsApplications = () => {
+  const { jobs } = useFetchJobs(true);
 
   /*
    Rendering Section 

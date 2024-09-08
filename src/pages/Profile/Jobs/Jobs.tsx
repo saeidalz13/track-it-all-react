@@ -1,4 +1,3 @@
-import { useAuthContext } from "../../../contexts/Auth/useAuthContext";
 import JobsApplications from "./JobsApplications";
 import JobsCreate from "./JobsCreate";
 import ProfileSectionHeader from "../../../components/Headers/ProfileSectionHeader";
@@ -16,14 +15,12 @@ const JobSectionStyle: React.CSSProperties = {
 };
 
 const Jobs = () => {
-  const authParams = useAuthContext();
   const [showOffCanvas, setShowOffCanvas] = useState(false);
 
   return (
     <div style={JobSectionStyle}>
-      {/* <JobsBreadcrumb /> */}
       <ProfileSectionHeader text="Recent Jobs" />
-      <JobsApplications userUlid={authParams.userId} />
+      <JobsApplications />
       <JobsCreate />
       <CommonButton
         variant="dark"

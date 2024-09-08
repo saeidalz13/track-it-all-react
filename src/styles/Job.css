@@ -1,21 +1,22 @@
 .job-form-input {
-    background-color: rgb(211, 235, 233);
-    font-size: medium;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    height: 3.8vh;
+  background-color: rgb(211, 235, 233);
+  font-size: medium;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  height: 5vh;
 }
 
 .job-form-input:focus {
-    /* outline: none; */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Keep box-shadow */
+  /* outline: none; */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Keep box-shadow */
 }
 
 .job-offcanvas-body {
-    font-size: 18px;
-    color: azure;
+  font-size: 18px;
+  color: rgb(12, 58, 58);
+  transition: all 0.2s ease;
 }
 
-
 .job-offcanvas-body:hover {
-    color: orange;
+  color: rgb(140, 0, 150);
+  text-decoration: none;
 }

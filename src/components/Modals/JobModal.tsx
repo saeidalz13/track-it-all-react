@@ -8,7 +8,7 @@ interface CreateJobModalProps {
 
 const JobModal: React.FC<CreateJobModalProps> = (props) => {
   return (
-    <Modal show={props.show} onHide={props.onHide} centered>
+    <Modal size="lg" show={props.show} onHide={props.onHide} centered>
       <Modal.Header closeButton>
         <Modal.Title className="text-success">
           New Job Application

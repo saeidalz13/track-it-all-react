@@ -6,18 +6,19 @@ body {
   margin: 0;
 }
 
+/* Divider */
 .breadcrumb-item + .breadcrumb-item::before {
-  content: "/"; /* The divider */
-  color: #EFE1D1; /* Divider color */
+  content: "/"; 
+  color: #EFE1D1; 
 }
 
 .breadcrumb-item.active {
-  color: #EFE1D1; /* Active item color */
+  color: #EFE1D1;
 }
 
 .breadcrumb-item a {
-  color: #abf6fd; /* Change to your desired color */
-  text-decoration: none; /* Remove underline if needed */
+  color: #abf6fd;
+  text-decoration: underline;
 }
 
 .breadcrumb-item a:hover {

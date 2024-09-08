@@ -171,6 +171,7 @@ const JobForm: React.FC<JobFormProps> = (props) => {
           type="date"
           ref={appliedDateRef}
         ></Form.Control>
+        <Form.Text className="text-success">If nothing chosen, default is today</Form.Text>
       </FloatingLabel>
 
       <FloatingLabel className="mb-3" controlId="floatingInput" label="Link">

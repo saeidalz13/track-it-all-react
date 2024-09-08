@@ -28,12 +28,12 @@ const BasicExample = () => {
         style={{ backgroundColor: "black", fontFamily: "Raleway" }}
       >
         <Container className="mx-3" fluid>
-          <Navbar.Brand className="text-info">Track It All</Navbar.Brand>
+          <Navbar.Brand style={{ color: "#00FF00" }}>Track It All</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             {authParams.authStatus === AuthStatus.AUTH ? (
               <Nav className="me-auto">
-                <Nav.Link className="text-warning" onClick={handleSignOut}>
+                <Nav.Link className="text-light" onClick={handleSignOut}>
                   Sign Out
                 </Nav.Link>
               </Nav>

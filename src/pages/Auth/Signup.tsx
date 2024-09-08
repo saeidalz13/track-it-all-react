@@ -262,7 +262,7 @@ const Signup = () => {
                   variant="success"
                   text={
                     submitBtnDisabled ? (
-                      <Spinner animation="border" variant="light" />
+                      <Spinner animation="border" variant="danger" />
                     ) : (
                       "Submit"
                     )

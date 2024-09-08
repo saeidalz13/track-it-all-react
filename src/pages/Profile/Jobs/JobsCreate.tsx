@@ -11,8 +11,8 @@ const JobsCreate = () => {
   return (
     <>
       <CommonButton
-        text="Create Application 💼"
-        variant="success"
+        text="Create Application"
+        variant="info"
         onClick={() => setNewJobModalShow(true)}
         style={{ width: "250px" }}
         divStyle={{fontSize: "20px", margin: "20px 0 10px"}}

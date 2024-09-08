@@ -1,6 +1,6 @@
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { Link } from "react-router-dom";
-import { GeneralRoutes } from "../../routes/Routes";
+import { GeneralRoutes, JobsRoutes } from "../../routes/Routes";
 
 interface OffCanvasExampleProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,11 +23,11 @@ const OffCanvasExample: React.FC<OffCanvasExampleProps> = (props) => {
         </Offcanvas.Header>
         <Offcanvas.Body
           style={{
-            background: "linear-gradient(160deg, #006a6c, #060030, #ff0051)",
+            background: "linear-gradient(160deg, #7dcee0, #d48cd5)",
             color: "white",
           }}
         >
-          <Link className="job-offcanvas-body" to={GeneralRoutes.Home}>Show All Jobs 🔍</Link>
+          <Link className="job-offcanvas-body" to={JobsRoutes.Jobs}>Show All Jobs 🔍</Link>
           <hr />
           <Link className="job-offcanvas-body" to={GeneralRoutes.Home}>Interview Preparation 🎤</Link>
           <hr />

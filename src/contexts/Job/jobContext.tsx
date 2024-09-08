@@ -11,9 +11,12 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     Map<string, JobApplication>
   >(new Map<string, JobApplication>());
 
-  const setJobs = (ja: JobApplication[], jc: number) => {
+  const [fetchedAllJobs, setFetchedAllJobs] = useState<
+    Map<number, JobApplication[]>
+  >(new Map<number, JobApplication[]>());
+
+  const setRecentJobs = (ja: JobApplication[]) => {
     setJobApplications(ja);
-    setJobCount(jc);
     return;
   };
 
@@ -31,15 +34,26 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     );
   };
 
+  const addFetchedAllJobs = (
+    offset: number,
+    jobs: JobApplication[],
+    jobCount: number
+  ) => {
+    setFetchedAllJobs((fetchedAllJobs) => fetchedAllJobs.set(offset, jobs));
+    setJobCount(jobCount);
+  };
+
   return (
     <JobContext.Provider
       value={{
         recentJobApplications: jobApplications,
-        setRecentJobs: setJobs,
+        setRecentJobs: setRecentJobs,
         jobCount: jobCount,
         updateRecentJobs: updateRecentJobs,
         fetchedSingleJobs: fetchedSingleJobs,
         addFetchedSingleJobs: addFetchedSingleJobs,
+        fetchedAllJobs: fetchedAllJobs,
+        addFetchedAllJobs: addFetchedAllJobs,
       }}
     >
       {children}
