@@ -1,9 +1,11 @@
 import JobsApplications from "./JobsApplications";
-import JobsCreate from "./JobsCreate";
 import ProfileSectionHeader from "../../../components/Headers/ProfileSectionHeader";
 import { useState } from "react";
 import OffCanvasExample from "../../../components/OffCanvas/ProfileOffCanvas";
 import CommonButton from "../../../components/Buttons/CommonButton";
+import { JobsRoutes } from "../../../routes/Routes";
+import { useNavigate } from "react-router-dom";
+import TextWithGrowingEmoji from "../../../components/Misc/TextWithGrowingEmoji";
 
 const JobSectionStyle: React.CSSProperties = {
   backgroundColor: "#EFE1D1",
@@ -16,18 +18,21 @@ const JobSectionStyle: React.CSSProperties = {
 
 const Jobs = () => {
   const [showOffCanvas, setShowOffCanvas] = useState(false);
+  const navigate = useNavigate();
+  const dropDownItems = new Map();
+  dropDownItems.set("All Jobs", JobsRoutes.Jobs);
 
   return (
     <div style={JobSectionStyle}>
       <ProfileSectionHeader text="Recent Jobs" />
       <JobsApplications />
-      <JobsCreate />
+
       <CommonButton
-        variant="dark"
-        text="More... 💡"
-        onClick={() => setShowOffCanvas(true)}
-        style={{ width: "250px" }}
-        divStyle={{ fontSize: "20px" }}
+        variant="info"
+        text={<TextWithGrowingEmoji text="Go To Jobs" emoji="💼" />}
+        onClick={() => navigate(JobsRoutes.Jobs)}
+        style={{ width: "250px", padding: "10px 0px", fontSize: "16px" }}
+        divStyle={{ fontSize: "20px", marginTop: "10px" }}
       />
 
       <OffCanvasExample show={showOffCanvas} setShow={setShowOffCanvas} />

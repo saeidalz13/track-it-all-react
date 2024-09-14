@@ -1,5 +1,5 @@
 import { Col, Image } from "react-bootstrap";
-import { JobImageSrcs } from "../../constants/JobConsts";
+import { JobImageSrcs, GENERIC_IMAGE_SRC } from "../../constants/JobConsts";
 import { useNavigate } from "react-router-dom";
 
 interface JobCardProps {
@@ -7,33 +7,28 @@ interface JobCardProps {
   companyName: string;
   position: string;
   dateApplied: Date;
-  imageSrc?: string;
+  imageSrcKey?: string;
 }
 
 const JobCard: React.FC<JobCardProps> = (props) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  function isKeyOfJobImageSrcs(key: string): key is keyof typeof JobImageSrcs {
-    return key in JobImageSrcs;
-  }
-  
-  let src = JobImageSrcs.generic;
-  if (props.imageSrc) {
-    if (isKeyOfJobImageSrcs(props.imageSrc)) {
-      src = JobImageSrcs[props.imageSrc];
+  let src = GENERIC_IMAGE_SRC;
+  if (props.imageSrcKey) {
+    const srcMap = JobImageSrcs.get(props.imageSrcKey);
+    if (srcMap) {
+      src = srcMap;
     }
   }
 
   return (
     <Col lg>
-      <div className="job-example-card mx-2 mb-2" onClick={() => navigate(`/job/${props.ulid}`)} >
+      <div
+        className="job-example-card mx-2 mb-2"
+        onClick={() => navigate(`/jobs/${props.ulid}`)}
+      >
         <div className="image-container">
-          <Image
-            src={src}
-            height="50px"
-            width="150px"
-            alt={`${props.companyName} Logo`}
-          />
+          <Image src={src} height="50px" width="150px" />
         </div>
         <div className="job-details">
           <h3 className="company-name">{props.companyName}</h3>
@@ -46,7 +41,7 @@ const JobCard: React.FC<JobCardProps> = (props) => {
           <Nav.Link
             className="details-link-text"
             as={Link}
-            to={`/job/${props.ulid}`}
+            to={`/jobs/${props.ulid}`}
           >
             See Details {"->"}
           </Nav.Link>

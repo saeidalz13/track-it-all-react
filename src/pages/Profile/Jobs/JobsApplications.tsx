@@ -55,7 +55,7 @@ const JobsApplications = () => {
                     companyName={job.companyName}
                     position={job.position}
                     dateApplied={job.appliedDate}
-                    imageSrc={job.companyName.trim().toLowerCase()}
+                    imageSrcKey={job.companyName.trim().toLowerCase()}
                   />
                 </Col>
               ))}

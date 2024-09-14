@@ -3,6 +3,7 @@
   font-size: medium;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   height: 5vh;
+  border-radius: 17px;
 }
 
 .job-form-input:focus {
@@ -19,4 +20,24 @@
 .job-offcanvas-body:hover {
   color: rgb(140, 0, 150);
   text-decoration: none;
+}
+
+
+.single-job-left-panel {
+  background: linear-gradient(0deg, rgba(255, 231, 191, 0.8) 0%, rgba(255, 255, 255, 0.8) 100%);
+  text-align: center;
+  /* background-color: rgba(255, 255, 255, 0.767); */
+  border-radius: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  padding: 2vh;
+  margin: 0 auto;
+  max-width: 450px;
+}
+
+.job-desc-div {
+  background-color: rgba(240, 248, 255, 0.1);
+  box-shadow: 0 5px 25px rgba(255, 252, 252, 0.6);
+  padding: 18px 50px;
+  color: rgb(248, 232, 202);
+  /* border-radius: 30px; */
 }

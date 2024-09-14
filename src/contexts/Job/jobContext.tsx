@@ -20,10 +20,11 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     return;
   };
 
-  const updateRecentJobs = (ja: JobApplication) => {
+  const createNewJob = (ja: JobApplication) => {
     if (jobApplications !== "loading") {
       jobApplications.pop();
       setJobApplications([ja, ...jobApplications]);
+      setJobCount(prev => prev + 1)
       return;
     }
   };
@@ -49,7 +50,7 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         recentJobApplications: jobApplications,
         setRecentJobs: setRecentJobs,
         jobCount: jobCount,
-        updateRecentJobs: updateRecentJobs,
+        updateRecentJobs: createNewJob,
         fetchedSingleJobs: fetchedSingleJobs,
         addFetchedSingleJobs: addFetchedSingleJobs,
         fetchedAllJobs: fetchedAllJobs,

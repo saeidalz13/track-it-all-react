@@ -19,6 +19,9 @@ import { AuthRoutes } from "../../../routes/Routes";
 import { useNavigate } from "react-router-dom";
 import JobsBreadcrumb from "../JobsBreadcrumb";
 import { useDebouncedSearch } from "../../../hooks/searchHooks";
+import OffCanvasExample from "../../../components/OffCanvas/ProfileOffCanvas";
+import JobsCreate from "../../Profile/Jobs/JobsCreate";
+import CommonButton from "../../../components/Buttons/CommonButton";
 
 const AllJobs = () => {
   useCheckAuthStatus();
@@ -149,6 +152,8 @@ const AllJobs = () => {
     }
   }, [offset, authContext.userId, dbncValue, jobContext, navigate]);
 
+  const [showOffCanvas, setShowOffCanvas] = useState(false);
+
   /*
    Rendering Section 
   */
@@ -163,6 +168,7 @@ const AllJobs = () => {
   return (
     <div>
       <JobsBreadcrumb jobUlid={null} />
+
       <InputGroup
         className="mt-3 mb-3"
         style={{ margin: "0 auto", maxWidth: "300px" }}
@@ -210,7 +216,7 @@ const AllJobs = () => {
                     companyName={job.companyName}
                     position={job.position}
                     dateApplied={job.appliedDate}
-                    imageSrc={job.companyName.trim().toLowerCase()}
+                    imageSrcKey={job.companyName.trim().toLowerCase()}
                   />
                 </Col>
               ))}
@@ -222,9 +228,21 @@ const AllJobs = () => {
           </div>
         </Container>
       )}
+
+      <div className="text-center">
+        <JobsCreate />
+        <CommonButton
+          variant="dark"
+          text="More... 💡"
+          onClick={() => setShowOffCanvas(true)}
+          style={{ width: "250px", padding: "10px" }}
+          divStyle={{ fontSize: "20px" }}
+        />
+
+        <OffCanvasExample show={showOffCanvas} setShow={setShowOffCanvas} />
+      </div>
     </div>
   );
 };
-
 
 export default AllJobs;

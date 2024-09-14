@@ -14,9 +14,8 @@ const JobsCreate = () => {
         text="Create Application"
         variant="info"
         onClick={() => setNewJobModalShow(true)}
-        style={{ width: "250px" }}
-        divStyle={{fontSize: "20px", margin: "20px 0 10px"}}
-
+        style={{ width: "250px", fontWeight: "500", padding: "10px" }}
+        divStyle={{ fontSize: "20px", margin: "20px 0 10px" }}
       />
 
       <JobModal show={newJobModalShow} onHide={hideShow} />
