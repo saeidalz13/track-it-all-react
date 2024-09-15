@@ -75,7 +75,7 @@ const JobContainers = () => {
               {doubledCardData.map((card, index) => (
                 <JobCard
                   key={index}
-                  src={card.src}
+                  src={card.src ? card.src : ""}
                   position={card.position}
                   companyName={card.companyName}
                   applicationDate={card.applicationDate}

@@ -3,28 +3,32 @@ import { JobApplication } from "../../models/Job/Job";
 
 export interface IJobContext {
   recentJobApplications: JobApplication[] | "loading";
-  jobCount: number;
-  fetchedSingleJobs: Map<string, JobApplication>;
-  fetchedAllJobs: Map<number, JobApplication[]>;
   setRecentJobs: (jobs: JobApplication[]) => void;
   updateRecentJobs: (job: JobApplication) => void;
+  jobCount: number;
+
+  fetchedSingleJobs: Map<string, JobApplication>;
   addFetchedSingleJobs: (job: JobApplication) => void;
+
+  fetchedAllJobs: Map<number, JobApplication[]>;
   addFetchedAllJobs: (
     offset: number,
     jobs: JobApplication[],
     jobCount: number
   ) => void;
-  // TODO: updateJobs
+  deleteJob: (jobUlid: string) => void;
 }
 
 export const JobContext = createContext<IJobContext>({
   recentJobApplications: "loading",
-  jobCount: 0,
-  fetchedSingleJobs: new Map<string, JobApplication>(),
-  fetchedAllJobs: new Map<number, JobApplication[]>(),
   setRecentJobs: () => {},
   updateRecentJobs: () => {},
+  jobCount: 0,
+
+  fetchedSingleJobs: new Map<string, JobApplication>(),
   addFetchedSingleJobs: () => {},
+
+  fetchedAllJobs: new Map<number, JobApplication[]>(),
   addFetchedAllJobs: () => {},
-  // TODO: updateJobs
+  deleteJob: () => {},
 });

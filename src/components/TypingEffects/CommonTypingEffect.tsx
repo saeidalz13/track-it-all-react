@@ -9,7 +9,6 @@ interface TypingEffectProps {
 }
 
 const TypingEffect: React.FC<TypingEffectProps> = ({
-  prefix,
   words,
   typingSpeed = 50,
   deletingSpeed = 50,
@@ -18,7 +17,6 @@ const TypingEffect: React.FC<TypingEffectProps> = ({
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
-  console.log(prefix);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;

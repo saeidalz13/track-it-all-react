@@ -3,7 +3,7 @@ import { JobContext } from "./jobContext";
 import { JobApplication } from "../../models/Job/Job";
 
 const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [jobApplications, setJobApplications] = useState<
+  const [recentJobApplications, setRecentJobApplications] = useState<
     JobApplication[] | "loading"
   >("loading");
   const [jobCount, setJobCount] = useState<number>(0);
@@ -16,15 +16,14 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   >(new Map<number, JobApplication[]>());
 
   const setRecentJobs = (ja: JobApplication[]) => {
-    setJobApplications(ja);
+    setRecentJobApplications(ja);
     return;
   };
 
   const createNewJob = (ja: JobApplication) => {
-    if (jobApplications !== "loading") {
-      jobApplications.pop();
-      setJobApplications([ja, ...jobApplications]);
-      setJobCount(prev => prev + 1)
+    if (recentJobApplications !== "loading") {
+      recentJobApplications.pop();
+      setRecentJobApplications([ja, ...recentJobApplications]);
       return;
     }
   };
@@ -44,10 +43,19 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     setJobCount(jobCount);
   };
 
+  const deleteJob = (jobUlid: string) => {
+    setFetchedAllJobs(new Map<number, JobApplication[]>());
+    setFetchedSingleJobs((prev) => {
+      prev.delete(jobUlid);
+      return prev;
+    });
+    setRecentJobApplications("loading");
+  };
+
   return (
     <JobContext.Provider
       value={{
-        recentJobApplications: jobApplications,
+        recentJobApplications: recentJobApplications,
         setRecentJobs: setRecentJobs,
         jobCount: jobCount,
         updateRecentJobs: createNewJob,
@@ -55,6 +63,7 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         addFetchedSingleJobs: addFetchedSingleJobs,
         fetchedAllJobs: fetchedAllJobs,
         addFetchedAllJobs: addFetchedAllJobs,
+        deleteJob: deleteJob,
       }}
     >
       {children}

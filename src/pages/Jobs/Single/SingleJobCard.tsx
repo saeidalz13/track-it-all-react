@@ -2,6 +2,7 @@ import CommonButton from "@components/Buttons/CommonButton";
 import { BACKEND_URL } from "@constants/EnvConsts";
 import { DataFetcher } from "@utils/fetcherUtils";
 import { StringProcessor } from "@utils/stringUtils";
+import { useJobContext } from "contexts/Job/useJobContext";
 import { StatusCodes } from "http-status-codes";
 import { JobApplication } from "models/Job/Job";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +14,7 @@ interface SingleJobCardProps {
 
 const SingleJobCard: React.FC<SingleJobCardProps> = (props) => {
   const navigate = useNavigate();
+  const jobContext = useJobContext();
 
   const handleDeleteJob = async () => {
     try {
@@ -21,6 +23,7 @@ const SingleJobCard: React.FC<SingleJobCardProps> = (props) => {
       );
 
       if (resp.status == StatusCodes.NO_CONTENT) {
+        jobContext.deleteJob(props.job.jobUlid);
         navigate(JobsRoutes.Jobs);
         return;
       }
