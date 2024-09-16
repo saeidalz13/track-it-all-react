@@ -26,6 +26,21 @@ export class DataFetcher {
     });
   }
 
+  public static patchData<T>(
+    url: string,
+    data: T,
+    credentials: Credentials = "include",
+    timeout: number = 5000
+  ): Promise<Response> {
+    return fetch(url, {
+      method: HttpMethods.PATCH,
+      body: JSON.stringify(data),
+      headers: { "Content-Type": "application/json" },
+      signal: AbortSignal.timeout(timeout),
+      credentials: credentials,
+    });
+  }
+
   public static getData(
     url: string,
     credentials: Credentials = "include",

@@ -23,7 +23,7 @@ const SingleJobCard: React.FC<SingleJobCardProps> = (props) => {
       );
 
       if (resp.status == StatusCodes.NO_CONTENT) {
-        jobContext.deleteJob(props.job.jobUlid);
+        jobContext.refetchJobData(props.job.jobUlid);
         navigate(JobsRoutes.Jobs);
         return;
       }

@@ -9,11 +9,11 @@ import { StatusCodes } from "http-status-codes";
 import Loading from "../../../components/Misc/Loading";
 import { useJobContext } from "../../../contexts/Job/useJobContext";
 import JobsBreadcrumb from "../JobsBreadcrumb";
-import { Col, Container, Row, Image, Button, Form } from "react-bootstrap";
+import { Col, Container, Row, Image } from "react-bootstrap";
 import { GENERIC_IMAGE_SRC, JobImageSrcs } from "@constants/JobConsts";
-import CommonButton from "@components/Buttons/CommonButton";
 import SingleJobCard from "./SingleJobCard";
 import { useAuthContext } from "contexts/Auth/useAuthContext";
+import SingleJobDesc from "./SingleJobDesc";
 
 const SingleJob = () => {
   const { jobUlid } = useParams();
@@ -21,7 +21,6 @@ const SingleJob = () => {
   const jobParams = useJobContext();
   const authParams = useAuthContext();
   const [job, setjob] = useState<"loading" | JobApplication>("loading");
-  const [editDesc, setEditDesc] = useState<boolean>(false);
   const [imageSrc, setImageSrc] = useState<string>(GENERIC_IMAGE_SRC);
 
   useEffect(() => {
@@ -102,30 +101,10 @@ const SingleJob = () => {
       </Container>
 
       <Container className="job-desc-div" fluid>
-        <h4>Job Description</h4>
-        <Button onClick={() => setEditDesc((prev) => !prev)} variant="info">
-          ✏️
-        </Button>
-        <div className="mt-3">
-          {editDesc ? (
-            <>
-              <Form.Control
-                as="textarea"
-                style={{ height: "200px" }}
-                placeholder="Job Responsibilites, Skills Required, Languages, etc."
-              />
-              <CommonButton
-                text="Submit"
-                variant="success"
-                divStyle={{ marginTop: "10px" }}
-              />
-            </>
-          ) : job.description ? (
-            job.description
-          ) : (
-            "No Description Provided".toLocaleUpperCase()
-          )}
-        </div>
+        <SingleJobDesc
+          jobDescription={job.description}
+          jobUlid={jobUlid}
+        />
       </Container>
     </>
   );

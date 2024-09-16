@@ -16,7 +16,7 @@ export interface IJobContext {
     jobs: JobApplication[],
     jobCount: number
   ) => void;
-  deleteJob: (jobUlid: string) => void;
+  refetchJobData: (jobUlid: string) => void;
 }
 
 export const JobContext = createContext<IJobContext>({
@@ -30,5 +30,5 @@ export const JobContext = createContext<IJobContext>({
 
   fetchedAllJobs: new Map<number, JobApplication[]>(),
   addFetchedAllJobs: () => {},
-  deleteJob: () => {},
+  refetchJobData: () => {},
 });

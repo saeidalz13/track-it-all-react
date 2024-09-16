@@ -43,7 +43,7 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     setJobCount(jobCount);
   };
 
-  const deleteJob = (jobUlid: string) => {
+  const refetchJobData = (jobUlid: string) => {
     setFetchedAllJobs(new Map<number, JobApplication[]>());
     setFetchedSingleJobs((prev) => {
       prev.delete(jobUlid);
@@ -63,7 +63,7 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         addFetchedSingleJobs: addFetchedSingleJobs,
         fetchedAllJobs: fetchedAllJobs,
         addFetchedAllJobs: addFetchedAllJobs,
-        deleteJob: deleteJob,
+        refetchJobData: refetchJobData,
       }}
     >
       {children}

@@ -4,6 +4,7 @@ body {
   /* Ensure the body takes up the full height */
   min-height: 100vh;
   margin: 0;
+  font-family: "Raleway",
 }
 
 /* Divider */
