@@ -95,6 +95,16 @@ const AllJobs = () => {
           `${BACKEND_URL}/jobs?userUlid=${authContext.userId}&limit=${limit}&offset=${offset}&search=${dbncValue}`
         );
 
+        if (resp.status === StatusCodes.UNAUTHORIZED) {
+          navigate(AuthRoutes.Login);
+          return;
+        }
+
+        if (resp.status === StatusCodes.NO_CONTENT) {
+          setJobs([]);
+          return;
+        }
+
         if (resp.status === StatusCodes.OK) {
           const apiResp: ApiResp<RespJobApplications> = await resp.json();
 
@@ -115,16 +125,7 @@ const AllJobs = () => {
           }
         }
 
-        if (resp.status === StatusCodes.NO_CONTENT) {
-          setJobs([]);
-          return;
-        }
-
-        if (resp.status === StatusCodes.UNAUTHORIZED) {
-          navigate(AuthRoutes.Login);
-          return;
-        }
-
+        console.error("here");
         console.error(resp.status);
         setJobs("error");
       } catch (error) {
@@ -134,6 +135,10 @@ const AllJobs = () => {
     };
 
     try {
+      if (authContext.userId === "") {
+        return;
+      }
+
       if (dbncValue !== "") {
         getJobs();
         return;

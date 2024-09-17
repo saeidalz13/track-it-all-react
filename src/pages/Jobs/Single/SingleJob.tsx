@@ -9,11 +9,12 @@ import { StatusCodes } from "http-status-codes";
 import Loading from "../../../components/Misc/Loading";
 import { useJobContext } from "../../../contexts/Job/useJobContext";
 import JobsBreadcrumb from "../JobsBreadcrumb";
-import { Col, Container, Row, Image } from "react-bootstrap";
-import { GENERIC_IMAGE_SRC, JobImageSrcs } from "@constants/JobConsts";
+import { Container } from "react-bootstrap";
 import SingleJobCard from "./SingleJobCard";
 import { useAuthContext } from "contexts/Auth/useAuthContext";
 import SingleJobDesc from "./SingleJobDesc";
+import PageHeader from "@components/Headers/PageHeader";
+import { StringProcessor } from "@utils/stringUtils";
 
 const SingleJob = () => {
   const { jobUlid } = useParams();
@@ -21,7 +22,6 @@ const SingleJob = () => {
   const jobParams = useJobContext();
   const authParams = useAuthContext();
   const [job, setjob] = useState<"loading" | JobApplication>("loading");
-  const [imageSrc, setImageSrc] = useState<string>(GENERIC_IMAGE_SRC);
 
   useEffect(() => {
     if (!jobUlid) {
@@ -47,13 +47,6 @@ const SingleJob = () => {
           if (data.payload) {
             setjob(data.payload);
             jobParams.addFetchedSingleJobs(data.payload);
-
-            const src = JobImageSrcs.get(
-              data.payload.companyName.toLowerCase().trim()
-            );
-            if (src) {
-              setImageSrc(src);
-            }
             return;
           }
         }
@@ -70,10 +63,6 @@ const SingleJob = () => {
     if (!cachedJob) {
       fetchJob();
     } else {
-      const src = JobImageSrcs.get(cachedJob.companyName.toLowerCase().trim());
-      if (src) {
-        setImageSrc(src);
-      }
       setjob(cachedJob);
     }
   }, [jobUlid, navigate, jobParams, authParams]);
@@ -90,21 +79,12 @@ const SingleJob = () => {
   return (
     <>
       <JobsBreadcrumb jobUlid={jobUlid} />
-      <Image src={imageSrc} fluid />
-      <Container className="mt-3">
-        <Row className="mb-4">
-          <Col className="text-center mb-3" lg></Col>
-          <Col lg>
-            <SingleJobCard job={job} />
-          </Col>
-        </Row>
-      </Container>
+      <PageHeader text={StringProcessor.convertTitleCase(job.companyName)} />
+
+      <SingleJobCard job={job} />
 
       <Container className="job-desc-div" fluid>
-        <SingleJobDesc
-          jobDescription={job.description}
-          jobUlid={jobUlid}
-        />
+        <SingleJobDesc jobDescription={job.description} jobUlid={jobUlid} />
       </Container>
     </>
   );
