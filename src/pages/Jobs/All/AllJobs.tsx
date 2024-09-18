@@ -32,7 +32,7 @@ const AllJobs = () => {
             onClick={() => setActiveTab("newjob")}
             eventKey="newjob"
           >
-            Create Job Application
+            New Application
           </Nav.Link>
         </Nav.Item>
       </Nav>
