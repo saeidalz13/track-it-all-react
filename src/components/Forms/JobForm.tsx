@@ -15,13 +15,13 @@ import { useAuthContext } from "../../contexts/Auth/useAuthContext";
 import { useJobContext } from "../../contexts/Job/useJobContext";
 
 interface JobFormProps {
-  onHide: () => void;
+  onHide?: () => void;
 }
 
-const JobForm: React.FC<JobFormProps> = (props) => {
+const JobForm: React.FC<JobFormProps> = () => {
   const authParams = useAuthContext();
   const navigate = useNavigate();
-  const { updateRecentJobs } = useJobContext();
+  const { createNewJob: updateRecentJobs } = useJobContext();
 
   const [notesChars, setNotesChars] = useState<number>(0);
   const [descChars, setDescChars] = useState<number>(0);
@@ -98,8 +98,8 @@ const JobForm: React.FC<JobFormProps> = (props) => {
             description: reqData.description,
           });
           setSendStatus("success");
-          setTimeout(() => setSendStatus(undefined), 500);
-          setTimeout(() => props.onHide(), 500);
+          setTimeout(() => setSendStatus(undefined), 5000);
+          // setTimeout(() => props.onHide(), 500);
           return;
         }
 

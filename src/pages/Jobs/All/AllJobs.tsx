@@ -1,251 +1,49 @@
-import { useEffect, useState } from "react";
-import { Col, Container, Form, InputGroup, Row } from "react-bootstrap";
-import { useCheckAuthStatus } from "../../../hooks/AuthHooks";
-import Loading from "../../../components/Misc/Loading";
-import JobCard from "../../../components/Misc/JobCard";
-import Pagination from "react-bootstrap/Pagination";
-import { useAuthContext } from "../../../contexts/Auth/useAuthContext";
-import { DataFetcher } from "../../../utils/fetcherUtils";
-import { BACKEND_URL } from "../../../constants/EnvConsts";
-import { ApiResp } from "../../../models/Api/ApiResp";
-import {
-  JobApplication,
-  JobApplicationsState,
-  RespJobApplications,
-} from "../../../models/Job/Job";
-import { StatusCodes } from "http-status-codes";
-import { useJobContext } from "../../../contexts/Job/useJobContext";
-import { AuthRoutes } from "../../../routes/Routes";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Nav } from "react-bootstrap";
 import JobsBreadcrumb from "../JobsBreadcrumb";
-import { useDebouncedSearch } from "../../../hooks/searchHooks";
-import OffCanvasExample from "../../../components/OffCanvas/ProfileOffCanvas";
-import JobsCreate from "../../Profile/Jobs/JobsCreate";
-import CommonButton from "../../../components/Buttons/CommonButton";
+import AppliedJobsTab from "./AppliedJobsTab";
+import CreateJobTab from "./CreateJobTab";
 
 const AllJobs = () => {
-  useCheckAuthStatus();
-
-  const authContext = useAuthContext();
-  const jobContext = useJobContext();
-  const navigate = useNavigate();
-  const [jobs, setJobs] = useState<JobApplicationsState>("loading");
-  const [jobCount, setJobCount] = useState<number>(0);
-
-  const limit = 6;
-  const [offset, setOffset] = useState(0);
-  const [activePage, setActivePage] = useState(1);
-  const [upperBound, setUpperBound] = useState(1);
-  const { setSearchValue, dbncValue } = useDebouncedSearch();
-
-  const pagItems = [];
-  for (let i = 1; i <= upperBound; i++) {
-    pagItems.push(
-      <Pagination.Item
-        onClick={() => {
-          setActivePage(i);
-          setOffset((i - 1) * limit);
-        }}
-        key={i}
-        active={i === activePage}
-      >
-        {i}
-      </Pagination.Item>
-    );
-  }
-
-  useEffect(() => {
-    if (jobCount / limit > 1) {
-      setUpperBound(Math.ceil(jobCount / limit));
-    }
-  }, [jobCount]);
-
-  useEffect(() => {
-    const restructureJobs = (
-      fetchedJobs: JobApplication[]
-    ): JobApplication[][] => {
-      if (fetchedJobs.length === 0) {
-        return [];
-      }
-
-      const maxCardEachRow = 3;
-      const modified: JobApplication[][] = [];
-      let counter = 0;
-      let eachRow = [];
-
-      for (let i = 0; i < fetchedJobs.length; i++) {
-        eachRow.push(fetchedJobs[i]);
-        counter++;
-
-        if (counter === maxCardEachRow) {
-          modified.push(eachRow);
-          eachRow = [];
-          counter = 0;
-        } else if (i === fetchedJobs.length - 1) {
-          modified.push(eachRow);
-        }
-      }
-
-      return modified;
-    };
-
-    const getJobs = async () => {
-      try {
-        const resp = await DataFetcher.getData(
-          `${BACKEND_URL}/jobs?userUlid=${authContext.userId}&limit=${limit}&offset=${offset}&search=${dbncValue}`
-        );
-
-        if (resp.status === StatusCodes.UNAUTHORIZED) {
-          navigate(AuthRoutes.Login);
-          return;
-        }
-
-        if (resp.status === StatusCodes.NO_CONTENT) {
-          setJobs([]);
-          return;
-        }
-
-        if (resp.status === StatusCodes.OK) {
-          const apiResp: ApiResp<RespJobApplications> = await resp.json();
-
-          if (apiResp.payload) {
-            const fetchedJobs = apiResp.payload.jobApplications;
-            const modifiedJobs = restructureJobs(fetchedJobs);
-            setJobs(modifiedJobs);
-
-            if (dbncValue === "") {
-              setJobCount(apiResp.payload.jobCount);
-              jobContext.addFetchedAllJobs(
-                offset,
-                fetchedJobs,
-                apiResp.payload.jobCount
-              );
-            }
-            return;
-          }
-        }
-
-        console.error("here");
-        console.error(resp.status);
-        setJobs("error");
-      } catch (error) {
-        console.error(error);
-        setJobs("error");
-      }
-    };
-
-    try {
-      if (authContext.userId === "") {
-        return;
-      }
-
-      if (dbncValue !== "") {
-        getJobs();
-        return;
-      }
-
-      const fetched = jobContext.fetchedAllJobs.get(offset);
-      if (fetched === undefined) {
-        getJobs();
-      } else {
-        setJobs(restructureJobs(fetched));
-        setJobCount(jobContext.jobCount);
-      }
-    } catch (error) {
-      console.log(error);
-      setJobs("error");
-    }
-  }, [offset, authContext.userId, dbncValue, jobContext, navigate]);
-
-  const [showOffCanvas, setShowOffCanvas] = useState(false);
-
-  /*
-   Rendering Section 
-  */
-  if (jobs === "error") {
-    return (
-      <h1 className="mt-4" style={{ color: "maroon" }}>
-        Server Error!
-      </h1>
-    );
-  }
+  const [activeTab, setActiveTab] = useState<"alljobs" | "newjob">("alljobs");
 
   return (
     <div>
       <JobsBreadcrumb jobUlid={null} />
 
-      <InputGroup
-        className="mt-3 mb-3"
-        style={{ margin: "0 auto", maxWidth: "300px" }}
+      <Nav
+        style={{ color: "maroon" }}
+        justify
+        variant="tabs"
+        defaultActiveKey="alljobs"
       >
-        <Form.Control
-          className="job-form-input"
-          placeholder="Search... 🔍"
-          aria-label="Search..."
-          onChange={(e) => {
-            setSearchValue(e.target.value);
-            setJobs("loading");
-          }}
-        />
-      </InputGroup>
-
-      {jobs === "loading" ? (
-        <Loading />
-      ) : jobs.length === 0 ? (
-        <div className="text-center mt-5">
-          <h1 className="text-danger">
-            Nothing Found!
-            <span role="img" aria-label="sad-face">
-              😢
-            </span>
-          </h1>
-          <p
-            style={{
-              color: "#6c757d",
-              fontSize: "1.5rem",
-              fontFamily: "Arial",
-              marginTop: "1rem",
-            }}
+        <Nav.Item>
+          <Nav.Link
+            className={activeTab === "alljobs" ? "active-nav-item" : ""}
+            onClick={() => setActiveTab("alljobs")}
+            eventKey="alljobs"
           >
-            Don't worry, the right opportunity is just around the corner!
-          </p>
-        </div>
+            All Jobs
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link
+            className={activeTab === "newjob" ? "active-nav-item" : ""}
+            onClick={() => setActiveTab("newjob")}
+            eventKey="newjob"
+          >
+            Create Job Application
+          </Nav.Link>
+        </Nav.Item>
+      </Nav>
+
+      {activeTab === "newjob" ? (
+        <CreateJobTab />
+      ) : activeTab === "alljobs" ? (
+        <AppliedJobsTab />
       ) : (
-        <Container className="mt-4">
-          {jobs.map((eachRowJobs, i) => (
-            <Row key={i}>
-              {eachRowJobs.map((job, i2) => (
-                <Col key={i2} lg={4}>
-                  <JobCard
-                    ulid={job.jobUlid}
-                    companyName={job.companyName}
-                    position={job.position}
-                    dateApplied={job.appliedDate}
-                    imageSrcKey={job.companyName.trim().toLowerCase()}
-                  />
-                </Col>
-              ))}
-            </Row>
-          ))}
-
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <Pagination>{pagItems}</Pagination>
-          </div>
-        </Container>
+        ""
       )}
-
-      <div className="text-center">
-        <JobsCreate />
-        <CommonButton
-          variant="dark"
-          text="More... 💡"
-          onClick={() => setShowOffCanvas(true)}
-          style={{ width: "250px", padding: "10px" }}
-          divStyle={{ fontSize: "20px" }}
-        />
-
-        <OffCanvasExample show={showOffCanvas} setShow={setShowOffCanvas} />
-      </div>
     </div>
   );
 };

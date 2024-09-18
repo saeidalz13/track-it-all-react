@@ -4,7 +4,7 @@ import { JobApplication } from "../../models/Job/Job";
 export interface IJobContext {
   recentJobApplications: JobApplication[] | "loading";
   setRecentJobs: (jobs: JobApplication[]) => void;
-  updateRecentJobs: (job: JobApplication) => void;
+  createNewJob: (job: JobApplication) => void;
   jobCount: number;
 
   fetchedSingleJobs: Map<string, JobApplication>;
@@ -22,7 +22,7 @@ export interface IJobContext {
 export const JobContext = createContext<IJobContext>({
   recentJobApplications: "loading",
   setRecentJobs: () => {},
-  updateRecentJobs: () => {},
+  createNewJob: () => {},
   jobCount: 0,
 
   fetchedSingleJobs: new Map<string, JobApplication>(),
