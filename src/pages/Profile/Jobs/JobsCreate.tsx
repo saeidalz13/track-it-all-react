@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import CommonButton from "../../../components/Buttons/CommonButton";
-import JobModal from "../../../components/Modals/JobModal";
+import CommonModal from "../../../components/Modals/CommonModal";
 
 const JobsCreate = () => {
   const [newJobModalShow, setNewJobModalShow] = useState(false);
@@ -18,7 +18,7 @@ const JobsCreate = () => {
         divStyle={{ fontSize: "20px", margin: "20px 0 10px" }}
       />
 
-      <JobModal show={newJobModalShow} onHide={hideShow} />
+      <CommonModal show={newJobModalShow} onHide={hideShow} />
     </>
   );
 };

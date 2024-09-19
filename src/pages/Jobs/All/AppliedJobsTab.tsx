@@ -98,6 +98,7 @@ const AppliedJobsTab = () => {
         );
 
         if (resp.status === StatusCodes.UNAUTHORIZED) {
+          authContext.logout();
           navigate(AuthRoutes.Login);
           return;
         }
@@ -127,7 +128,6 @@ const AppliedJobsTab = () => {
           }
         }
 
-        console.error("here");
         console.error(resp.status);
         setJobs("error");
       } catch (error) {
@@ -157,7 +157,7 @@ const AppliedJobsTab = () => {
       console.log(error);
       setJobs("error");
     }
-  }, [offset, authContext.userId, dbncValue, jobContext, navigate]);
+  }, [offset, authContext, dbncValue, jobContext, navigate]);
 
   if (jobs === "error") {
     return (
@@ -170,11 +170,11 @@ const AppliedJobsTab = () => {
   return (
     <div>
       <InputGroup
-        className="mt-3 mb-3"
+        className="mt-4 mb-3"
         style={{ margin: "0 auto", maxWidth: "300px" }}
       >
         <Form.Control
-          className="job-form-input"
+          className="job-search-input"
           placeholder="Search... 🔍"
           aria-label="Search..."
           onChange={(e) => {

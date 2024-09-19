@@ -30,7 +30,7 @@
 }
 
 .fancy-circle-div:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
 }
 
 .fancy-circle-title {
@@ -45,7 +45,7 @@
 }
 
 .active-nav-item {
-  background-color: rgba(97, 8, 63, 0.591) !important;
+  background-color: black !important;
   color: rgb(166, 166, 166) !important;
   box-shadow: 0 0 0 1px rgb(0, 0, 0) !important;
 }
@@ -57,6 +57,9 @@
 
 .nav-tabs .nav-link.active {
   border-color: rgba(0, 0, 0, 0);
+  color: #00de00 !important;
+  border-bottom-color: #00de00;
+  font-weight: 700;
 }
 
 .create-job-form-div {
@@ -87,3 +90,9 @@
 /* .job-form-input:focus {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); 
 } */
+
+.job-search-input {
+  background-color: rgb(249, 226, 239);
+  height: 50px;
+  border-radius: 15px;
+}

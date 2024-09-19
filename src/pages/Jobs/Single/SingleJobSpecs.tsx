@@ -1,20 +1,24 @@
 import CommonButton from "@components/Buttons/CommonButton";
+import CommonModal from "@components/Modals/CommonModal";
 import { BACKEND_URL } from "@constants/EnvConsts";
 import { DataFetcher } from "@utils/fetcherUtils";
 import { useJobContext } from "contexts/Job/useJobContext";
 import { StatusCodes } from "http-status-codes";
 import { JobApplication } from "models/Job/Job";
+import { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { JobsRoutes } from "routes/Routes";
 
 interface SingleJobCardProps {
   job: JobApplication;
 }
 
-const SingleJobCard: React.FC<SingleJobCardProps> = (props) => {
+const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
   const navigate = useNavigate();
   const jobContext = useJobContext();
+
+  const [showNoteModal, setShowNotesModal] = useState(false);
 
   const handleDeleteJob = async () => {
     try {
@@ -65,7 +69,9 @@ const SingleJobCard: React.FC<SingleJobCardProps> = (props) => {
           <div className="fancy-circle-div">
             <span className="fancy-circle-title">🔗 Link</span> <br />
             {props.job.link ? (
-              props.job.link
+              <a href={props.job.link} target="_blank">
+                Go To Link
+              </a>
             ) : (
               <span style={{ color: "maroon" }}>No Link!</span>
             )}
@@ -74,12 +80,21 @@ const SingleJobCard: React.FC<SingleJobCardProps> = (props) => {
         <Col md>
           <div className="fancy-circle-div">
             <span className="fancy-circle-title">📝 Notes</span> <br />
-            {props.job.notes ? props.job.notes : "No Notes"}
+            <Link onClick={() => setShowNotesModal(true)} to="#">
+              Click To See
+            </Link>
           </div>
         </Col>
       </Row>
+
+      <CommonModal
+        title="📝 Notes"
+        notes={props.job.notes ? props.job.notes : "No Notes!"}
+        onHide={() => setShowNotesModal(false)}
+        show={showNoteModal}
+      />
     </Container>
   );
 };
 
-export default SingleJobCard;
+export default SingleJobSpecs;

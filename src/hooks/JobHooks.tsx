@@ -14,7 +14,7 @@ import { useAuthContext } from "../contexts/Auth/useAuthContext";
 import { BACKEND_URL } from "../constants/EnvConsts";
 
 export const useFetchJobs = (recent: boolean = true) => {
-  const authParams = useAuthContext();
+  const authContext = useAuthContext();
   const jobContext = useJobContext();
   const navigate = useNavigate();
   const [jobs, setJobs] = useState<JobApplicationsState>("loading");
@@ -50,7 +50,7 @@ export const useFetchJobs = (recent: boolean = true) => {
     const getJobs = async () => {
       try {
         const resp = await DataFetcher.getData(
-          `${BACKEND_URL}/jobs?userUlid=${authParams.userId}&recent=${recent}`
+          `${BACKEND_URL}/jobs?userUlid=${authContext.userId}&recent=${recent}`
         );
 
         if (resp.status === StatusCodes.OK) {
@@ -70,6 +70,7 @@ export const useFetchJobs = (recent: boolean = true) => {
         }
 
         if (resp.status === StatusCodes.UNAUTHORIZED) {
+          authContext.logout();
           navigate(AuthRoutes.Login);
           return;
         }
@@ -92,7 +93,7 @@ export const useFetchJobs = (recent: boolean = true) => {
       console.log(error);
       setJobs("error");
     }
-  }, [navigate, jobContext, setJobs, authParams.userId, recent]);
+  }, [navigate, jobContext, setJobs, recent, authContext]);
 
   return { jobs, setJobs };
 };

@@ -17,8 +17,8 @@ const PageHeader: React.FC<PageHeaderProps> = (props) => {
   return (
     <Container style={PageHeaderStyle} fluid>
       <span>
-        <span style={{ color: "#00FF00" }}>{">"}_</span> trackItAll.
-        <span style={{ color: "#00FF00" }}>{props.text}</span>
+        <span style={{ color: "#00de00" }}>{">"}_</span> trackItAll.
+        <span style={{ color: "#00de00" }}>{props.text}</span>
       </span>
     </Container>
   );

@@ -13,33 +13,33 @@ import { ApiResp } from "../../models/Api/ApiResp";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../contexts/Auth/useAuthContext";
 import { useJobContext } from "../../contexts/Job/useJobContext";
+import CommonModal from "@components/Modals/CommonModal";
 
 interface JobFormProps {
   onHide?: () => void;
 }
 
 const JobForm: React.FC<JobFormProps> = () => {
-  const authParams = useAuthContext();
+  const authContext = useAuthContext();
   const navigate = useNavigate();
-  const { createNewJob: updateRecentJobs } = useJobContext();
+  const { createNewJob } = useJobContext();
 
   const [notesChars, setNotesChars] = useState<number>(0);
   const [descChars, setDescChars] = useState<number>(0);
-  const [sendStatus, setSendStatus] = useState<
-    undefined | "success" | "error"
-  >();
+  const [showModal, setShowModal] = useState(false);
+  const [sendStatus, setSendStatus] = useState<"Success" | "Error">("Success");
 
   const positionRef = useRef<HTMLInputElement>(null);
   const companyNameRef = useRef<HTMLInputElement>(null);
   const appliedDateRef = useRef<HTMLInputElement>(null);
   const linkRef = useRef<HTMLInputElement>(null);
-  const notesRef = useRef<HTMLInputElement>(null);
+  const notesRef = useRef<HTMLTextAreaElement>(null);
   const descRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSubmitJob = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (authParams.userId === "") {
+    if (authContext.userId === "") {
       navigate(AuthRoutes.Login);
       return;
     }
@@ -62,7 +62,7 @@ const JobForm: React.FC<JobFormProps> = () => {
     }
 
     const reqData: ReqJobApplication = {
-      user_ulid: authParams.userId,
+      user_ulid: authContext.userId,
       position: positionRef.current.value,
       companyName: companyNameRef.current.value,
       appliedDate: appliedDate,
@@ -80,6 +80,7 @@ const JobForm: React.FC<JobFormProps> = () => {
       );
 
       if (resp.status === StatusCodes.UNAUTHORIZED) {
+        authContext.logout();
         navigate(AuthRoutes.Login);
         return;
       }
@@ -88,7 +89,7 @@ const JobForm: React.FC<JobFormProps> = () => {
         const respData: ApiResp<RespPostJobApplication> = await resp.json();
 
         if (respData.payload) {
-          updateRecentJobs({
+          createNewJob({
             jobUlid: respData.payload.jobUlid,
             position: reqData.position,
             companyName: reqData.companyName,
@@ -97,24 +98,27 @@ const JobForm: React.FC<JobFormProps> = () => {
             notes: reqData.notes,
             description: reqData.description,
           });
-          setSendStatus("success");
-          setTimeout(() => setSendStatus(undefined), 5000);
-          // setTimeout(() => props.onHide(), 500);
+          setSendStatus("Success");
+          setShowModal(true);
+
+          descRef.current.value = "";
+          notesRef.current.value = "";
+          linkRef.current.value = "";
+          appliedDateRef.current.value = "";
+          companyNameRef.current.value = "";
+          positionRef.current.value = "";
           return;
         }
-
-        setSendStatus("error");
-        setTimeout(() => setSendStatus(undefined), 5000);
-        return;
       }
 
-      setSendStatus("error");
-      setTimeout(() => setSendStatus(undefined), 5000);
+      setSendStatus("Error");
+      setShowModal(true);
+
       return;
     } catch (error) {
       console.error(error);
-      setSendStatus("error");
-      setTimeout(() => setSendStatus(undefined), 5000);
+      setSendStatus("Error");
+      setShowModal(true);
       return;
     }
   };
@@ -177,7 +181,7 @@ const JobForm: React.FC<JobFormProps> = () => {
       </FloatingLabel>
 
       <FloatingLabel className="mb-3" controlId="floatingInput" label="Link">
-        <Form.Control ref={linkRef} placeholder="" type="text"></Form.Control>
+        <Form.Control ref={linkRef} placeholder="" type="url"></Form.Control>
       </FloatingLabel>
 
       <FloatingLabel className="mb-3" controlId="floatingInput" label="Notes">
@@ -185,6 +189,8 @@ const JobForm: React.FC<JobFormProps> = () => {
           ref={notesRef}
           onChange={countNotesChar}
           placeholder=""
+          as="textarea"
+          style={{ height: "150px" }}
         ></Form.Control>
         <Form.Text style={{ color: notesChars < 500 ? "green" : "red" }}>
           {notesChars}/500
@@ -193,7 +199,7 @@ const JobForm: React.FC<JobFormProps> = () => {
 
       <FloatingLabel controlId="floatingInput" label="Job Description">
         <Form.Control
-          style={{ height: "200px" }}
+          style={{ height: "400px" }}
           placeholder=""
           as="textarea"
           onChange={countDescChar}
@@ -208,17 +214,20 @@ const JobForm: React.FC<JobFormProps> = () => {
         text="Submit"
         variant="success"
         divStyle={{ textAlign: "center", marginTop: "20px" }}
+        style={{ padding: "10px 40px" }}
       />
 
-      <div className="text-center mt-2">
-        {sendStatus === undefined ? (
-          ""
-        ) : sendStatus === "success" ? (
-          <span className="text-success">Added Successfully!</span>
-        ) : (
-          <span className="text-danger">Failed to Add Job!</span>
-        )}
-      </div>
+      <CommonModal
+        title={sendStatus}
+        notes={
+          sendStatus === "Success"
+            ? "Your job application was submitted successfully!"
+            : "Failed to create a new job application"
+        }
+        titleColor={sendStatus === "Success" ? "text-success" : "text-danger"}
+        show={showModal}
+        onHide={() => setShowModal(false)}
+      />
     </Form>
   );
 };

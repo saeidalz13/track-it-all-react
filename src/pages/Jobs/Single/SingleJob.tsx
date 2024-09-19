@@ -10,7 +10,7 @@ import Loading from "../../../components/Misc/Loading";
 import { useJobContext } from "../../../contexts/Job/useJobContext";
 import JobsBreadcrumb from "../JobsBreadcrumb";
 import { Container } from "react-bootstrap";
-import SingleJobCard from "./SingleJobCard";
+import SingleJobSpecs from "./SingleJobSpecs";
 import { useAuthContext } from "contexts/Auth/useAuthContext";
 import SingleJobDesc from "./SingleJobDesc";
 import PageHeader from "@components/Headers/PageHeader";
@@ -81,7 +81,7 @@ const SingleJob = () => {
       <JobsBreadcrumb jobUlid={jobUlid} />
       <PageHeader text={StringProcessor.convertTitleCase(job.companyName)} />
 
-      <SingleJobCard job={job} />
+      <SingleJobSpecs job={job} />
 
       <Container className="job-desc-div" fluid>
         <SingleJobDesc jobDescription={job.description} jobUlid={jobUlid} />
