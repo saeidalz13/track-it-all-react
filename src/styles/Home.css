@@ -4,14 +4,22 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 16px;
   text-align: center;
-  background: linear-gradient(0deg, rgba(34,193,195,0.8) 0%, rgba(255, 255, 255, 0.8) 100%);
+  background: linear-gradient(
+    0deg,
+    rgba(34, 193, 195, 0.8) 0%,
+    rgba(255, 255, 255, 0.8) 100%
+  );
   transition: all 0.3s ease;
 }
 
 .job-example-card:hover {
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, .5);
-  background: linear-gradient(0deg, rgb(214, 165, 191) 0%, rgba(255, 255, 255, 0.8) 100%);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(
+    0deg,
+    rgb(214, 165, 191) 0%,
+    rgba(255, 255, 255, 0.8) 100%
+  );
   transform: translateY(-4px);
 }
 

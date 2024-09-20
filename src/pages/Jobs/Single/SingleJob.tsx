@@ -15,6 +15,7 @@ import { useAuthContext } from "contexts/Auth/useAuthContext";
 import SingleJobDesc from "./SingleJobDesc";
 import PageHeader from "@components/Headers/PageHeader";
 import { StringProcessor } from "@utils/stringUtils";
+import InterviewSection from "./InterviewSection";
 
 const SingleJob = () => {
   const { jobUlid } = useParams();
@@ -86,6 +87,8 @@ const SingleJob = () => {
       <Container className="job-desc-div" fluid>
         <SingleJobDesc jobDescription={job.description} jobUlid={jobUlid} />
       </Container>
+
+      <InterviewSection />
     </>
   );
 };

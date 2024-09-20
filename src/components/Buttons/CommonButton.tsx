@@ -3,7 +3,7 @@ import { Button } from "react-bootstrap";
 import { BtnType } from "../../types/Simples/Simples";
 
 interface CommonButtonProps {
-  variant: string;
+  variant: "dark" | "info" | "success" | "primary" | "link";
   text: React.ReactNode;
   type?: BtnType;
   style?: React.CSSProperties;

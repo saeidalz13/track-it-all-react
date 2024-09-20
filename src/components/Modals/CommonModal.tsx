@@ -1,6 +1,6 @@
 import { Modal } from "react-bootstrap";
 
-interface CreateJobModalProps {
+interface CommonModalProps {
   show: boolean;
   onHide: () => void;
   notes: string;
@@ -8,7 +8,7 @@ interface CreateJobModalProps {
   titleColor?: "text-danger" | "text-info" | "text-success";
 }
 
-const CommonModal: React.FC<CreateJobModalProps> = (props) => {
+const CommonModal: React.FC<CommonModalProps> = (props) => {
   return (
     <Modal size="lg" show={props.show} onHide={props.onHide} centered>
       <Modal.Header closeButton>
