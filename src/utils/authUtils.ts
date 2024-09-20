@@ -8,7 +8,7 @@ import { RespLoginPayload } from "../models/Auth/Login";
 export const IsAuthenticated = async (
   authStatus: AuthStatus
 ): Promise<RespLoginPayload | boolean> => {
-  if (authStatus === AuthStatus.AUTH) {
+  if (authStatus === AuthStatus.AUTH || authStatus === AuthStatus.LOADING) {
     return true;
   }
 

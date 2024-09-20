@@ -5,6 +5,11 @@ import { AuthRoutes, ProfileRoutes } from "../routes/Routes";
 import { AuthStatus } from "../constants/AuthConsts";
 import Loading from "../components/Misc/Loading";
 import { useAuthContext } from "../contexts/Auth/useAuthContext";
+import { DataFetcher } from "@utils/fetcherUtils";
+import { BACKEND_URL } from "@constants/EnvConsts";
+import { StatusCodes } from "http-status-codes";
+import { ApiResp } from "models/Api/ApiResp";
+import { RespLoginPayload } from "models/Auth/Login";
 
 export const useRedirectToProfile = () => {
   const navigate = useNavigate();
@@ -13,23 +18,27 @@ export const useRedirectToProfile = () => {
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
-        const result = await IsAuthenticated(authParams.authStatus);
+        const resp = await DataFetcher.getData(`${BACKEND_URL}/auth`);
+        if (resp.status === StatusCodes.OK) {
+          const apiResp: ApiResp<RespLoginPayload> = await resp.json();
 
-        if (result === false) {
-          return;
+          if (apiResp.payload) {
+            authParams.login(apiResp.payload.email, apiResp.payload.user_id);
+            navigate(ProfileRoutes.Profile);
+            return;
+          }
         }
-
-        if (result === true) {
-          navigate(ProfileRoutes.Profile);
-          return;
-        }
-
-        authParams.login(result.email, result.user_id);
-        navigate(ProfileRoutes.Profile);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     };
+
+    if (
+      authParams.authStatus === AuthStatus.AUTH ||
+      authParams.authStatus === AuthStatus.LOADING
+    ) {
+      return;
+    }
 
     checkAuthentication();
   });

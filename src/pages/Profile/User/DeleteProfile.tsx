@@ -44,7 +44,7 @@ const DeleteProfile = () => {
         body="Are you sure you want to delete your profile? All your data will be lost!"
         show={showModal}
         onHide={() => setShowModal(false)}
-        confirmFunc={() => handleDeleteProfile()}
+        confirmFunc={handleDeleteProfile}
       />
     </div>
   );

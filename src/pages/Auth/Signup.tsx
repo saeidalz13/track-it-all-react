@@ -125,7 +125,10 @@ const Signup = () => {
     };
 
     try {
-      const resp = await DataFetcher.postData(`${BACKEND_URL}/signup`, reqBody);
+      const resp = await DataFetcher.postData(
+        `${BACKEND_URL}/signup`,
+        reqBody,
+      );
       const apiResp: ApiResp<RespSignupPayload> = await resp.json();
 
       if (resp.status === StatusCodes.OK) {
@@ -134,9 +137,9 @@ const Signup = () => {
           setTimeout(() => setSubmitErr(""), 5000);
           return;
         }
+
         authParams.login(apiResp.payload.email, apiResp.payload.user_id);
         navigate(ProfileRoutes.Profile);
-
         return;
       }
 

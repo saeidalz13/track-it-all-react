@@ -11,6 +11,11 @@ interface ConfirmModalProps {
 }
 
 const ConfirmModal: React.FC<ConfirmModalProps> = (props) => {
+  const execConfirmFunc = () => {
+    props.confirmFunc();
+    props.onHide();
+  };
+
   return (
     <Modal size="lg" show={props.show} onHide={props.onHide} centered>
       <Modal.Header closeButton>
@@ -25,7 +30,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = (props) => {
         <CommonButton
           text="Yes"
           variant="info"
-          onClick={props.confirmFunc}
+          onClick={execConfirmFunc}
           style={{ padding: "8px 15px" }}
         />
         <CommonButton
