@@ -28,6 +28,7 @@ const DeleteProfile = () => {
       alert(resp.status);
     } catch (error) {
       console.error(error);
+      alert(error)
     }
   };
 

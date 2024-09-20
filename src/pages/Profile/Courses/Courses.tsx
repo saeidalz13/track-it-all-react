@@ -13,7 +13,6 @@ const Courses = () => {
   return (
     <div style={CoursesSectionStyle}>
       <ProfileSectionHeader text="Recent Courses" />
-      Courses
     </div>
   );
 };

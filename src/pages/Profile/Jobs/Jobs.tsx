@@ -29,7 +29,7 @@ const Jobs = () => {
 
       <CommonButton
         variant="info"
-        text={<TextWithGrowingEmoji text="Go To Jobs" emoji="💼" />}
+        text={<TextWithGrowingEmoji text="More..." emoji="💼" />}
         onClick={() => navigate(JobsRoutes.Jobs)}
         style={{ width: "250px", padding: "10px 0px", fontSize: "16px" }}
         divStyle={{ fontSize: "20px", marginTop: "10px" }}

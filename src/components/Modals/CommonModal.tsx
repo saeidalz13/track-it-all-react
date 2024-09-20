@@ -3,7 +3,7 @@ import { Modal } from "react-bootstrap";
 interface CommonModalProps {
   show: boolean;
   onHide: () => void;
-  notes: string;
+  body: string;
   title: string;
   titleColor?: "text-danger" | "text-info" | "text-success";
 }
@@ -18,7 +18,7 @@ const CommonModal: React.FC<CommonModalProps> = (props) => {
           {props.title}
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body>{props.notes ? props.notes : "No Notes!"}</Modal.Body>
+      <Modal.Body>{props.body}</Modal.Body>
     </Modal>
   );
 };

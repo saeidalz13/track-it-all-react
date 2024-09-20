@@ -130,7 +130,7 @@ const Signup = () => {
         reqBody,
       );
       const apiResp: ApiResp<RespSignupPayload> = await resp.json();
-
+      
       if (resp.status === StatusCodes.OK) {
         if (!apiResp.payload) {
           setSubmitErr("Server Error! Please Try Again Later");

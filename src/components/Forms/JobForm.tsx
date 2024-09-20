@@ -24,7 +24,6 @@ const JobForm: React.FC<JobFormProps> = () => {
   const navigate = useNavigate();
   const { createNewJob } = useJobContext();
 
-  const [notesChars, setNotesChars] = useState<number>(0);
   const [descChars, setDescChars] = useState<number>(0);
   const [showModal, setShowModal] = useState(false);
   const [sendStatus, setSendStatus] = useState<"Success" | "Error">("Success");
@@ -33,7 +32,6 @@ const JobForm: React.FC<JobFormProps> = () => {
   const companyNameRef = useRef<HTMLInputElement>(null);
   const appliedDateRef = useRef<HTMLInputElement>(null);
   const linkRef = useRef<HTMLInputElement>(null);
-  const notesRef = useRef<HTMLTextAreaElement>(null);
   const descRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSubmitJob = async (e: FormEvent) => {
@@ -46,7 +44,6 @@ const JobForm: React.FC<JobFormProps> = () => {
 
     if (
       !descRef.current ||
-      !notesRef.current ||
       !linkRef.current ||
       !appliedDateRef.current ||
       !companyNameRef.current ||
@@ -67,7 +64,6 @@ const JobForm: React.FC<JobFormProps> = () => {
       companyName: companyNameRef.current.value,
       appliedDate: appliedDate,
       link: linkRef.current.value === "" ? undefined : linkRef.current.value,
-      notes: notesRef.current.value === "" ? undefined : notesRef.current.value,
       description:
         descRef.current.value === "" ? undefined : descRef.current.value,
     };
@@ -102,7 +98,6 @@ const JobForm: React.FC<JobFormProps> = () => {
           setShowModal(true);
 
           descRef.current.value = "";
-          notesRef.current.value = "";
           linkRef.current.value = "";
           appliedDateRef.current.value = "";
           companyNameRef.current.value = "";
@@ -121,13 +116,6 @@ const JobForm: React.FC<JobFormProps> = () => {
       setShowModal(true);
       return;
     }
-  };
-
-  const countNotesChar = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const target = e.target as HTMLInputElement | HTMLTextAreaElement;
-    setNotesChars(target.value.length);
   };
 
   const countDescChar = (
@@ -184,19 +172,6 @@ const JobForm: React.FC<JobFormProps> = () => {
         <Form.Control ref={linkRef} placeholder="" type="url"></Form.Control>
       </FloatingLabel>
 
-      <FloatingLabel className="mb-3" controlId="floatingInput" label="Notes">
-        <Form.Control
-          ref={notesRef}
-          onChange={countNotesChar}
-          placeholder=""
-          as="textarea"
-          style={{ height: "150px" }}
-        ></Form.Control>
-        <Form.Text style={{ color: notesChars < 500 ? "green" : "red" }}>
-          {notesChars}/500
-        </Form.Text>
-      </FloatingLabel>
-
       <FloatingLabel controlId="floatingInput" label="Job Description">
         <Form.Control
           style={{ height: "400px" }}
@@ -219,7 +194,7 @@ const JobForm: React.FC<JobFormProps> = () => {
 
       <CommonModal
         title={sendStatus}
-        notes={
+        body={
           sendStatus === "Success"
             ? "Your job application was submitted successfully!"
             : "Failed to create a new job application"
