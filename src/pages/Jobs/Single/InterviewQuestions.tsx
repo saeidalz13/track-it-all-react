@@ -6,6 +6,9 @@ const s: React.CSSProperties = {
 };
 
 const InterviewQuestions = () => {
+  
+
+
   return (
     <Accordion style={s}>
       {SampleQuestions.map((questions, idx) => (

@@ -69,9 +69,8 @@ const JobForm: React.FC<JobFormProps> = () => {
     };
 
     try {
-      console.log(`${BACKEND_URL}${JobsRoutes.Jobs}`);
       const resp = await DataFetcher.postData(
-        `${BACKEND_URL}${JobsRoutes.Jobs}`,
+        `${BACKEND_URL}${JobsRoutes.Jobs}?userUlid=${authContext.userId}`,
         reqData
       );
 

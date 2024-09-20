@@ -7,7 +7,7 @@ import { StatusCodes } from "http-status-codes";
 import { JobApplication } from "models/Job/Job";
 import { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { JobsRoutes } from "routes/Routes";
 
 interface SingleJobCardProps {
@@ -77,14 +77,14 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
             )}
           </div>
         </Col>
-        <Col md>
+        {/* <Col md>
           <div className="fancy-circle-div">
             <span className="fancy-circle-title">📝 Notes</span> <br />
             <Link onClick={() => setShowNotesModal(true)} to="#">
               Click To See
             </Link>
           </div>
-        </Col>
+        </Col> */}
       </Row>
 
       <CommonModal

@@ -12,7 +12,7 @@ const InterviewSectionStyle: React.CSSProperties = {
 const InterviewSection = () => {
   return (
     <div style={InterviewSectionStyle}>
-      <h1>Interview Sample Questions</h1>
+      <h1 className="mb-3">Interview Sample Questions</h1>
       <InterviewQuestions />
     </div>
   );
