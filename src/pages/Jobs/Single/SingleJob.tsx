@@ -16,13 +16,22 @@ import SingleJobDesc from "./SingleJobDesc";
 import PageHeader from "@components/Headers/PageHeader";
 import { StringProcessor } from "@utils/stringUtils";
 import InterviewSection from "./InterviewSection";
+import EntityPatchForm from "@components/Forms/JobNotes";
 
 const SingleJob = () => {
   const { jobUlid } = useParams();
   const navigate = useNavigate();
-  const jobParams = useJobContext();
+  const jobContext = useJobContext();
   const authParams = useAuthContext();
   const [job, setjob] = useState<"loading" | JobApplication>("loading");
+
+  const handleRefetchJob = () => {
+    if (!jobUlid) {
+      navigate(ProfileRoutes.Profile);
+      return;
+    }
+    jobContext.refetchJobData(jobUlid);
+  };
 
   useEffect(() => {
     if (!jobUlid) {
@@ -47,7 +56,7 @@ const SingleJob = () => {
 
           if (data.payload) {
             setjob(data.payload);
-            jobParams.addFetchedSingleJobs(data.payload);
+            jobContext.addFetchedSingleJobs(data.payload);
             return;
           }
         }
@@ -60,13 +69,13 @@ const SingleJob = () => {
       }
     };
 
-    const cachedJob = jobParams.fetchedSingleJobs.get(jobUlid);
+    const cachedJob = jobContext.fetchedSingleJobs.get(jobUlid);
     if (!cachedJob) {
       fetchJob();
     } else {
       setjob(cachedJob);
     }
-  }, [jobUlid, navigate, jobParams, authParams]);
+  }, [jobUlid, navigate, jobContext, authParams]);
 
   if (jobUlid === undefined) {
     navigate(JobsRoutes.Jobs);
@@ -86,6 +95,17 @@ const SingleJob = () => {
 
       <Container className="job-desc-div" fluid>
         <SingleJobDesc jobDescription={job.description} jobUlid={jobUlid} />
+      </Container>
+
+      <Container className="job-notes-div" fluid>
+        <h4>What do I know about this company/position?</h4>
+        <EntityPatchForm
+          url={`${BACKEND_URL}/jobs/${jobUlid}`}
+          currentPatchVariable={job.notes}
+          toPatchAttrName="notes"
+          handleRefetch={handleRefetchJob}
+          formControlPlaceholder="Any information about this company or position"
+        />
       </Container>
 
       <InterviewSection jobUlid={jobUlid} />

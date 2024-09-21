@@ -1,3 +1,4 @@
+import { TButtonVariant } from "@constants/AppConsts";
 import React from "react";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +9,7 @@ interface NavigateButtonProps {
   style?: React.CSSProperties;
   divStyle?: React.CSSProperties;
   disabled?: boolean;
-  variant?: string;
+  variant?: TButtonVariant;
 }
 
 const NavigateButton: React.FC<NavigateButtonProps> = (props) => {

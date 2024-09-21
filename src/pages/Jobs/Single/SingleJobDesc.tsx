@@ -3,8 +3,6 @@ import { BACKEND_URL } from "@constants/EnvConsts";
 import { DataFetcher } from "@utils/fetcherUtils";
 import { useJobContext } from "contexts/Job/useJobContext";
 import { StatusCodes } from "http-status-codes";
-import { ApiResp } from "models/Api/ApiResp";
-import { JobApplication } from "models/Job/Job";
 import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 
@@ -31,13 +29,10 @@ const SingleJobDesc: React.FC<SingleJobDescProps> = (props) => {
       );
 
       if (resp.status == StatusCodes.OK) {
-        const apiResp: ApiResp<JobApplication> = await resp.json();
-
-        if (apiResp.payload) {
-          jobContext.refetchJobData(props.jobUlid);
-          setEditDesc(false);
-          return;
-        }
+        // TODO: update the job on client side
+        jobContext.refetchJobData(props.jobUlid);
+        setEditDesc(false);
+        return;
       }
 
       console.error(resp.status);
