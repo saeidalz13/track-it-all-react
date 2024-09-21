@@ -31,7 +31,11 @@ const EntityPatchForm = ({
   const [newPatchVar, setNewPatchVar] = useState<string | undefined>(
     currentPatchVariable
   );
+  const [descChars, setDescChars] = useState<number>(
+    currentPatchVariable ? currentPatchVariable.length : 0
+  );
   const navigate = useNavigate();
+
   const handlePatchVar = async () => {
     try {
       const resp = await DataFetcher.patchData(url, {
@@ -80,13 +84,21 @@ const EntityPatchForm = ({
               style={{ height: "200px" }}
               placeholder={formControlPlaceholder}
               value={newPatchVar === null ? undefined : newPatchVar}
-              onChange={(e) => setNewPatchVar(e.target.value)}
+              onChange={(e) => {
+                setNewPatchVar(e.target.value);
+                setDescChars(e.target.value.length);
+              }}
             />
+            <Form.Text style={{ color: descChars < 2000 ? "green" : "red" }}>
+              {descChars}/2000
+            </Form.Text>
+
             <CommonButton
               text="Submit"
               variant={editButtonVariant ? editButtonVariant : "success"}
               divStyle={{ marginTop: "10px" }}
               onClick={handlePatchVar}
+              disabled={newPatchVar === currentPatchVariable? true : false}
             />
             <Form.Text className="text-danger">{submitError}</Form.Text>
           </>

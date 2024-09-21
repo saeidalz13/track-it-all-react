@@ -17,10 +17,10 @@
 }
 
 .job-notes-div {
-  background-color: rgba(70, 115, 122, 0.775);
+  background-color: rgba(213, 87, 179, 0.244);
   box-shadow: 0 5px 25px rgba(255, 252, 252, 0.6);
   padding: 50px 40px;
-  color: rgb(210, 255, 248);
+  color: rgb(252, 218, 248);
 }
 
 .fancy-circle-div {
@@ -94,13 +94,8 @@
   border-radius: 20px;
 }
 
-/* .job-form-input:focus {
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); 
-} */
-
 .job-search-input {
   background-color: rgb(249, 226, 239);
   height: 50px;
   border-radius: 15px;
 }
-

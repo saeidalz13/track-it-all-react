@@ -18,8 +18,24 @@ const SingleJobDesc: React.FC<SingleJobDescProps> = (props) => {
   );
   const [editDesc, setEditDesc] = useState<boolean>(false);
   const [submitError, setSubmitError] = useState<string>("");
+  const [descChars, setDescChars] = useState<number>(
+    props.jobDescription ? props.jobDescription.length : 0
+  );
+
+  const handleChangeDesc = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setDescription(e.target.value);
+    setDescChars(e.target.value.length);
+  };
 
   const handleUpdateJobDesc = async () => {
+    setSubmitError("")
+
+    if (descChars > 2000) {
+      setSubmitError("Must be less than 2000 chars");
+      setTimeout(() => setSubmitError(""), 5000);
+      return
+    }
+
     try {
       const resp = await DataFetcher.patchData(
         `${BACKEND_URL}/jobs/${props.jobUlid}`,
@@ -48,7 +64,18 @@ const SingleJobDesc: React.FC<SingleJobDescProps> = (props) => {
   return (
     <>
       <h4>Job Description</h4>
-      <Button onClick={() => setEditDesc((prev) => !prev)} variant="info">
+      <Button
+        onClick={() =>
+          setEditDesc((prev) => {
+            setDescription(props.jobDescription);
+            setDescChars(
+              props.jobDescription ? props.jobDescription.length : 0
+            );
+            return !prev;
+          })
+        }
+        variant="info"
+      >
         {editDesc ? "📖" : "✏️"}
       </Button>
 
@@ -60,13 +87,18 @@ const SingleJobDesc: React.FC<SingleJobDescProps> = (props) => {
               style={{ height: "200px" }}
               placeholder="Job Responsibilites, Skills Required, Languages, etc."
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={handleChangeDesc}
             />
+            <Form.Text style={{ color: descChars < 2000 ? "green" : "red" }}>
+              {descChars}/2000
+            </Form.Text>
+
             <CommonButton
               text="Submit"
               variant="success"
               divStyle={{ marginTop: "10px" }}
               onClick={handleUpdateJobDesc}
+              disabled={description === props.jobDescription ? true : false}
             />
             <Form.Text className="text-danger">{submitError}</Form.Text>
           </>

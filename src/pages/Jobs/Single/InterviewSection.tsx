@@ -2,7 +2,7 @@ import React from "react";
 import InterviewQuestions from "./InterviewQuestions";
 
 const InterviewSectionStyle: React.CSSProperties = {
-  backgroundColor: "#efe1d194",
+  backgroundColor: "#efe1d150",
   color: "black",
   textAlign: "center",
   //   fontSize: "clamp(35px, 6vw, 60px)",
