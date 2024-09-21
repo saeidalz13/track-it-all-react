@@ -16,7 +16,7 @@ import SingleJobDesc from "./SingleJobDesc";
 import PageHeader from "@components/Headers/PageHeader";
 import { StringProcessor } from "@utils/stringUtils";
 import InterviewSection from "./InterviewSection";
-import EntityPatchForm from "@components/Forms/JobNotes";
+import EntityPatchForm from "@components/Forms/EntityPatchForm";
 
 const SingleJob = () => {
   const { jobUlid } = useParams();

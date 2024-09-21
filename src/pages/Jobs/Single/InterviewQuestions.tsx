@@ -1,3 +1,4 @@
+import EntityPatchForm from "@components/Forms/EntityPatchForm";
 import Loading from "@components/Misc/Loading";
 import ServerError from "@components/Misc/ServerError";
 import { BACKEND_URL } from "@constants/EnvConsts";
@@ -19,15 +20,17 @@ interface InterviewQuestionsProps {
   jobUlid: string;
 }
 
-const InterviewQuestions: React.FC<InterviewQuestionsProps> = (props) => {
+const InterviewQuestions = ({ jobUlid }: InterviewQuestionsProps) => {
   const [jobInterviewQuestions, setJobInterviewQuestions] =
     useState<JobInterviewQuestionsState>("loading");
+
+  const handleRefetch = () => {};
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
         const resp = await DataFetcher.getData(
-          `${BACKEND_URL}/jobs/${props.jobUlid}/interview-questions`
+          `${BACKEND_URL}/jobs/${jobUlid}/interview-questions`
         );
 
         if (resp.status === StatusCodes.OK) {
@@ -42,7 +45,7 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = (props) => {
     };
 
     fetchQuestions();
-  }, [props.jobUlid]);
+  }, [jobUlid]);
 
   if (jobInterviewQuestions === "loading") {
     return <Loading />;
@@ -59,7 +62,15 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = (props) => {
           <Accordion.Header>{jic.question}</Accordion.Header>
           <Accordion.Body>
             <h5 className="text-primary">Response</h5>
-            {jic.response ? jic.response : "No Response Yet"}
+            {
+              <EntityPatchForm
+                url={`${BACKEND_URL}/jobs/${jobUlid}/job-interview-questions/${jic.id}`}
+                currentPatchVariable={jic.response}
+                toPatchAttrName="response"
+                handleRefetch={handleRefetch}
+                formControlPlaceholder="Reflect on your experiences..."
+              />
+            }
           </Accordion.Body>
         </Accordion.Item>
       ))}
