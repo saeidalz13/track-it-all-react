@@ -1,40 +1,65 @@
-import { SampleQuestions } from "@constants/InterviewConsts";
+import Loading from "@components/Misc/Loading";
+import ServerError from "@components/Misc/ServerError";
+import { BACKEND_URL } from "@constants/EnvConsts";
+import { DataFetcher } from "@utils/fetcherUtils";
+import { StatusCodes } from "http-status-codes";
+import { ApiResp } from "models/Api/ApiResp";
+import {
+  JobInterviewQuestionsState,
+  RespJobInterviewQuestions,
+} from "models/Job/Job";
+import { useEffect, useState } from "react";
 import { Accordion } from "react-bootstrap";
 
 const s: React.CSSProperties = {
   textAlign: "left",
 };
 
-const InterviewQuestions = () => {
-  
+interface InterviewQuestionsProps {
+  jobUlid: string;
+}
 
+const InterviewQuestions: React.FC<InterviewQuestionsProps> = (props) => {
+  const [jobInterviewQuestions, setJobInterviewQuestions] =
+    useState<JobInterviewQuestionsState>("loading");
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const resp = await DataFetcher.getData(
+          `${BACKEND_URL}/jobs/${props.jobUlid}/interview-questions`
+        );
+
+        if (resp.status === StatusCodes.OK) {
+          const apiResp: ApiResp<RespJobInterviewQuestions> = await resp.json();
+          if (apiResp.payload) {
+            setJobInterviewQuestions(apiResp.payload.job_interview_questions);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchQuestions();
+  }, [props.jobUlid]);
+
+  if (jobInterviewQuestions === "loading") {
+    return <Loading />;
+  }
+
+  if (jobInterviewQuestions === "error") {
+    return <ServerError />;
+  }
 
   return (
     <Accordion style={s}>
-      {SampleQuestions.map((questions, idx) => (
-        <Accordion.Item eventKey={String(idx)}>
-          <Accordion.Header>{questions[0]}</Accordion.Header>
+      {jobInterviewQuestions.map((jic, idx) => (
+        <Accordion.Item key={String(idx)} eventKey={String(idx)}>
+          <Accordion.Header>{jic.question}</Accordion.Header>
           <Accordion.Body>
-            {questions.length > 1 ? (
-              <div>
-                <h5 className="text-success">Alternative Questions:</h5>
-                <ul>
-                  {questions.slice(1).map((q) => (
-                    <li>{q}</li>
-                  ))}
-                </ul>
-              </div>
-            ) : (
-              ""
-            )}
             <h5 className="text-primary">Response</h5>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
+            {jic.response ? jic.response : "No Response Yet"}
           </Accordion.Body>
         </Accordion.Item>
       ))}

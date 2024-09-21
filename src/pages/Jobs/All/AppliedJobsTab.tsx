@@ -1,5 +1,6 @@
 import JobCard from "@components/Misc/JobCard";
 import Loading from "@components/Misc/Loading";
+import ServerError from "@components/Misc/ServerError";
 import { BACKEND_URL } from "@constants/EnvConsts";
 import { useCheckAuthStatus } from "@hooks/AuthHooks";
 import { useDebouncedSearch } from "@hooks/searchHooks";
@@ -160,11 +161,7 @@ const AppliedJobsTab = () => {
   }, [offset, authContext, dbncValue, jobContext, navigate]);
 
   if (jobs === "error") {
-    return (
-      <h1 className="mt-4" style={{ color: "maroon" }}>
-        Server Error!
-      </h1>
-    );
+    return <ServerError />
   }
 
   return (

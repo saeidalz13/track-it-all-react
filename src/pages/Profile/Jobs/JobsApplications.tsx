@@ -2,6 +2,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import JobCard from "../../../components/Misc/JobCard";
 import Loading from "../../../components/Misc/Loading";
 import { useFetchJobs } from "../../../hooks/JobHooks";
+import ServerError from "@components/Misc/ServerError";
 
 const JobsApplications = () => {
   const { jobs } = useFetchJobs(true);
@@ -10,11 +11,7 @@ const JobsApplications = () => {
    Rendering Section 
   */
   if (jobs === "error") {
-    return (
-      <h1 className="mt-4" style={{ color: "maroon" }}>
-        Server Error!
-      </h1>
-    );
+    return <ServerError />;
   }
 
   if (jobs.length === 0) {

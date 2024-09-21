@@ -22,6 +22,11 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   const createNewJob = (ja: JobApplication) => {
     if (recentJobApplications !== "loading") {
+      if (recentJobApplications.length < 3) {
+        setRecentJobApplications([ja, ...recentJobApplications]);
+        return;
+      }
+
       recentJobApplications.pop();
       setRecentJobApplications([ja, ...recentJobApplications]);
       setFetchedAllJobs(new Map<number, JobApplication[]>());

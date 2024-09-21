@@ -88,7 +88,7 @@ const SingleJob = () => {
         <SingleJobDesc jobDescription={job.description} jobUlid={jobUlid} />
       </Container>
 
-      <InterviewSection />
+      <InterviewSection jobUlid={jobUlid} />
     </>
   );
 };

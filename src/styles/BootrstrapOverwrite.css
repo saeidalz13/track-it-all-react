@@ -67,3 +67,9 @@
   box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
   transform: translateY(-2px);
 }
+
+.accordion-button {
+  background: linear-gradient(160deg, #56adc1, #e19be2);
+  font-weight: 500;
+  font-size: 18px;
+}
