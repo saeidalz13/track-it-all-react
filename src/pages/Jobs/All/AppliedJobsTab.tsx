@@ -145,10 +145,11 @@ const AppliedJobsTab = () => {
       if (dbncValue !== "") {
         getJobs();
         return;
-      }
+      } 
 
+      console.log(jobContext.fetchedAllJobs)
       const fetched = jobContext.fetchedAllJobs.get(offset);
-      if (fetched === undefined) {
+      if (fetched === undefined || jobContext.fetchedAllJobs.size === 0) {
         getJobs();
       } else {
         setJobs(restructureJobs(fetched));
@@ -161,7 +162,7 @@ const AppliedJobsTab = () => {
   }, [offset, authContext, dbncValue, jobContext, navigate]);
 
   if (jobs === "error") {
-    return <ServerError />
+    return <ServerError />;
   }
 
   return (

@@ -101,6 +101,9 @@ const JobForm: React.FC<JobFormProps> = () => {
           appliedDateRef.current.value = "";
           companyNameRef.current.value = "";
           positionRef.current.value = "";
+
+          await new Promise((r) => setTimeout(r, 1000));
+          navigate(`/jobs/${respData.payload.jobUlid}`);
           return;
         }
       }
@@ -195,7 +198,7 @@ const JobForm: React.FC<JobFormProps> = () => {
         title={sendStatus}
         body={
           sendStatus === "Success"
-            ? "Your job application was submitted successfully!"
+            ? "Your job application was submitted successfully! Redirecting to created job page in a second"
             : "Failed to create a new job application"
         }
         titleColor={sendStatus === "Success" ? "text-success" : "text-danger"}
