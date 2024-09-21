@@ -1,6 +1,6 @@
 import React, { ReactNode, useState } from "react";
 import { JobContext } from "./jobContext";
-import { JobApplication } from "../../models/Job/Job";
+import { JobApplication, JobInterviewQuestion } from "../../models/Job/Job";
 
 const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [recentJobApplications, setRecentJobApplications] = useState<
@@ -14,6 +14,10 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [fetchedAllJobs, setFetchedAllJobs] = useState<
     Map<number, JobApplication[]>
   >(new Map<number, JobApplication[]>());
+
+  const [jobInterviewQuestions, setJobInterviewQuestions] = useState<
+    Map<number, JobInterviewQuestion>
+  >(new Map<number, JobInterviewQuestion>());
 
   const setRecentJobs = (ja: JobApplication[]) => {
     setRecentJobApplications(ja);
@@ -58,6 +62,29 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     setRecentJobApplications("loading");
   };
 
+  // Job Interview Questions
+  const setJIQs = (jiqs: JobInterviewQuestion[]) => {
+    const values = new Map<number, JobInterviewQuestion>();
+    for (let i = 0; i < jiqs.length; i++) {
+      values.set(jiqs[i].id, jiqs[i]);
+    }
+
+    setJobInterviewQuestions(values);
+  };
+
+  const updateResponseJIQ = (id: number, response: string) => {
+    setJobInterviewQuestions((prev) => {
+      const curr = prev.get(id);
+      if (!curr) {
+        return prev;
+      }
+
+      curr.response = response;
+      prev.set(id, curr);
+      return prev;
+    });
+  };
+
   return (
     <JobContext.Provider
       value={{
@@ -70,6 +97,9 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         fetchedAllJobs: fetchedAllJobs,
         addFetchedAllJobs: addFetchedAllJobs,
         refetchJobData: refetchJobData,
+        jobInterviewQuestions: jobInterviewQuestions,
+        setJIQs: setJIQs,
+        updateResponseJIQ: updateResponseJIQ,
       }}
     >
       {children}

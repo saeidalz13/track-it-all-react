@@ -30,17 +30,17 @@ export interface ReqJobApplication {
   link?: string;
 }
 
-interface JobInterviewQuestionsModified {
+export interface JobInterviewQuestion {
   id: number;
   question: string;
   response?: string;
 }
 
 export interface RespJobInterviewQuestions {
-  job_interview_questions: JobInterviewQuestionsModified[];
+  job_interview_questions: JobInterviewQuestion[];
 }
 
 export type JobInterviewQuestionsState =
   | "loading"
   | "error"
-  | JobInterviewQuestionsModified[];
+  | Map<number, JobInterviewQuestion>;

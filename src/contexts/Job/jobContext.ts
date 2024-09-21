@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { JobApplication } from "../../models/Job/Job";
+import { JobApplication, JobInterviewQuestion } from "../../models/Job/Job";
 
 export interface IJobContext {
   recentJobApplications: JobApplication[] | "loading";
@@ -17,6 +17,10 @@ export interface IJobContext {
     jobCount: number
   ) => void;
   refetchJobData: (jobUlid: string) => void;
+
+  jobInterviewQuestions: Map<number, JobInterviewQuestion>;
+  setJIQs: (jiqs: JobInterviewQuestion[]) => void;
+  updateResponseJIQ: (id: number, response: string) => void;
 }
 
 export const JobContext = createContext<IJobContext>({
@@ -31,4 +35,8 @@ export const JobContext = createContext<IJobContext>({
   fetchedAllJobs: new Map<number, JobApplication[]>(),
   addFetchedAllJobs: () => {},
   refetchJobData: () => {},
+
+  jobInterviewQuestions: new Map<number, JobInterviewQuestion>(),
+  setJIQs: () => {},
+  updateResponseJIQ: () => {},
 });
