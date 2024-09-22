@@ -3,8 +3,11 @@ import { Nav } from "react-bootstrap";
 import JobsBreadcrumb from "../JobsBreadcrumb";
 import AppliedJobsTab from "./AppliedJobsTab";
 import CreateJobTab from "./CreateJobTab";
+import { useCheckAuthStatus } from "@hooks/AuthHooks";
 
 const AllJobs = () => {
+  useCheckAuthStatus();
+
   const [activeTab, setActiveTab] = useState<"alljobs" | "newjob">("alljobs");
 
   return (

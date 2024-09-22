@@ -8,13 +8,13 @@ import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 
 interface SingleJobDescProps {
-  jobDescription: string | undefined;
+  jobDescription: string | null;
   jobUlid: string;
 }
 
 const SingleJobDesc: React.FC<SingleJobDescProps> = (props) => {
   const jobContext = useJobContext();
-  const [description, setDescription] = useState<string | undefined>(
+  const [description, setDescription] = useState<string | null>(
     props.jobDescription
   );
   const [editDesc, setEditDesc] = useState<boolean>(false);
@@ -29,12 +29,12 @@ const SingleJobDesc: React.FC<SingleJobDescProps> = (props) => {
   };
 
   const handleUpdateJobDesc = async () => {
-    setSubmitError("")
+    setSubmitError("");
 
     if (descChars > MaxChar.JOB_DESC) {
       setSubmitError(`Must be less than ${MaxChar.JOB_DESC} chars`);
       setTimeout(() => setSubmitError(""), 5000);
-      return
+      return;
     }
 
     try {
@@ -87,10 +87,12 @@ const SingleJobDesc: React.FC<SingleJobDescProps> = (props) => {
               as="textarea"
               style={{ height: "200px" }}
               placeholder="Job Responsibilites, Skills Required, Languages, etc."
-              value={description}
+              value={description === null ? undefined : description}
               onChange={handleChangeDesc}
             />
-            <Form.Text style={{ color: descChars < MaxChar.JOB_DESC ? "green" : "red" }}>
+            <Form.Text
+              style={{ color: descChars < MaxChar.JOB_DESC ? "green" : "red" }}
+            >
               {descChars}/{MaxChar.JOB_DESC}
             </Form.Text>
 

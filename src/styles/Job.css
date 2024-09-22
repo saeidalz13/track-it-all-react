@@ -16,11 +16,13 @@
   color: rgb(248, 232, 202);
 }
 
-.job-notes-div {
-  background-color: rgba(213, 87, 179, 0.244);
+/* rgba(87, 205, 213, 0.176) */
+/* rgba(123, 87, 213, 0.17) */
+.job-ai-insight-div {
+  background-color: rgba(87, 205, 213, 0.17);
   box-shadow: 0 5px 25px rgba(255, 252, 252, 0.6);
   padding: 50px 40px;
-  color: rgb(252, 218, 248);
+  color: rgba(255, 255, 255, 0.879);
 }
 
 .fancy-circle-div {

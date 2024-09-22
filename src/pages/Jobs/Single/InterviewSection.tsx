@@ -2,10 +2,9 @@ import React from "react";
 import InterviewQuestions from "./InterviewQuestions";
 
 const InterviewSectionStyle: React.CSSProperties = {
-  backgroundColor: "#efe1d150",
+  backgroundColor: "rgba(123, 87, 213, 0.17)",
   color: "black",
   textAlign: "center",
-  //   fontSize: "clamp(35px, 6vw, 60px)",
   fontFamily: "Raleway",
   padding: "3vh 6vw",
 };
@@ -17,7 +16,7 @@ interface InterviewSectionProps {
 const InterviewSection: React.FC<InterviewSectionProps> = (props) => {
   return (
     <div style={InterviewSectionStyle}>
-      <h1 className="mb-3">Interview Sample Questions</h1>
+      <h1 className="mb-3 text-light">Interview Sample Questions</h1>
       <InterviewQuestions jobUlid={props.jobUlid} />
     </div>
   );

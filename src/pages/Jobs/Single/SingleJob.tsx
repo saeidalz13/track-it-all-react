@@ -16,22 +16,17 @@ import SingleJobDesc from "./SingleJobDesc";
 import PageHeader from "@components/Headers/PageHeader";
 import { StringProcessor } from "@utils/stringUtils";
 import InterviewSection from "./InterviewSection";
-import EntityPatchForm from "@components/Forms/EntityPatchForm";
+import AiInsightSection from "./AiInsightSection";
+import { useCheckAuthStatus } from "@hooks/AuthHooks";
 
 const SingleJob = () => {
+  useCheckAuthStatus();
+  
   const { jobUlid } = useParams();
   const navigate = useNavigate();
   const jobContext = useJobContext();
   const authParams = useAuthContext();
   const [job, setjob] = useState<"loading" | JobApplication>("loading");
-
-  const handleRefetchJob = () => {
-    if (!jobUlid) {
-      navigate(ProfileRoutes.Profile);
-      return;
-    }
-    jobContext.refetchJobData(jobUlid);
-  };
 
   useEffect(() => {
     if (!jobUlid) {
@@ -97,16 +92,10 @@ const SingleJob = () => {
         <SingleJobDesc jobDescription={job.description} jobUlid={jobUlid} />
       </Container>
 
-      <Container className="job-notes-div" fluid>
-        <h4>What do I know about this company/position?</h4>
-        <EntityPatchForm
-          url={`${BACKEND_URL}/jobs/${jobUlid}`}
-          currentPatchVariable={job.aiInsight}
-          toPatchAttrName="notes"
-          handleRefetch={handleRefetchJob}
-          formControlPlaceholder="Any information about this company or position"
-        />
-      </Container>
+      <AiInsightSection
+        aiInsight={job.aiInsight ? [job.aiInsight] : []}
+        jobUlid={jobUlid}
+      />
 
       <InterviewSection jobUlid={jobUlid} />
     </>
@@ -114,3 +103,4 @@ const SingleJob = () => {
 };
 
 export default SingleJob;
+

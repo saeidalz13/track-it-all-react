@@ -147,7 +147,6 @@ const AppliedJobsTab = () => {
         return;
       } 
 
-      console.log(jobContext.fetchedAllJobs)
       const fetched = jobContext.fetchedAllJobs.get(offset);
       if (fetched === undefined || jobContext.fetchedAllJobs.size === 0) {
         getJobs();

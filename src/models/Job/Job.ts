@@ -3,9 +3,9 @@ export interface JobApplication {
   position: string;
   companyName: string;
   appliedDate: Date;
-  description?: string;
-  link?: string;
-  aiInsight?: string;
+  description: string | null;
+  link: string | null;
+  aiInsight: string | null;
 }
 
 export interface RespJobApplications {
@@ -24,16 +24,15 @@ export interface ReqJobApplication {
   user_ulid: string;
   position: string;
   companyName: string;
-  appliedDate?: Date;
-  description?: string;
-  aiInsight?: string;
-  link?: string;
+  appliedDate: Date | null;
+  description: string | null;
+  link: string | null;
 }
 
 export interface JobInterviewQuestion {
   id: number;
   question: string;
-  response?: string;
+  response: string | null;
 }
 
 export interface RespJobInterviewQuestions {

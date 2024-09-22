@@ -54,7 +54,7 @@ const JobForm: React.FC<JobFormProps> = () => {
       return;
     }
 
-    let appliedDate = undefined;
+    let appliedDate = null;
     if (appliedDateRef.current.value !== "") {
       appliedDate = new Date(appliedDateRef.current.value);
     }
@@ -64,9 +64,8 @@ const JobForm: React.FC<JobFormProps> = () => {
       position: positionRef.current.value,
       companyName: companyNameRef.current.value,
       appliedDate: appliedDate,
-      link: linkRef.current.value === "" ? undefined : linkRef.current.value,
-      description:
-        descRef.current.value === "" ? undefined : descRef.current.value,
+      link: linkRef.current.value,
+      description: descRef.current.value,
     };
 
     try {
@@ -91,7 +90,7 @@ const JobForm: React.FC<JobFormProps> = () => {
             companyName: reqData.companyName,
             appliedDate: respData.payload.appliedDate,
             link: reqData.link,
-            aiInsight: reqData.aiInsight,
+            aiInsight: null,
             description: reqData.description,
           });
           setSendStatus("Success");
@@ -183,7 +182,9 @@ const JobForm: React.FC<JobFormProps> = () => {
           onChange={countDescChar}
           ref={descRef}
         ></Form.Control>
-        <Form.Text style={{ color: descChars < MaxChar.JOB_DESC ? "green" : "red" }}>
+        <Form.Text
+          style={{ color: descChars < MaxChar.JOB_DESC ? "green" : "red" }}
+        >
           {descChars}/{MaxChar.JOB_DESC}
         </Form.Text>
       </FloatingLabel>
