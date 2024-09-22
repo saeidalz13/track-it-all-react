@@ -101,3 +101,11 @@
   height: 50px;
   border-radius: 15px;
 }
+
+.resume-upload-div {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(160deg, #a3ed8de0, #da9fd5de);
+  border-radius: 10px;
+  color: rgb(47, 0, 90);
+}

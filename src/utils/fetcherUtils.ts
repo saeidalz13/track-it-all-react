@@ -15,12 +15,13 @@ export class DataFetcher {
     url: string,
     data: T,
     credentials: Credentials = "include",
-    timeout: number = 5000
+    timeout: number = 5000,
+    contentType: string = "application/json" 
   ): Promise<Response> {
     return fetch(url, {
       method: HttpMethods.POST,
       body: JSON.stringify(data),
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": contentType },
       signal: AbortSignal.timeout(timeout),
       credentials: credentials,
     });

@@ -1,14 +1,12 @@
 import CommonButton from "@components/Buttons/CommonButton";
-import CommonModal from "@components/Modals/CommonModal";
 import { BACKEND_URL } from "@constants/EnvConsts";
 import { DataFetcher } from "@utils/fetcherUtils";
 import { useJobContext } from "contexts/Job/useJobContext";
 import { StatusCodes } from "http-status-codes";
 import { JobApplication } from "models/Job/Job";
-import { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { JobsRoutes } from "routes/Routes";
+import { AuthRoutes, JobsRoutes } from "routes/Routes";
 
 interface SingleJobCardProps {
   job: JobApplication;
@@ -17,8 +15,6 @@ interface SingleJobCardProps {
 const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
   const navigate = useNavigate();
   const jobContext = useJobContext();
-
-  const [showNoteModal, setShowNotesModal] = useState(false);
 
   const handleDeleteJob = async () => {
     try {
@@ -35,6 +31,39 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
       alert(`Error in deleting job, status: ${resp.status}`);
     } catch (error) {
       alert(error);
+    }
+  };
+
+  const handleUploadResume = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (event.target.files === null) return;
+
+    const fileContent = await event.target.files[0].arrayBuffer();
+    console.log('Sending file content:', fileContent);
+
+    try {
+      const resp = await DataFetcher.postData(
+        `${BACKEND_URL}/jobs/${props.job.jobUlid}/resume`,
+        fileContent,
+        undefined,
+        undefined,
+        "application/pdf"
+      );
+
+      if (resp.status === StatusCodes.UNAUTHORIZED) {
+        navigate(AuthRoutes.Login);
+        return;
+      }
+
+      if (resp.status === StatusCodes.OK) {
+        alert("Resume Saved");
+        return;
+      }
+
+      console.error(resp.status);
+    } catch (error) {
+      console.error("Unexpected error while uploading resume", error);
     }
   };
 
@@ -77,22 +106,26 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
             )}
           </div>
         </Col>
-        {/* <Col md>
-          <div className="fancy-circle-div">
-            <span className="fancy-circle-title">📝 Notes</span> <br />
-            <Link onClick={() => setShowNotesModal(true)} to="#">
-              Click To See
-            </Link>
-          </div>
-        </Col> */}
       </Row>
 
-      <CommonModal
-        title="📝 Notes"
-        body={props.job.aiInsight ? props.job.aiInsight : "No Notes!"}
-        onHide={() => setShowNotesModal(false)}
-        show={showNoteModal}
-      />
+      <Row className="mt-3">
+        <Col style={{ maxWidth: "500px", margin: "0 auto" }} md>
+          <div className="resume-upload-div">
+            <h3>Resume</h3>
+            <div>
+              {props.job.resumePath === null ? (
+                <input
+                  type="file"
+                  accept=".pdf"
+                  onChange={handleUploadResume}
+                />
+              ) : (
+                "See File"
+              )}
+            </div>
+          </div>
+        </Col>
+      </Row>
     </Container>
   );
 };

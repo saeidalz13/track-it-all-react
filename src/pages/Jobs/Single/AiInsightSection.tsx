@@ -25,7 +25,7 @@ const AiInsightSection = ({ aiInsight, jobUlid }: AiInsightSectionProps) => {
   const authContext = useAuthContext();
   const jobContext = useJobContext();
   const navigate = useNavigate();
-
+  
   const handleSaveInsight = async () => {
     setSaveBtnDisabled(true);
     const message = aiMessages.join("");
@@ -102,42 +102,39 @@ const AiInsightSection = ({ aiInsight, jobUlid }: AiInsightSectionProps) => {
         onClick={handleGenerateAiInsight}
       />
 
-      <CommonButton
-        text={hideInsight? "Show Insight" : "Hide Insight"}
-        variant="success"
-        divStyle={{ marginTop: "10px", textAlign: "center" }}
-        onClick={() => setHideInsight((prev) => !prev)}
-      />
-
       {aiMessages.length === 0 ? (
         <div className="text-center mt-3" style={{ fontSize: "18px" }}>
           No Insight Generatet Yet
         </div>
       ) : (
-        <div hidden={hideInsight}>
-          <ReactMarkdown className="mt-3 p-2">
-            {aiMessages.join("")}
-          </ReactMarkdown>
+        <>
+          <CommonButton
+            text={hideInsight ? "Show Insight 👀" : "Hide Insight 😶‍🌫️"}
+            variant="success"
+            divStyle={{ marginTop: "10px", textAlign: "center" }}
+            onClick={() => setHideInsight((prev) => !prev)}
+          />
+          <div hidden={hideInsight}>
+            <ReactMarkdown className="mt-3 p-2">
+              {aiMessages.join("")}
+            </ReactMarkdown>
 
-          {aiMessages.join("") === aiInsight.join("") ? (
-            ""
-          ) : (
-            <CommonButton
-              text="Save Insight"
-              variant="dark"
-              divStyle={{ textAlign: "center" }}
-              disabled={saveBtnDisabled}
-              onClick={handleSaveInsight}
-            />
-          )}
-        </div>
+            {aiMessages.join("") === aiInsight.join("") ? (
+              ""
+            ) : (
+              <CommonButton
+                text="Save Insight"
+                variant="dark"
+                divStyle={{ textAlign: "center" }}
+                disabled={saveBtnDisabled}
+                onClick={handleSaveInsight}
+              />
+            )}
+          </div>
+        </>
       )}
     </Container>
   );
 };
 
 export default AiInsightSection;
-
-{
-  /* {aiMessages.map((aiMessage) => aiMessage)} */
-}
