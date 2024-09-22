@@ -101,7 +101,7 @@ const SingleJob = () => {
         <h4>What do I know about this company/position?</h4>
         <EntityPatchForm
           url={`${BACKEND_URL}/jobs/${jobUlid}`}
-          currentPatchVariable={job.notes}
+          currentPatchVariable={job.aiInsight}
           toPatchAttrName="notes"
           handleRefetch={handleRefetchJob}
           formControlPlaceholder="Any information about this company or position"

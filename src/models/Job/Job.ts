@@ -5,7 +5,7 @@ export interface JobApplication {
   appliedDate: Date;
   description?: string;
   link?: string;
-  notes?: string;
+  aiInsight?: string;
 }
 
 export interface RespJobApplications {
@@ -26,7 +26,7 @@ export interface ReqJobApplication {
   companyName: string;
   appliedDate?: Date;
   description?: string;
-  notes?: string;
+  aiInsight?: string;
   link?: string;
 }
 

@@ -1,4 +1,5 @@
 import CommonButton from "@components/Buttons/CommonButton";
+import { MaxChar } from "@constants/AppConsts";
 import { BACKEND_URL } from "@constants/EnvConsts";
 import { DataFetcher } from "@utils/fetcherUtils";
 import { useJobContext } from "contexts/Job/useJobContext";
@@ -30,8 +31,8 @@ const SingleJobDesc: React.FC<SingleJobDescProps> = (props) => {
   const handleUpdateJobDesc = async () => {
     setSubmitError("")
 
-    if (descChars > 2000) {
-      setSubmitError("Must be less than 2000 chars");
+    if (descChars > MaxChar.JOB_DESC) {
+      setSubmitError(`Must be less than ${MaxChar.JOB_DESC} chars`);
       setTimeout(() => setSubmitError(""), 5000);
       return
     }
@@ -89,8 +90,8 @@ const SingleJobDesc: React.FC<SingleJobDescProps> = (props) => {
               value={description}
               onChange={handleChangeDesc}
             />
-            <Form.Text style={{ color: descChars < 2000 ? "green" : "red" }}>
-              {descChars}/2000
+            <Form.Text style={{ color: descChars < MaxChar.JOB_DESC ? "green" : "red" }}>
+              {descChars}/{MaxChar.JOB_DESC}
             </Form.Text>
 
             <CommonButton

@@ -89,7 +89,7 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
 
       <CommonModal
         title="📝 Notes"
-        body={props.job.notes ? props.job.notes : "No Notes!"}
+        body={props.job.aiInsight ? props.job.aiInsight : "No Notes!"}
         onHide={() => setShowNotesModal(false)}
         show={showNoteModal}
       />

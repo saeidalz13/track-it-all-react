@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../contexts/Auth/useAuthContext";
 import { useJobContext } from "../../contexts/Job/useJobContext";
 import CommonModal from "@components/Modals/CommonModal";
+import { MaxChar } from "@constants/AppConsts";
 
 interface JobFormProps {
   onHide?: () => void;
@@ -90,7 +91,7 @@ const JobForm: React.FC<JobFormProps> = () => {
             companyName: reqData.companyName,
             appliedDate: respData.payload.appliedDate,
             link: reqData.link,
-            notes: reqData.notes,
+            aiInsight: reqData.aiInsight,
             description: reqData.description,
           });
           setSendStatus("Success");
@@ -182,8 +183,8 @@ const JobForm: React.FC<JobFormProps> = () => {
           onChange={countDescChar}
           ref={descRef}
         ></Form.Control>
-        <Form.Text style={{ color: descChars < 2000 ? "green" : "red" }}>
-          {descChars}/2000
+        <Form.Text style={{ color: descChars < MaxChar.JOB_DESC ? "green" : "red" }}>
+          {descChars}/{MaxChar.JOB_DESC}
         </Form.Text>
       </FloatingLabel>
 

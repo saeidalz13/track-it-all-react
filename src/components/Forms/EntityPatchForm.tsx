@@ -1,5 +1,5 @@
 import CommonButton from "@components/Buttons/CommonButton";
-import { TButtonVariant } from "@constants/AppConsts";
+import { MaxChar, TButtonVariant } from "@constants/AppConsts";
 import { DataFetcher } from "@utils/fetcherUtils";
 import { StatusCodes } from "http-status-codes";
 import { useState } from "react";
@@ -89,8 +89,15 @@ const EntityPatchForm = ({
                 setDescChars(e.target.value.length);
               }}
             />
-            <Form.Text style={{ color: descChars < 2000 ? "green" : "red" }}>
-              {descChars}/2000
+            <Form.Text
+              style={{
+                color:
+                  descChars < MaxChar.INTERVIEW_SAMPLE_QUESTION_RESP
+                    ? "green"
+                    : "red",
+              }}
+            >
+              {descChars}/{MaxChar.INTERVIEW_SAMPLE_QUESTION_RESP}
             </Form.Text>
 
             <CommonButton
@@ -98,7 +105,7 @@ const EntityPatchForm = ({
               variant={editButtonVariant ? editButtonVariant : "success"}
               divStyle={{ marginTop: "10px" }}
               onClick={handlePatchVar}
-              disabled={newPatchVar === currentPatchVariable? true : false}
+              disabled={newPatchVar === currentPatchVariable ? true : false}
             />
             <Form.Text className="text-danger">{submitError}</Form.Text>
           </>
