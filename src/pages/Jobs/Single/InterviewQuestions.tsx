@@ -17,6 +17,8 @@ import { Accordion } from "react-bootstrap";
 
 const s: React.CSSProperties = {
   textAlign: "left",
+  maxWidth: "1000px",
+  margin: "0 auto"
 };
 
 interface InterviewQuestionsProps {

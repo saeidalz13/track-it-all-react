@@ -25,7 +25,7 @@ const AiInsightSection = ({ aiInsight, jobUlid }: AiInsightSectionProps) => {
   const authContext = useAuthContext();
   const jobContext = useJobContext();
   const navigate = useNavigate();
-  
+
   const handleSaveInsight = async () => {
     setSaveBtnDisabled(true);
     const message = aiMessages.join("");
@@ -114,7 +114,7 @@ const AiInsightSection = ({ aiInsight, jobUlid }: AiInsightSectionProps) => {
             divStyle={{ marginTop: "10px", textAlign: "center" }}
             onClick={() => setHideInsight((prev) => !prev)}
           />
-          <div hidden={hideInsight}>
+          <div style={{maxWidth: "1400px", margin: "0 auto"}} hidden={hideInsight}>
             <ReactMarkdown className="mt-3 p-2">
               {aiMessages.join("")}
             </ReactMarkdown>

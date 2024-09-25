@@ -9,7 +9,7 @@ import { AuthRoutes } from "routes/Routes";
 
 interface EntityPatchFormProps {
   url: string;
-  currentPatchVariable: string | undefined;
+  currentPatchVariable: string | null;
   toPatchAttrName: string;
   formControlPlaceholder: string;
   editButtonVariant?: TButtonVariant;
@@ -28,7 +28,7 @@ const EntityPatchForm = ({
 }: EntityPatchFormProps) => {
   const [editDesc, setEditDesc] = useState<boolean>(false);
   const [submitError, setSubmitError] = useState<string>("");
-  const [newPatchVar, setNewPatchVar] = useState<string | undefined>(
+  const [newPatchVar, setNewPatchVar] = useState<string | null>(
     currentPatchVariable
   );
   const [descChars, setDescChars] = useState<number>(

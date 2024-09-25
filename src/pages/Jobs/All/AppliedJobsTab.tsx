@@ -2,7 +2,6 @@ import JobCard from "@components/Misc/JobCard";
 import Loading from "@components/Misc/Loading";
 import ServerError from "@components/Misc/ServerError";
 import { BACKEND_URL } from "@constants/EnvConsts";
-import { useCheckAuthStatus } from "@hooks/AuthHooks";
 import { useDebouncedSearch } from "@hooks/searchHooks";
 import { DataFetcher } from "@utils/fetcherUtils";
 import { useAuthContext } from "contexts/Auth/useAuthContext";
@@ -27,8 +26,6 @@ import { useNavigate } from "react-router-dom";
 import { AuthRoutes } from "routes/Routes";
 
 const AppliedJobsTab = () => {
-  useCheckAuthStatus();
-
   const authContext = useAuthContext();
   const jobContext = useJobContext();
   const navigate = useNavigate();

@@ -63,7 +63,7 @@ const SingleJobDesc: React.FC<SingleJobDescProps> = (props) => {
   };
 
   return (
-    <>
+    <div style={{maxWidth: "1400px", margin: "0 auto"}}>
       <h4>Job Description</h4>
       <Button
         onClick={() =>
@@ -111,7 +111,7 @@ const SingleJobDesc: React.FC<SingleJobDescProps> = (props) => {
           "No Description Provided".toLocaleUpperCase()
         )}
       </div>
-    </>
+    </div>
   );
 };
 

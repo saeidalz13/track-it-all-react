@@ -21,7 +21,7 @@ import { useCheckAuthStatus } from "@hooks/AuthHooks";
 
 const SingleJob = () => {
   useCheckAuthStatus();
-  
+
   const { jobUlid } = useParams();
   const navigate = useNavigate();
   const jobContext = useJobContext();
@@ -29,7 +29,7 @@ const SingleJob = () => {
   const [job, setjob] = useState<"loading" | JobApplication>("loading");
 
   useEffect(() => {
-    if (!jobUlid) {
+    if (jobUlid === undefined) {
       navigate(ProfileRoutes.Profile);
       return;
     }
@@ -55,7 +55,7 @@ const SingleJob = () => {
             return;
           }
         }
-
+        
         navigate(ProfileRoutes.Profile);
       } catch (error) {
         console.error(error);
@@ -103,4 +103,3 @@ const SingleJob = () => {
 };
 
 export default SingleJob;
-

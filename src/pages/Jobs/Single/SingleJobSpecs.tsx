@@ -1,10 +1,11 @@
 import CommonButton from "@components/Buttons/CommonButton";
 import { BACKEND_URL } from "@constants/EnvConsts";
 import { DataFetcher } from "@utils/fetcherUtils";
+import { useAuthContext } from "contexts/Auth/useAuthContext";
 import { useJobContext } from "contexts/Job/useJobContext";
 import { StatusCodes } from "http-status-codes";
 import { JobApplication } from "models/Job/Job";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { AuthRoutes, JobsRoutes } from "routes/Routes";
 
@@ -15,6 +16,7 @@ interface SingleJobCardProps {
 const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
   const navigate = useNavigate();
   const jobContext = useJobContext();
+  const authContext = useAuthContext();
 
   const handleDeleteJob = async () => {
     try {
@@ -34,21 +36,40 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
     }
   };
 
+  const handleGetResume = async () => {
+    try {
+      const resp = await DataFetcher.getData(
+        `${BACKEND_URL}/fs/resume?userUlid=${authContext.userId}&jobUlid=${props.job.jobUlid}`
+      );
+
+      if (resp.status === StatusCodes.OK) {
+        const file = await resp.blob();
+        const fileURL = URL.createObjectURL(file);
+        window.open(fileURL, "_blank");
+        setTimeout(() => URL.revokeObjectURL(fileURL), 1000);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleUploadResume = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (event.target.files === null) return;
 
-    const fileContent = await event.target.files[0].arrayBuffer();
-    console.log('Sending file content:', fileContent);
+    const formData = new FormData();
+    formData.append("file", event.target.files[0]);
 
     try {
-      const resp = await DataFetcher.postData(
-        `${BACKEND_URL}/jobs/${props.job.jobUlid}/resume`,
-        fileContent,
-        undefined,
-        undefined,
-        "application/pdf"
+      const resp = await fetch(
+        `${BACKEND_URL}/fs/resume?userUlid=${authContext.userId}&jobUlid=${props.job.jobUlid}`,
+        {
+          method: "POST",
+          body: formData,
+          signal: AbortSignal.timeout(5000),
+          credentials: "include",
+        }
       );
 
       if (resp.status === StatusCodes.UNAUTHORIZED) {
@@ -114,13 +135,17 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
             <h3>Resume</h3>
             <div>
               {props.job.resumePath === null ? (
-                <input
+                <Form.Control
                   type="file"
                   accept=".pdf"
                   onChange={handleUploadResume}
                 />
               ) : (
-                "See File"
+                <CommonButton
+                  text="See File"
+                  variant="link"
+                  onClick={handleGetResume}
+                />
               )}
             </div>
           </div>
