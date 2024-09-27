@@ -55,7 +55,7 @@ const SingleJob = () => {
             return;
           }
         }
-        
+
         navigate(ProfileRoutes.Profile);
       } catch (error) {
         console.error(error);

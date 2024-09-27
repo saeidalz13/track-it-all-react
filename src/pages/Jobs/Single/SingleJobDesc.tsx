@@ -22,6 +22,7 @@ const SingleJobDesc: React.FC<SingleJobDescProps> = (props) => {
   const [descChars, setDescChars] = useState<number>(
     props.jobDescription ? props.jobDescription.length : 0
   );
+  const [hideDesc, setHideDesc] = useState(true);
 
   const handleChangeDesc = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDescription(e.target.value);
@@ -63,53 +64,64 @@ const SingleJobDesc: React.FC<SingleJobDescProps> = (props) => {
   };
 
   return (
-    <div style={{maxWidth: "1400px", margin: "0 auto"}}>
-      <h4>Job Description</h4>
-      <Button
-        onClick={() =>
-          setEditDesc((prev) => {
-            setDescription(props.jobDescription);
-            setDescChars(
-              props.jobDescription ? props.jobDescription.length : 0
-            );
-            return !prev;
-          })
-        }
-        variant="info"
-      >
-        {editDesc ? "📖" : "✏️"}
-      </Button>
+    <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
+      <h2 className="text-center">Job Description</h2>
+      <CommonButton
+        text={hideDesc ? "Show Description 👀" : "Hide Description 😶‍🌫️"}
+        variant="success"
+        divStyle={{ margin: "10px 0", textAlign: "center" }}
+        onClick={() => setHideDesc((prev) => !prev)}
+      />
 
-      <div className="mt-3">
-        {editDesc ? (
-          <>
-            <Form.Control
-              as="textarea"
-              style={{ height: "200px" }}
-              placeholder="Job Responsibilites, Skills Required, Languages, etc."
-              value={description === null ? undefined : description}
-              onChange={handleChangeDesc}
-            />
-            <Form.Text
-              style={{ color: descChars < MaxChar.JOB_DESC ? "green" : "red" }}
-            >
-              {descChars}/{MaxChar.JOB_DESC}
-            </Form.Text>
+      <div hidden={hideDesc}>
+        <Button
+          onClick={() =>
+            setEditDesc((prev) => {
+              setDescription(props.jobDescription);
+              setDescChars(
+                props.jobDescription ? props.jobDescription.length : 0
+              );
+              return !prev;
+            })
+          }
+          variant="info"
+        >
+          {editDesc ? "📖" : "✏️"}
+        </Button>
 
-            <CommonButton
-              text="Submit"
-              variant="success"
-              divStyle={{ marginTop: "10px" }}
-              onClick={handleUpdateJobDesc}
-              disabled={description === props.jobDescription ? true : false}
-            />
-            <Form.Text className="text-danger">{submitError}</Form.Text>
-          </>
-        ) : props.jobDescription ? (
-          <pre style={{ fontFamily: "Raleway" }}>{props.jobDescription}</pre>
-        ) : (
-          "No Description Provided".toLocaleUpperCase()
-        )}
+        <div className="mt-3">
+          {editDesc ? (
+            <>
+              <Form.Control
+                as="textarea"
+                style={{ height: "200px" }}
+                placeholder="Job Responsibilites, Skills Required, Languages, etc."
+                value={description === null ? undefined : description}
+                onChange={handleChangeDesc}
+              />
+              <Form.Text
+                style={{
+                  color: descChars < MaxChar.JOB_DESC ? "green" : "red",
+                }}
+              >
+                {descChars}/{MaxChar.JOB_DESC}
+              </Form.Text>
+
+              <CommonButton
+                text="Submit"
+                variant="success"
+                divStyle={{ marginTop: "10px" }}
+                onClick={handleUpdateJobDesc}
+                disabled={description === props.jobDescription ? true : false}
+              />
+              <Form.Text className="text-danger">{submitError}</Form.Text>
+            </>
+          ) : props.jobDescription ? (
+            <pre style={{ fontFamily: "Raleway" }}>{props.jobDescription}</pre>
+          ) : (
+            "No Description Provided".toLocaleUpperCase()
+          )}
+        </div>
       </div>
     </div>
   );

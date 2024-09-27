@@ -21,7 +21,7 @@ const AiInsightSection = ({ aiInsight, jobUlid }: AiInsightSectionProps) => {
   const [aiBtnDisabled, setAiBtnDisabled] = useState(
     aiMessages.length === 0 ? false : true
   );
-  const [hideInsight, setHideInsight] = useState(false);
+  const [hideInsight, setHideInsight] = useState(true);
   const authContext = useAuthContext();
   const jobContext = useJobContext();
   const navigate = useNavigate();
@@ -66,7 +66,7 @@ const AiInsightSection = ({ aiInsight, jobUlid }: AiInsightSectionProps) => {
 
     try {
       const eventSource = new EventSource(
-        `${BACKEND_URL}/ai-insight/${jobUlid}?userUlid=${authContext.userId}`
+        `${BACKEND_URL}/ai/job-insight/${jobUlid}?userUlid=${authContext.userId}`
       );
 
       eventSource.onmessage = (event) => {
