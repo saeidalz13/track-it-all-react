@@ -125,13 +125,10 @@ const Signup = () => {
     };
 
     try {
-      const resp = await DataFetcher.postData(
-        `${BACKEND_URL}/signup`,
-        reqBody,
-      );
+      const resp = await DataFetcher.postData(`${BACKEND_URL}/signup`, reqBody);
       const apiResp: ApiResp<RespSignupPayload> = await resp.json();
-      
-      if (resp.status === StatusCodes.OK) {
+
+      if (resp.status === StatusCodes.CREATED) {
         if (!apiResp.payload) {
           setSubmitErr("Server Error! Please Try Again Later");
           setTimeout(() => setSubmitErr(""), 5000);

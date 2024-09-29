@@ -10,7 +10,7 @@ import { ReqLogin, RespLoginPayload } from "../../models/Auth/Login";
 import { ApiResp } from "../../models/Api/ApiResp";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../contexts/Auth/useAuthContext";
-import { useRedirectToProfile } from "../../hooks/AuthHooks";
+import { AuthStatus } from "@constants/AuthConsts";
 
 const btnStyle: React.CSSProperties = {
   marginTop: "15px",
@@ -26,8 +26,6 @@ const Login = () => {
 
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-
-  useRedirectToProfile();
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
@@ -58,6 +56,12 @@ const Login = () => {
 
       const apiResp: ApiResp<RespLoginPayload> = await resp.json();
 
+      if (resp.status === StatusCodes.UNAUTHORIZED) {
+        setLoginError("Could not authorize! Wrong Credentials");
+        setTimeout(() => setLoginError(""), 5000);
+        return;
+      }
+
       if (
         resp.status === StatusCodes.INTERNAL_SERVER_ERROR ||
         resp.status == StatusCodes.NOT_FOUND
@@ -80,6 +84,7 @@ const Login = () => {
         return;
       }
 
+      console.error(resp.status);
       console.error(resp);
       setLoginError("Unexpected Error! Please Try Again Later");
       setTimeout(() => setLoginError(""), 5000);
@@ -129,12 +134,15 @@ const Login = () => {
               />
             </InputGroup>
           </Form.Group>
+
           <CommonButton
             variant="success"
             text="Submit"
             style={btnStyle}
             type="submit"
+            disabled={authParams.authStatus === AuthStatus.AUTH}
           ></CommonButton>
+
           {loginError === "" ? (
             ""
           ) : (
@@ -152,6 +160,7 @@ const Login = () => {
           url={AuthRoutes.Signup}
           divStyle={{ marginTop: "10px" }}
           style={{ color: "#CDC2A5" }}
+          disabled={authParams.authStatus === AuthStatus.AUTH}
         />
       </Container>
     </>
