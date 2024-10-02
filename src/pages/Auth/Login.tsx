@@ -1,4 +1,4 @@
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { Button, Container, Form, InputGroup } from "react-bootstrap";
 import CommonButton from "../../components/Buttons/CommonButton";
 import NavigateButton from "../../components/Buttons/NavigateButton";
@@ -7,7 +7,7 @@ import { BACKEND_URL } from "../../constants/EnvConsts";
 import { DataFetcher } from "../../utils/fetcherUtils";
 import { StatusCodes } from "http-status-codes";
 import { ReqLogin, RespLoginPayload } from "../../models/Auth/Login";
-import { ApiResp } from "../../models/Api/ApiResp";
+import { ApiResp, NoPayload } from "../../models/Api/ApiResp";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../contexts/Auth/useAuthContext";
 import { AuthStatus } from "@constants/AuthConsts";
@@ -23,9 +23,42 @@ const Login = () => {
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [loginError, setLoginError] = useState<string>("");
+  const [googleBtnDisabled, setGoogleBtnDisabled] = useState(false);
 
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (authParams.authStatus === AuthStatus.AUTH) {
+      navigate(ProfileRoutes.Profile);
+      return;
+    }
+  }, [authParams.authStatus, navigate]);
+
+  const handleGetOAuth2ServerUri = async () => {
+    try {
+      setGoogleBtnDisabled(true);
+      const resp = await DataFetcher.getData(
+        `${BACKEND_URL}/oauth2-auth-server-uri`
+      );
+
+      if (resp.status === StatusCodes.OK) {
+        const data: ApiResp<{ auth_server_uri: string }> = await resp.json();
+
+        if (data.payload) {
+          location.assign(data.payload.auth_server_uri);
+          return;
+        }
+      } else {
+        const data: ApiResp<NoPayload> = await resp.json();
+        alert(data.error);
+        setGoogleBtnDisabled(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setGoogleBtnDisabled(false);
+    }
+  };
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
@@ -99,6 +132,19 @@ const Login = () => {
   return (
     <>
       <h1 className="common-h1 mt-5 text-center">Continue Tracking!</h1>
+      <CommonButton
+        text="Log in Using Google"
+        variant="info"
+        style={{ padding: "10px 20px" }}
+        divStyle={{ textAlign: "center" }}
+        disabled={googleBtnDisabled}
+        onClick={handleGetOAuth2ServerUri}
+      />
+
+      <div className="text-center mt-3" style={{ color: "white" }}>
+        OR
+      </div>
+
       <Container
         style={{
           margin: "50px auto",
@@ -140,7 +186,6 @@ const Login = () => {
             text="Submit"
             style={btnStyle}
             type="submit"
-            disabled={authParams.authStatus === AuthStatus.AUTH}
           ></CommonButton>
 
           {loginError === "" ? (
@@ -160,7 +205,6 @@ const Login = () => {
           url={AuthRoutes.Signup}
           divStyle={{ marginTop: "10px" }}
           style={{ color: "#CDC2A5" }}
-          disabled={authParams.authStatus === AuthStatus.AUTH}
         />
       </Container>
     </>

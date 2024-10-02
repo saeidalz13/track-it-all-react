@@ -4,6 +4,7 @@ import { BACKEND_URL } from "@constants/EnvConsts";
 import { DataFetcher } from "@utils/fetcherUtils";
 import { useAuthContext } from "contexts/Auth/useAuthContext";
 import { StatusCodes } from "http-status-codes";
+import { ApiResp, NoPayload } from "models/Api/ApiResp";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthRoutes } from "routes/Routes";
@@ -19,16 +20,27 @@ const DeleteProfile = () => {
         `${BACKEND_URL}/users/${authContext.userId}`
       );
 
+      if (resp.status === StatusCodes.UNAUTHORIZED) {
+        navigate(AuthRoutes.Login);
+        return;
+      }
+
       if (resp.status === StatusCodes.NO_CONTENT) {
-        setShowModal(false)
+        setShowModal(false);
         navigate(AuthRoutes.Signup);
+        return;
+      }
+
+      if (resp.status === StatusCodes.BAD_REQUEST) {
+        const data: ApiResp<NoPayload> = await resp.json();
+        alert(data.error!);
         return;
       }
 
       alert(resp.status);
     } catch (error) {
       console.error(error);
-      alert(error)
+      alert(error);
     }
   };
 
