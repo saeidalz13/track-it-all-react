@@ -112,7 +112,7 @@ const Login = () => {
           setTimeout(() => setLoginError(""), 5000);
           return;
         }
-        authParams.login(apiResp.payload.email, apiResp.payload.user_id);
+        authParams.login();
         navigate(ProfileRoutes.Profile);
         return;
       }
@@ -135,7 +135,7 @@ const Login = () => {
       <CommonButton
         text="Log in Using Google"
         variant="info"
-        style={{ padding: "10px 20px" }}
+        style={{ padding: "20px 40px", marginTop: "20px" }}
         divStyle={{ textAlign: "center" }}
         disabled={googleBtnDisabled}
         onClick={handleGetOAuth2ServerUri}
@@ -147,7 +147,7 @@ const Login = () => {
 
       <Container
         style={{
-          margin: "50px auto",
+          margin: "30px auto",
           maxWidth: "500px",
           textAlign: "center",
         }}

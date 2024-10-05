@@ -2,32 +2,20 @@ import React, { ReactNode, useState } from "react";
 import { AuthContext } from "./authContext";
 import { AuthStatus } from "../../constants/AuthConsts";
 
-const AuthProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [authStatus, setAuthStatus] = useState<AuthStatus>(AuthStatus.LOADING);
-  const [email, setEmail] = useState<string>("");
-  const [userId, setUserId] = useState<string>("");
 
-  const login = (email: string, userId: string) => {
-    setEmail(email);
+  const login = () => {
     setAuthStatus(AuthStatus.AUTH);
-    setUserId(userId);
-    return;
   };
 
   const logout = () => {
-    setEmail("");
-    setUserId("");
     setAuthStatus(AuthStatus.UNAUTH);
-    return;
   };
 
   return (
     <AuthContext.Provider
       value={{
-        userId: userId,
-        email: email,
         authStatus: authStatus,
         login: login,
         logout: logout,
@@ -37,6 +25,5 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({
     </AuthContext.Provider>
   );
 };
-
 
 export default AuthProvider;

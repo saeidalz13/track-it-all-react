@@ -135,7 +135,7 @@ const Signup = () => {
           return;
         }
 
-        authParams.login(apiResp.payload.email, apiResp.payload.user_id);
+        authParams.login();
         navigate(ProfileRoutes.Profile);
         return;
       }

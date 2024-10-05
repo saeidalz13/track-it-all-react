@@ -1,11 +1,19 @@
 import Jobs from "./Jobs/Jobs";
-import { useCheckAuthStatus } from "../../hooks/AuthHooks";
 import PageHeader from "../../components/Headers/PageHeader";
 import Courses from "./Courses/Courses";
 import UserContainer from "./User/UserContainer";
+import { useLocation } from "react-router-dom";
+import { useAuthContext } from "contexts/Auth/useAuthContext";
 
 const Profile = () => {
-  useCheckAuthStatus();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const auth = queryParams.get("auth");
+  const authContext = useAuthContext();
+
+  if (auth === "true") {
+    authContext.login();
+  }
 
   return (
     <>

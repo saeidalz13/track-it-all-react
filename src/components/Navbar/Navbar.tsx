@@ -6,19 +6,35 @@ import { useAuthContext } from "../../contexts/Auth/useAuthContext";
 import { AuthStatus } from "../../constants/AuthConsts";
 import { BACKEND_URL } from "../../constants/EnvConsts";
 import { DataFetcher } from "../../utils/fetcherUtils";
+import { StatusCodes } from "http-status-codes";
+import { ApiResp, NoPayload } from "models/Api/ApiResp";
 
 const BasicExample = () => {
   const authParams = useAuthContext();
   const navigate = useNavigate();
 
   const handleSignOut = () => {
-    DataFetcher.deleteData(`${BACKEND_URL}/signout`)
-      .then(() => console.log("Deleted token in backend"))
+    DataFetcher.deleteData(`${BACKEND_URL}/signout`, "include")
+      .then((resp) => {
+        if (resp.status === StatusCodes.NO_CONTENT) {
+          console.log("Deleted token in backend");
+          return;
+        }
+
+        resp
+          .json()
+          .then((data: ApiResp<NoPayload>) => {
+            console.error(data.error);
+          })
+          .catch((error) => console.log(error));
+      })
       .catch((error) => console.log(`failed to delete server token: ${error}`));
 
     authParams.logout();
     navigate(GeneralRoutes.Home);
   };
+
+  console.log("from navbar:",authParams.authStatus)
 
   return (
     <>

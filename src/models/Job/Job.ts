@@ -10,7 +10,7 @@ export interface JobApplication {
 }
 
 export interface RespJobApplications {
-  jobApplications: JobApplication[];
+  jobs: JobApplication[];
   jobCount: number;
 }
 
@@ -22,7 +22,6 @@ export interface RespPostJobApplication {
 }
 
 export interface ReqJobApplication {
-  user_ulid: string;
   position: string;
   companyName: string;
   appliedDate: Date | null;

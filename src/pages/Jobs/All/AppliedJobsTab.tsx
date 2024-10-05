@@ -110,7 +110,7 @@ const AppliedJobsTab = () => {
           const apiResp: ApiResp<RespJobApplications> = await resp.json();
 
           if (apiResp.payload) {
-            const fetchedJobs = apiResp.payload.jobApplications;
+            const fetchedJobs = apiResp.payload.jobs;
             const modifiedJobs = restructureJobs(fetchedJobs);
             setJobs(modifiedJobs);
 
@@ -142,7 +142,7 @@ const AppliedJobsTab = () => {
       if (dbncValue !== "") {
         getJobs();
         return;
-      } 
+      }
 
       const fetched = jobContext.fetchedAllJobs.get(offset);
       if (fetched === undefined || jobContext.fetchedAllJobs.size === 0) {

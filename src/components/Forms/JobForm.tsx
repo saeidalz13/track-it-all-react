@@ -15,6 +15,7 @@ import { useAuthContext } from "../../contexts/Auth/useAuthContext";
 import { useJobContext } from "../../contexts/Job/useJobContext";
 import CommonModal from "@components/Modals/CommonModal";
 import { MaxChar } from "@constants/AppConsts";
+import { isUserAuthenticated } from "@constants/AuthConsts";
 
 interface JobFormProps {
   onHide?: () => void;
@@ -38,7 +39,7 @@ const JobForm: React.FC<JobFormProps> = () => {
   const handleSubmitJob = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (authContext.userId === "") {
+    if (!isUserAuthenticated(authContext.authStatus)) {
       navigate(AuthRoutes.Login);
       return;
     }
@@ -60,7 +61,6 @@ const JobForm: React.FC<JobFormProps> = () => {
     }
 
     const reqData: ReqJobApplication = {
-      user_ulid: authContext.userId,
       position: positionRef.current.value,
       companyName: companyNameRef.current.value,
       appliedDate: appliedDate,
@@ -70,7 +70,7 @@ const JobForm: React.FC<JobFormProps> = () => {
 
     try {
       const resp = await DataFetcher.postData(
-        `${BACKEND_URL}${JobsRoutes.Jobs}?userUlid=${authContext.userId}`,
+        `${BACKEND_URL}${JobsRoutes.Jobs}`,
         reqData
       );
 
@@ -92,6 +92,7 @@ const JobForm: React.FC<JobFormProps> = () => {
             link: reqData.link,
             aiInsight: null,
             description: reqData.description,
+            resumePath: null,
           });
           setSendStatus("Success");
           setShowModal(true);
