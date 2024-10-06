@@ -51,7 +51,7 @@ const SingleJob = () => {
 
           if (data.payload) {
             setjob(data.payload);
-            jobContext.addFetchedSingleJobs(data.payload);
+            jobContext.insertToJobLookup(data.payload);
             return;
           }
         }
@@ -64,7 +64,7 @@ const SingleJob = () => {
       }
     };
 
-    const cachedJob = jobContext.fetchedSingleJobs.get(jobUlid);
+    const cachedJob = jobContext.jobLookup.get(jobUlid);
     if (!cachedJob) {
       fetchJob();
     } else {

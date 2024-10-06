@@ -1,18 +1,15 @@
 import JobCard from "@components/Misc/JobCard";
 import Loading from "@components/Misc/Loading";
 import ServerError from "@components/Misc/ServerError";
-import { BACKEND_URL } from "@constants/EnvConsts";
+import { isUserAuthenticated } from "@constants/AuthConsts";
 import { useDebouncedSearch } from "@hooks/searchHooks";
-import { DataFetcher } from "@utils/fetcherUtils";
+import {
+  getJobsByLimitOffset,
+  reformatJobsForContainer,
+} from "@utils/jobUtils";
 import { useAuthContext } from "contexts/Auth/useAuthContext";
 import { useJobContext } from "contexts/Job/useJobContext";
-import { StatusCodes } from "http-status-codes";
-import { ApiResp } from "models/Api/ApiResp";
-import {
-  JobApplication,
-  JobApplicationsState,
-  RespJobApplications,
-} from "models/Job/Job";
+import { JobApplicationsState } from "models/Job/Job";
 import { useEffect, useState } from "react";
 import {
   Col,
@@ -61,94 +58,52 @@ const AppliedJobsTab = () => {
   }, [jobCount]);
 
   useEffect(() => {
-    const restructureJobs = (
-      fetchedJobs: JobApplication[]
-    ): JobApplication[][] => {
-      if (fetchedJobs.length === 0) {
-        return [];
-      }
-
-      const maxCardEachRow = 3;
-      const modified: JobApplication[][] = [];
-      let counter = 0;
-      let eachRow = [];
-
-      for (let i = 0; i < fetchedJobs.length; i++) {
-        eachRow.push(fetchedJobs[i]);
-        counter++;
-
-        if (counter === maxCardEachRow) {
-          modified.push(eachRow);
-          eachRow = [];
-          counter = 0;
-        } else if (i === fetchedJobs.length - 1) {
-          modified.push(eachRow);
-        }
-      }
-
-      return modified;
-    };
-
-    const getJobs = async () => {
-      try {
-        const resp = await DataFetcher.getData(
-          `${BACKEND_URL}/jobs?userUlid=${authContext.userId}&limit=${limit}&offset=${offset}&search=${dbncValue}`
-        );
-
-        if (resp.status === StatusCodes.UNAUTHORIZED) {
-          authContext.logout();
-          navigate(AuthRoutes.Login);
-          return;
-        }
-
-        if (resp.status === StatusCodes.NO_CONTENT) {
-          setJobs([]);
-          return;
-        }
-
-        if (resp.status === StatusCodes.OK) {
-          const apiResp: ApiResp<RespJobApplications> = await resp.json();
-
-          if (apiResp.payload) {
-            const fetchedJobs = apiResp.payload.jobs;
-            const modifiedJobs = restructureJobs(fetchedJobs);
-            setJobs(modifiedJobs);
-
-            if (dbncValue === "") {
-              setJobCount(apiResp.payload.jobCount);
-              jobContext.addFetchedAllJobs(
-                offset,
-                fetchedJobs,
-                apiResp.payload.jobCount
-              );
-            }
-            return;
-          }
-        }
-
-        console.error(resp.status);
-        setJobs("error");
-      } catch (error) {
-        console.error(error);
-        setJobs("error");
-      }
-    };
-
     try {
-      if (authContext.userId === "") {
+      if (!isUserAuthenticated(authContext.authStatus)) {
+        navigate(AuthRoutes.Login);
         return;
       }
 
       if (dbncValue !== "") {
-        getJobs();
+        const result = getJobsByLimitOffset(limit, offset, dbncValue);
+        result.then((res) => {
+          switch (res) {
+            case "authError":
+              navigate(AuthRoutes.Login);
+              return;
+            case "otherError":
+              setJobs("error");
+              return;
+
+            default:
+              setJobs(reformatJobsForContainer(res.jobs));
+              return;
+          }
+        });
+
         return;
       }
 
-      const fetched = jobContext.fetchedAllJobs.get(offset);
-      if (fetched === undefined || jobContext.fetchedAllJobs.size === 0) {
-        getJobs();
+      const fetched = jobContext.jobsGroupedByOffset.get(offset);
+      if (fetched === undefined || jobContext.jobsGroupedByOffset.size === 0) {
+        const result = getJobsByLimitOffset(limit, offset, dbncValue);
+        result.then((res) => {
+          switch (res) {
+            case "authError":
+              navigate(AuthRoutes.Login);
+              return;
+            case "otherError":
+              setJobs("error");
+              return;
+
+            default:
+              setJobs(reformatJobsForContainer(res.jobs));
+              setJobCount(res.jobCount);
+              return;
+          }
+        });
       } else {
-        setJobs(restructureJobs(fetched));
+        setJobs(reformatJobsForContainer(fetched));
         setJobCount(jobContext.jobCount);
       }
     } catch (error) {

@@ -3,9 +3,6 @@ import { JobContext } from "./jobContext";
 import { JobApplication, JobInterviewQuestion } from "../../models/Job/Job";
 
 const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [recentJobApplications, setRecentJobApplications] = useState<
-    JobApplication[] | "loading"
-  >("loading");
   const [jobCount, setJobCount] = useState<number>(0);
   const [fetchedSingleJobs, setFetchedSingleJobs] = useState<
     Map<string, JobApplication>
@@ -19,20 +16,7 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     Map<number, JobInterviewQuestion>
   >(new Map<number, JobInterviewQuestion>());
 
-  const setRecentJobs = (ja: JobApplication[]) => {
-    setRecentJobApplications(ja);
-    return;
-  };
-
-  const createNewJob = (ja: JobApplication) => {
-    if (recentJobApplications !== "loading") {
-      if (recentJobApplications.length < 3) {
-        setRecentJobApplications([ja, ...recentJobApplications]);
-      } else {
-        recentJobApplications.pop();
-        setRecentJobApplications([ja, ...recentJobApplications]);
-      }
-    }
+  const createNewJob = () => {
     setFetchedAllJobs(new Map<number, JobApplication[]>());
   };
 
@@ -57,7 +41,6 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       prev.delete(jobUlid);
       return prev;
     });
-    setRecentJobApplications("loading");
   };
 
   // Job Interview Questions
@@ -86,18 +69,17 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <JobContext.Provider
       value={{
-        recentJobApplications: recentJobApplications,
-        setRecentJobs: setRecentJobs,
         jobCount: jobCount,
         createNewJob: createNewJob,
-        fetchedSingleJobs: fetchedSingleJobs,
-        addFetchedSingleJobs: addFetchedSingleJobs,
-        fetchedAllJobs: fetchedAllJobs,
-        addFetchedAllJobs: addFetchedAllJobs,
+        jobLookup: fetchedSingleJobs,
+        insertToJobLookup: addFetchedSingleJobs,
+        jobsGroupedByOffset: fetchedAllJobs,
+        addToJobsGroupedByOffset: addFetchedAllJobs,
         refetchJobData: refetchJobData,
         jobInterviewQuestions: jobInterviewQuestions,
         setJIQs: setJIQs,
         updateResponseJIQ: updateResponseJIQ,
+        setJobCount: setJobCount,
       }}
     >
       {children}

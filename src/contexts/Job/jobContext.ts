@@ -2,20 +2,21 @@ import { createContext } from "react";
 import { JobApplication, JobInterviewQuestion } from "../../models/Job/Job";
 
 export interface IJobContext {
-  recentJobApplications: JobApplication[] | "loading";
-  setRecentJobs: (jobs: JobApplication[]) => void;
-  createNewJob: (job: JobApplication) => void;
-  jobCount: number;
-
-  fetchedSingleJobs: Map<string, JobApplication>;
-  addFetchedSingleJobs: (job: JobApplication) => void;
-
-  fetchedAllJobs: Map<number, JobApplication[]>;
-  addFetchedAllJobs: (
+  jobsGroupedByOffset: Map<number, JobApplication[]>;
+  addToJobsGroupedByOffset: (
     offset: number,
     jobs: JobApplication[],
     jobCount: number
   ) => void;
+
+  jobCount: number;
+  setJobCount: React.Dispatch<React.SetStateAction<number>>;
+  
+  createNewJob: (job: JobApplication) => void;
+
+  jobLookup: Map<string, JobApplication>;
+  insertToJobLookup: (job: JobApplication) => void;
+
   refetchJobData: (jobUlid: string) => void;
 
   jobInterviewQuestions: Map<number, JobInterviewQuestion>;
@@ -24,16 +25,16 @@ export interface IJobContext {
 }
 
 export const JobContext = createContext<IJobContext>({
-  recentJobApplications: "loading",
-  setRecentJobs: () => {},
-  createNewJob: () => {},
+  jobsGroupedByOffset: new Map<number, JobApplication[]>(),
+  addToJobsGroupedByOffset: () => {},
+
   jobCount: 0,
+  setJobCount: () => {},
 
-  fetchedSingleJobs: new Map<string, JobApplication>(),
-  addFetchedSingleJobs: () => {},
+  jobLookup: new Map<string, JobApplication>(),
+  insertToJobLookup: () => {},
 
-  fetchedAllJobs: new Map<number, JobApplication[]>(),
-  addFetchedAllJobs: () => {},
+  createNewJob: () => {},
   refetchJobData: () => {},
 
   jobInterviewQuestions: new Map<number, JobInterviewQuestion>(),

@@ -1,4 +1,4 @@
-import JobsApplications from "./JobsApplications";
+import RecentJobs from "./RecentJobs";
 import ProfileSectionHeader from "../../../components/Headers/ProfileSectionHeader";
 import { useState } from "react";
 import OffCanvasExample from "../../../components/OffCanvas/ProfileOffCanvas";
@@ -25,7 +25,7 @@ const Jobs = () => {
   return (
     <div style={JobSectionStyle}>
       <ProfileSectionHeader text="Recent Jobs" />
-      <JobsApplications />
+      <RecentJobs />
 
       <CommonButton
         variant="info"

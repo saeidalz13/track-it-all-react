@@ -44,18 +44,18 @@ const Login = () => {
 
       if (resp.status === StatusCodes.OK) {
         const data: ApiResp<{ auth_server_uri: string }> = await resp.json();
-
-        if (data.payload) {
-          location.assign(data.payload.auth_server_uri);
-          return;
-        }
-      } else {
-        const data: ApiResp<NoPayload> = await resp.json();
-        alert(data.error);
-        setGoogleBtnDisabled(false);
+        location.assign(data.payload!.auth_server_uri);
+        return;
       }
+
+      const data: ApiResp<NoPayload> = await resp.json();
+      setLoginError(data.error!);
+      setTimeout(() => setLoginError(""), 5000);
+      setGoogleBtnDisabled(false);
     } catch (error) {
       console.error(error);
+      setLoginError("Connection error to server");
+      setTimeout(() => setLoginError(""), 5000);
       setGoogleBtnDisabled(false);
     }
   };
