@@ -112,7 +112,7 @@ const Login = () => {
           setTimeout(() => setLoginError(""), 5000);
           return;
         }
-        authParams.login();
+        authParams.setUserAuth();
         navigate(ProfileRoutes.Profile);
         return;
       }

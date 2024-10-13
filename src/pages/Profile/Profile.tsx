@@ -12,7 +12,7 @@ const Profile = () => {
   const authContext = useAuthContext();
 
   if (auth === "true") {
-    authContext.login();
+    authContext.setUserAuth();
   }
 
   return (

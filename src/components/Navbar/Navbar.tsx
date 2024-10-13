@@ -8,9 +8,11 @@ import { BACKEND_URL } from "../../constants/EnvConsts";
 import { DataFetcher } from "../../utils/fetcherUtils";
 import { StatusCodes } from "http-status-codes";
 import { ApiResp, NoPayload } from "models/Api/ApiResp";
+// import { useEffect } from "react";
+// import { isAuthenticated } from "@utils/authUtils";
 
 const BasicExample = () => {
-  const authParams = useAuthContext();
+  const authContext = useAuthContext();
   const navigate = useNavigate();
 
   const handleSignOut = () => {
@@ -30,11 +32,23 @@ const BasicExample = () => {
       })
       .catch((error) => console.log(`failed to delete server token: ${error}`));
 
-    authParams.logout();
+    authContext.setUserUnauth();
     navigate(GeneralRoutes.Home);
   };
 
-  console.log("from navbar:",authParams.authStatus)
+  // useEffect(() => {
+  //   isAuthenticated(authContext.authStatus).then((res) => {
+  //     switch (res) {
+  //       case false:
+  //         navigate(AuthRoutes.Login);
+  //         return;
+
+  //       case true:
+  //         authContext.login();
+  //         return;
+  //     }
+  //   });
+  // }, [authContext, navigate]);
 
   return (
     <>
@@ -47,7 +61,7 @@ const BasicExample = () => {
           <Navbar.Brand style={{ color: "#00de00" }}>Track It All</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            {authParams.authStatus === AuthStatus.AUTH ? (
+            {authContext.authStatus === AuthStatus.AUTH ? (
               <Nav className="me-auto">
                 <Nav.Link className="text-light" onClick={handleSignOut}>
                   Sign Out

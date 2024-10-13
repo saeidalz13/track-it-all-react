@@ -18,7 +18,7 @@ import { Accordion } from "react-bootstrap";
 const s: React.CSSProperties = {
   textAlign: "left",
   maxWidth: "1000px",
-  margin: "0 auto"
+  margin: "0 auto",
 };
 
 interface InterviewQuestionsProps {
@@ -28,8 +28,8 @@ interface InterviewQuestionsProps {
 const InterviewQuestions = ({ jobUlid }: InterviewQuestionsProps) => {
   const {
     jobInterviewQuestions: jiqs,
-    updateResponseJIQ,
-    setJIQs,
+    updateJobInterviewResponse: updateResponseJIQ,
+    addJobInterviewQuestions,
   } = useJobContext();
   const [jobInterviewQuestions, setJobInterviewQuestions] =
     useState<JobInterviewQuestionsState>("loading");
@@ -76,18 +76,18 @@ const InterviewQuestions = ({ jobUlid }: InterviewQuestionsProps) => {
     const fetchQuestions = async () => {
       try {
         const resp = await DataFetcher.getData(
-          `${BACKEND_URL}/jobs/${jobUlid}/interview-questions`
+          `${BACKEND_URL}/interview-questions?job_id=${jobUlid}`
         );
 
         if (resp.status === StatusCodes.OK) {
           const apiResp: ApiResp<RespJobInterviewQuestions> = await resp.json();
           if (apiResp.payload) {
-            setJobInterviewQuestions(
-              convertArrayToMapById<JobInterviewQuestion>(
-                apiResp.payload.job_interview_questions
-              )
+            const jiqm = convertArrayToMapById<JobInterviewQuestion>(
+              apiResp.payload.job_interview_questions
             );
-            setJIQs(apiResp.payload.job_interview_questions);
+
+            setJobInterviewQuestions(jiqm);
+            addJobInterviewQuestions(jiqm);
             return;
           }
         }
@@ -96,12 +96,14 @@ const InterviewQuestions = ({ jobUlid }: InterviewQuestionsProps) => {
       }
     };
 
+    console.log(jiqs)
+
     if (jiqs.size === 0) {
       fetchQuestions();
     } else {
       setJobInterviewQuestions(jiqs);
     }
-  }, [jobUlid, jiqs, setJIQs]);
+  }, [jobUlid, jiqs, addJobInterviewQuestions]);
 
   if (jobInterviewQuestions === "loading") {
     return <Loading />;

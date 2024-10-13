@@ -1,7 +1,6 @@
 import JobCard from "@components/Misc/JobCard";
 import Loading from "@components/Misc/Loading";
 import ServerError from "@components/Misc/ServerError";
-import { isUserAuthenticated } from "@constants/AuthConsts";
 import { useDebouncedSearch } from "@hooks/searchHooks";
 import {
   getJobsByLimitOffset,
@@ -23,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthRoutes } from "routes/Routes";
 
 const AppliedJobsTab = () => {
-  const authContext = useAuthContext();
+  const { setUserAuth } = useAuthContext();
   const jobContext = useJobContext();
   const navigate = useNavigate();
   const [jobs, setJobs] = useState<JobApplicationsState>("loading");
@@ -59,11 +58,6 @@ const AppliedJobsTab = () => {
 
   useEffect(() => {
     try {
-      if (!isUserAuthenticated(authContext.authStatus)) {
-        navigate(AuthRoutes.Login);
-        return;
-      }
-
       if (dbncValue !== "") {
         const result = getJobsByLimitOffset(limit, offset, dbncValue);
         result.then((res) => {
@@ -92,11 +86,14 @@ const AppliedJobsTab = () => {
             case "authError":
               navigate(AuthRoutes.Login);
               return;
+
             case "otherError":
+              setUserAuth();
               setJobs("error");
               return;
 
             default:
+              setUserAuth();
               setJobs(reformatJobsForContainer(res.jobs));
               setJobCount(res.jobCount);
               return;
@@ -110,7 +107,7 @@ const AppliedJobsTab = () => {
       console.log(error);
       setJobs("error");
     }
-  }, [offset, authContext, dbncValue, jobContext, navigate]);
+  }, [offset, setUserAuth, dbncValue, jobContext, navigate]);
 
   if (jobs === "error") {
     return <ServerError />;
@@ -161,11 +158,11 @@ const AppliedJobsTab = () => {
               {eachRowJobs.map((job, i2) => (
                 <Col key={i2} lg={4}>
                   <JobCard
-                    ulid={job.jobUlid}
-                    companyName={job.companyName}
+                    ulid={job.id}
+                    companyName={job.company_name}
                     position={job.position}
-                    dateApplied={job.appliedDate}
-                    imageSrcKey={job.companyName.trim().toLowerCase()}
+                    dateApplied={job.applied_date}
+                    imageSrcKey={job.company_name.trim().toLowerCase()}
                   />
                 </Col>
               ))}

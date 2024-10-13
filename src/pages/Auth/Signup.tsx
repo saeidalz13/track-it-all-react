@@ -135,7 +135,7 @@ const Signup = () => {
           return;
         }
 
-        authParams.login();
+        authParams.setUserAuth();
         navigate(ProfileRoutes.Profile);
         return;
       }

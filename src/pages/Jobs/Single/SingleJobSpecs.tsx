@@ -30,16 +30,17 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
   const handleDeleteJob = async () => {
     try {
       const resp = await DataFetcher.deleteData(
-        `${BACKEND_URL}/jobs/${props.job.jobUlid}`
+        `${BACKEND_URL}/jobs/${props.job.id}`
       );
 
       if (resp.status === StatusCodes.UNAUTHORIZED) {
+        authContext.setUserUnauth();
         navigate(AuthRoutes.Login);
         return;
       }
 
       if (resp.status == StatusCodes.NO_CONTENT) {
-        jobContext.refetchJobData(props.job.jobUlid);
+        jobContext.refetchJobData(props.job.id);
         navigate(JobsRoutes.Jobs);
         return;
       }
@@ -53,10 +54,11 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
   const handleGetResume = async () => {
     try {
       const resp = await DataFetcher.getData(
-        `${BACKEND_URL}/fs/resume?userUlid=${authContext.userId}&jobUlid=${props.job.jobUlid}`
+        `${BACKEND_URL}/fs/resume?job_ulid=${props.job.id}`
       );
 
       if (resp.status === StatusCodes.UNAUTHORIZED) {
+        authContext.setUserUnauth();
         navigate(AuthRoutes.Login);
         return;
       }
@@ -76,7 +78,7 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
       } else {
         console.log(error);
         setFetchModalContent(FetchError.fetchModalContentUnknownError());
-        setShowFetchErrorModal(true)
+        setShowFetchErrorModal(true);
       }
     }
   };
@@ -84,16 +86,17 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
   const handleDeleteResume = async () => {
     try {
       const resp = await DataFetcher.deleteData(
-        `${BACKEND_URL}/fs/resume?userUlid=${authContext.userId}&jobUlid=${props.job.jobUlid}`
+        `${BACKEND_URL}/fs/resume?job_ulid=${props.job.id}`
       );
 
       if (resp.status === StatusCodes.UNAUTHORIZED) {
+        authContext.setUserUnauth();
         navigate(AuthRoutes.Login);
         return;
       }
 
       if (resp.status === StatusCodes.NO_CONTENT) {
-        jobContext.refetchJobData(props.job.jobUlid);
+        jobContext.refetchJobData(props.job.id);
         return;
       }
 
@@ -118,7 +121,7 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
 
     try {
       const resp = await fetch(
-        `${BACKEND_URL}/fs/resume?userUlid=${authContext.userId}&jobUlid=${props.job.jobUlid}`,
+        `${BACKEND_URL}/fs/resume?job_ulid=${props.job.id}`,
         {
           method: "POST",
           body: formData,
@@ -128,12 +131,13 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
       );
 
       if (resp.status === StatusCodes.UNAUTHORIZED) {
+        authContext.setUserUnauth();
         navigate(AuthRoutes.Login);
         return;
       }
 
       if (resp.status === StatusCodes.OK) {
-        jobContext.refetchJobData(props.job.jobUlid);
+        jobContext.refetchJobData(props.job.id);
         return;
       }
 
@@ -167,7 +171,7 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
           <Col className="mb-1" md>
             <div className="fancy-circle-div">
               <span className="fancy-circle-title">📅 Date Applied</span> <br />
-              {new Date(props.job.appliedDate).toISOString().split("T")[0]}
+              {new Date(props.job.applied_date).toISOString().split("T")[0]}
             </div>
           </Col>
 
@@ -190,7 +194,7 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
             <div className="resume-upload-div">
               <h3>Resume</h3>
               <div>
-                {props.job.resumePath === null ? (
+                {props.job.resume_path === null ? (
                   <Form.Control
                     type="file"
                     accept=".pdf"

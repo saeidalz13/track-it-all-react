@@ -5,11 +5,11 @@ import { AuthStatus } from "../../constants/AuthConsts";
 const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [authStatus, setAuthStatus] = useState<AuthStatus>(AuthStatus.LOADING);
 
-  const login = () => {
+  const setUserAuth = () => {
     setAuthStatus(AuthStatus.AUTH);
   };
 
-  const logout = () => {
+  const setUserUnauth = () => {
     setAuthStatus(AuthStatus.UNAUTH);
   };
 
@@ -17,8 +17,8 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     <AuthContext.Provider
       value={{
         authStatus: authStatus,
-        login: login,
-        logout: logout,
+        setUserAuth: setUserAuth,
+        setUserUnauth: setUserUnauth,
       }}
     >
       {children}

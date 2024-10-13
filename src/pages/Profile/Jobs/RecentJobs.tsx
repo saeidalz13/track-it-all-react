@@ -21,6 +21,8 @@ const RecentJobs = () => {
   const [jobs, setJobs] = useState<JobApplicationsState>("loading");
   const [defaultLimit, defaultOffset] = [6, 0];
 
+  console.log(jobs);
+
   useEffect(() => {
     try {
       if (jobContext.jobsGroupedByOffset.size === 0) {
@@ -30,11 +32,14 @@ const RecentJobs = () => {
             case "authError":
               navigate(AuthRoutes.Login);
               return;
+
             case "otherError":
+              authContext.setUserAuth();
               setJobs("error");
               return;
 
             default:
+              authContext.setUserAuth();
               jobContext.addToJobsGroupedByOffset(
                 defaultOffset,
                 res.jobs,
@@ -57,7 +62,7 @@ const RecentJobs = () => {
       console.log(error);
       setJobs("error");
     }
-  }, [navigate, jobContext, setJobs, authContext, defaultLimit, defaultOffset]);
+  }, [navigate, jobContext, authContext, setJobs, defaultLimit, defaultOffset]);
 
   if (jobs === "error") {
     return <ServerError />;
@@ -97,11 +102,11 @@ const RecentJobs = () => {
               {eachRowJobs.map((job, i2) => (
                 <Col key={i2} lg={4}>
                   <JobCard
-                    ulid={job.jobUlid}
-                    companyName={job.companyName}
+                    ulid={job.id}
+                    companyName={job.company_name}
                     position={job.position}
-                    dateApplied={job.appliedDate}
-                    imageSrcKey={job.companyName.trim().toLowerCase()}
+                    dateApplied={job.applied_date}
+                    imageSrcKey={job.company_name.trim().toLowerCase()}
                   />
                 </Col>
               ))}

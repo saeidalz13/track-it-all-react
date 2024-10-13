@@ -17,11 +17,8 @@ import PageHeader from "@components/Headers/PageHeader";
 import { StringProcessor } from "@utils/stringUtils";
 import InterviewSection from "./InterviewSection";
 import AiInsightSection from "./AiInsightSection";
-import { useCheckAuthStatus } from "@hooks/AuthHooks";
 
 const SingleJob = () => {
-  useCheckAuthStatus();
-
   const { jobUlid } = useParams();
   const navigate = useNavigate();
   const jobContext = useJobContext();
@@ -41,7 +38,7 @@ const SingleJob = () => {
         );
 
         if (resp.status === StatusCodes.UNAUTHORIZED) {
-          authParams.logout();
+          authParams.setUserUnauth();
           navigate(AuthRoutes.Login);
           return;
         }
@@ -84,7 +81,7 @@ const SingleJob = () => {
   return (
     <>
       <JobsBreadcrumb jobUlid={jobUlid} />
-      <PageHeader text={StringProcessor.convertTitleCase(job.companyName)} />
+      <PageHeader text={StringProcessor.convertTitleCase(job.company_name)} />
 
       <SingleJobSpecs job={job} />
 
@@ -93,7 +90,7 @@ const SingleJob = () => {
       </Container>
 
       <AiInsightSection
-        aiInsight={job.aiInsight ? [job.aiInsight] : []}
+        aiInsight={job.ai_insight ? [job.ai_insight] : []}
         jobUlid={jobUlid}
       />
 

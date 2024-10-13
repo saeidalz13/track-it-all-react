@@ -1,12 +1,12 @@
 export interface JobApplication {
-  jobUlid: string;
+  id: string;
   position: string;
-  companyName: string;
-  appliedDate: Date;
+  company_name: string;
+  applied_date: Date;
   description: string | null;
   link: string | null;
-  aiInsight: string | null;
-  resumePath: string | null;
+  ai_insight: string | null;
+  resume_path: string | null;
 }
 
 export interface RespJobApplications {
@@ -17,14 +17,14 @@ export interface RespJobApplications {
 export type JobApplicationsState = JobApplication[][] | "loading" | "error";
 
 export interface RespPostJobApplication {
-  jobUlid: string;
-  appliedDate: Date;
+  id: string;
+  applied_date: Date;
 }
 
 export interface ReqJobApplication {
   position: string;
-  companyName: string;
-  appliedDate: Date | null;
+  company_name: string;
+  applied_date: Date | null;
   description: string | null;
   link: string | null;
 }

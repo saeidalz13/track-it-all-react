@@ -4,11 +4,11 @@ import { JobApplication, JobInterviewQuestion } from "../../models/Job/Job";
 
 const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [jobCount, setJobCount] = useState<number>(0);
-  const [fetchedSingleJobs, setFetchedSingleJobs] = useState<
-    Map<string, JobApplication>
-  >(new Map<string, JobApplication>());
+  const [jobLookup, setJobLookup] = useState<Map<string, JobApplication>>(
+    new Map<string, JobApplication>()
+  );
 
-  const [fetchedAllJobs, setFetchedAllJobs] = useState<
+  const [jobsGroupedByOffset, setJobsGroupedByOffset] = useState<
     Map<number, JobApplication[]>
   >(new Map<number, JobApplication[]>());
 
@@ -17,43 +17,46 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   >(new Map<number, JobInterviewQuestion>());
 
   const createNewJob = () => {
-    setFetchedAllJobs(new Map<number, JobApplication[]>());
+    setJobsGroupedByOffset(new Map<number, JobApplication[]>());
   };
 
-  const addFetchedSingleJobs = (ja: JobApplication) => {
-    setFetchedSingleJobs((fetchedSingleJobs) =>
-      fetchedSingleJobs.set(ja.jobUlid, ja)
-    );
+  const insertToJobLookup = (ja: JobApplication) => {
+    setJobLookup((jobLookup) => jobLookup.set(ja.id, ja));
   };
 
-  const addFetchedAllJobs = (
+  const addToJobsGroupedByOffset = (
     offset: number,
     jobs: JobApplication[],
     jobCount: number
   ) => {
-    setFetchedAllJobs((fetchedAllJobs) => fetchedAllJobs.set(offset, jobs));
+    setJobsGroupedByOffset((fetchedAllJobs) =>
+      fetchedAllJobs.set(offset, jobs)
+    );
     setJobCount(jobCount);
   };
 
   const refetchJobData = (jobUlid: string) => {
-    setFetchedAllJobs(new Map<number, JobApplication[]>());
-    setFetchedSingleJobs((prev) => {
+    setJobsGroupedByOffset(new Map<number, JobApplication[]>());
+    setJobLookup((prev) => {
       prev.delete(jobUlid);
       return prev;
     });
   };
 
-  // Job Interview Questions
-  const setJIQs = (jiqs: JobInterviewQuestion[]) => {
-    const values = new Map<number, JobInterviewQuestion>();
-    for (let i = 0; i < jiqs.length; i++) {
-      values.set(jiqs[i].id, jiqs[i]);
-    }
+  const addJobInterviewQuestions = (
+    jiqs: Map<number, JobInterviewQuestion>
+  ) => {
+    setJobInterviewQuestions((current) => {
+      const updatedMap = new Map(current);
+      jiqs.forEach((value, key) => {
+        updatedMap.set(key, value);
+      });
 
-    setJobInterviewQuestions(values);
+      return updatedMap;
+    });
   };
 
-  const updateResponseJIQ = (id: number, response: string) => {
+  const updateJobInterviewResponse = (id: number, response: string) => {
     setJobInterviewQuestions((prev) => {
       const curr = prev.get(id);
       if (!curr) {
@@ -69,17 +72,21 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <JobContext.Provider
       value={{
+        jobsGroupedByOffset: jobsGroupedByOffset,
+        addToJobsGroupedByOffset: addToJobsGroupedByOffset,
+
         jobCount: jobCount,
-        createNewJob: createNewJob,
-        jobLookup: fetchedSingleJobs,
-        insertToJobLookup: addFetchedSingleJobs,
-        jobsGroupedByOffset: fetchedAllJobs,
-        addToJobsGroupedByOffset: addFetchedAllJobs,
-        refetchJobData: refetchJobData,
-        jobInterviewQuestions: jobInterviewQuestions,
-        setJIQs: setJIQs,
-        updateResponseJIQ: updateResponseJIQ,
         setJobCount: setJobCount,
+
+        jobLookup: jobLookup,
+        insertToJobLookup: insertToJobLookup,
+
+        createNewJob: createNewJob,
+        refetchJobData: refetchJobData,
+
+        jobInterviewQuestions: jobInterviewQuestions,
+        updateJobInterviewResponse: updateJobInterviewResponse,
+        addJobInterviewQuestions: addJobInterviewQuestions,
       }}
     >
       {children}

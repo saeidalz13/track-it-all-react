@@ -3,12 +3,12 @@ import { AuthStatus } from "../../constants/AuthConsts";
 
 export interface IAuthContext {
   authStatus: AuthStatus;
-  login: () => void;
-  logout: () => void;
+  setUserAuth: () => void;
+  setUserUnauth: () => void;
 }
 
 export const AuthContext = createContext<IAuthContext>({
   authStatus: AuthStatus.LOADING,
-  login: () => {},
-  logout: () => {},
+  setUserAuth: () => {},
+  setUserUnauth: () => {},
 });

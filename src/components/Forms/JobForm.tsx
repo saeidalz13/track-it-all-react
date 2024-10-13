@@ -15,7 +15,6 @@ import { useAuthContext } from "../../contexts/Auth/useAuthContext";
 import { useJobContext } from "../../contexts/Job/useJobContext";
 import CommonModal from "@components/Modals/CommonModal";
 import { MaxChar } from "@constants/AppConsts";
-import { isUserAuthenticated } from "@constants/AuthConsts";
 
 interface JobFormProps {
   onHide?: () => void;
@@ -24,7 +23,7 @@ interface JobFormProps {
 const JobForm: React.FC<JobFormProps> = () => {
   const authContext = useAuthContext();
   const navigate = useNavigate();
-  const { createNewJob } = useJobContext();
+  const { createNewJob, insertToJobLookup } = useJobContext();
 
   const [descChars, setDescChars] = useState<number>(0);
   const [showModal, setShowModal] = useState(false);
@@ -38,11 +37,6 @@ const JobForm: React.FC<JobFormProps> = () => {
 
   const handleSubmitJob = async (e: FormEvent) => {
     e.preventDefault();
-
-    if (!isUserAuthenticated(authContext.authStatus)) {
-      navigate(AuthRoutes.Login);
-      return;
-    }
 
     if (
       !descRef.current ||
@@ -62,8 +56,8 @@ const JobForm: React.FC<JobFormProps> = () => {
 
     const reqData: ReqJobApplication = {
       position: positionRef.current.value,
-      companyName: companyNameRef.current.value,
-      appliedDate: appliedDate,
+      company_name: companyNameRef.current.value,
+      applied_date: appliedDate,
       link: linkRef.current.value,
       description: descRef.current.value,
     };
@@ -75,7 +69,7 @@ const JobForm: React.FC<JobFormProps> = () => {
       );
 
       if (resp.status === StatusCodes.UNAUTHORIZED) {
-        authContext.logout();
+        authContext.setUserUnauth();
         navigate(AuthRoutes.Login);
         return;
       }
@@ -84,15 +78,16 @@ const JobForm: React.FC<JobFormProps> = () => {
         const respData: ApiResp<RespPostJobApplication> = await resp.json();
 
         if (respData.payload) {
-          createNewJob({
-            jobUlid: respData.payload.jobUlid,
+          createNewJob();
+          insertToJobLookup({
+            id: respData.payload.id,
             position: reqData.position,
-            companyName: reqData.companyName,
-            appliedDate: respData.payload.appliedDate,
+            company_name: reqData.company_name,
+            applied_date: respData.payload.applied_date,
             link: reqData.link,
-            aiInsight: null,
+            ai_insight: null,
             description: reqData.description,
-            resumePath: null,
+            resume_path: null,
           });
           setSendStatus("Success");
           setShowModal(true);
@@ -104,7 +99,7 @@ const JobForm: React.FC<JobFormProps> = () => {
           positionRef.current.value = "";
 
           await new Promise((r) => setTimeout(r, 1000));
-          navigate(`/jobs/${respData.payload.jobUlid}`);
+          navigate(`/jobs/${respData.payload.id}`);
           return;
         }
       }

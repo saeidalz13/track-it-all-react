@@ -11,8 +11,8 @@ export interface IJobContext {
 
   jobCount: number;
   setJobCount: React.Dispatch<React.SetStateAction<number>>;
-  
-  createNewJob: (job: JobApplication) => void;
+
+  createNewJob: () => void;
 
   jobLookup: Map<string, JobApplication>;
   insertToJobLookup: (job: JobApplication) => void;
@@ -20,8 +20,8 @@ export interface IJobContext {
   refetchJobData: (jobUlid: string) => void;
 
   jobInterviewQuestions: Map<number, JobInterviewQuestion>;
-  setJIQs: (jiqs: JobInterviewQuestion[]) => void;
-  updateResponseJIQ: (id: number, response: string) => void;
+  updateJobInterviewResponse: (id: number, response: string) => void;
+  addJobInterviewQuestions: (jiqs: Map<number, JobInterviewQuestion>) => void;
 }
 
 export const JobContext = createContext<IJobContext>({
@@ -38,6 +38,6 @@ export const JobContext = createContext<IJobContext>({
   refetchJobData: () => {},
 
   jobInterviewQuestions: new Map<number, JobInterviewQuestion>(),
-  setJIQs: () => {},
-  updateResponseJIQ: () => {},
+  updateJobInterviewResponse: () => {},
+  addJobInterviewQuestions: () => {},
 });
