@@ -96,8 +96,6 @@ const InterviewQuestions = ({ jobUlid }: InterviewQuestionsProps) => {
       }
     };
 
-    console.log(jiqs)
-
     if (jiqs.size === 0) {
       fetchQuestions();
     } else {

@@ -22,7 +22,7 @@ const SingleJobDesc: React.FC<SingleJobDescProps> = (props) => {
   const [descChars, setDescChars] = useState<number>(
     props.jobDescription ? props.jobDescription.length : 0
   );
-  const [hideDesc, setHideDesc] = useState(true);
+  const [hideDesc, setHideDesc] = useState(false);
 
   const handleChangeDesc = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDescription(e.target.value);

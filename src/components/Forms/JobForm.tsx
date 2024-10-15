@@ -59,7 +59,8 @@ const JobForm: React.FC<JobFormProps> = () => {
       company_name: companyNameRef.current.value,
       applied_date: appliedDate,
       link: linkRef.current.value,
-      description: descRef.current.value,
+      description:
+        descRef.current.value.trim() !== "" ? descRef.current.value : null,
     };
 
     try {

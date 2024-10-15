@@ -1,7 +1,6 @@
 import CommonButton from "@components/Buttons/CommonButton";
 import { BACKEND_URL } from "@constants/EnvConsts";
 import { DataFetcher } from "@utils/fetcherUtils";
-import { useAuthContext } from "contexts/Auth/useAuthContext";
 import { useJobContext } from "contexts/Job/useJobContext";
 import { StatusCodes } from "http-status-codes";
 import { useState } from "react";
@@ -15,14 +14,17 @@ interface AiInsightSectionProps {
   jobUlid: string;
 }
 
+interface EventContent extends Event {
+  data: string; // Specify the type of the data property
+}
+
 const AiInsightSection = ({ aiInsight, jobUlid }: AiInsightSectionProps) => {
   const [saveBtnDisabled, setSaveBtnDisabled] = useState(false);
   const [aiMessages, setAiMessages] = useState<string[]>(aiInsight);
   const [aiBtnDisabled, setAiBtnDisabled] = useState(
     aiMessages.length === 0 ? false : true
   );
-  const [hideInsight, setHideInsight] = useState(true);
-  const authContext = useAuthContext();
+  const [hideInsight, setHideInsight] = useState(false);
   const jobContext = useJobContext();
   const navigate = useNavigate();
 
@@ -34,7 +36,7 @@ const AiInsightSection = ({ aiInsight, jobUlid }: AiInsightSectionProps) => {
       const resp = await DataFetcher.patchData(
         `${BACKEND_URL}/jobs/${jobUlid}`,
         {
-          aiInsight: message,
+          ai_insight: message,
         }
       );
 
@@ -60,18 +62,20 @@ const AiInsightSection = ({ aiInsight, jobUlid }: AiInsightSectionProps) => {
 
   const handleGenerateAiInsight = async () => {
     setAiBtnDisabled(true);
-    if (authContext.userId === "") {
-      return;
-    }
 
     try {
       const eventSource = new EventSource(
-        `${BACKEND_URL}/ai/job-insight/${jobUlid}?userUlid=${authContext.userId}`
+        `${BACKEND_URL}/ai/job-insight?job_id=${jobUlid}`,
+        { withCredentials: true }
       );
 
-      eventSource.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (data.endStream) {
+      eventSource.onmessage = (event: EventContent) => {
+        // console.log(event);
+        // const data = JSON.parse(event.data);
+
+        // ! With Ruby I get the data as strings
+        const data = event.data;
+        if (data === "[DONE]") {
           setAiBtnDisabled(false);
           eventSource.close();
           return;
@@ -81,9 +85,27 @@ const AiInsightSection = ({ aiInsight, jobUlid }: AiInsightSectionProps) => {
       };
 
       eventSource.onerror = (event) => {
-        console.error(event);
-        eventSource.close();
-        setAiBtnDisabled(false);
+        const errorEvent = event as EventContent;
+        const err = JSON.parse(errorEvent.data).error;
+        switch (err) {
+          case "Unauthorized":
+            setAiBtnDisabled(false);
+            eventSource.close();
+            navigate(AuthRoutes.Login);
+            return;
+
+          case "Job description is missing":
+            setAiBtnDisabled(false);
+            eventSource.close();
+            alert("You need to provide job description first!");
+            return;
+
+          default:
+            setAiBtnDisabled(false);
+            eventSource.close();
+            console.error(err);
+            return;
+        }
       };
     } catch (error) {
       console.error(error);
@@ -114,7 +136,10 @@ const AiInsightSection = ({ aiInsight, jobUlid }: AiInsightSectionProps) => {
             divStyle={{ marginTop: "10px", textAlign: "center" }}
             onClick={() => setHideInsight((prev) => !prev)}
           />
-          <div style={{maxWidth: "1400px", margin: "0 auto"}} hidden={hideInsight}>
+          <div
+            style={{ maxWidth: "1400px", margin: "0 auto" }}
+            hidden={hideInsight}
+          >
             <ReactMarkdown className="mt-3 p-2">
               {aiMessages.join("")}
             </ReactMarkdown>

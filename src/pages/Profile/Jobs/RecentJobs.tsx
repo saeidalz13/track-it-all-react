@@ -21,8 +21,6 @@ const RecentJobs = () => {
   const [jobs, setJobs] = useState<JobApplicationsState>("loading");
   const [defaultLimit, defaultOffset] = [6, 0];
 
-  console.log(jobs);
-
   useEffect(() => {
     try {
       if (jobContext.jobsGroupedByOffset.size === 0) {
