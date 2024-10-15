@@ -28,48 +28,36 @@ interface InterviewQuestionsProps {
 const InterviewQuestions = ({ jobUlid }: InterviewQuestionsProps) => {
   const {
     jobInterviewQuestions: jiqs,
-    updateJobInterviewResponse: updateResponseJIQ,
+    updateJobInterviewResponse,
     addJobInterviewQuestions,
   } = useJobContext();
   const [jobInterviewQuestions, setJobInterviewQuestions] =
     useState<JobInterviewQuestionsState>("loading");
 
-  const updateData = (resp: Response) => {
-    resp
-      .json()
-      .then((apiResp: ApiResp<JobInterviewQuestion>) => {
-        if (apiResp.payload && apiResp.payload.response) {
-          // Updating the job context
-          updateResponseJIQ(apiResp.payload.id, apiResp.payload.response);
+  const updateData = (resp: { id: number; response: string }) => {
+    // Updating the job context
+    updateJobInterviewResponse(resp.id, jobUlid, resp.response);
 
-          // Changing the state of tthe page
-          setJobInterviewQuestions((prev) => {
-            if (
-              prev !== "loading" &&
-              prev !== "error" &&
-              apiResp.payload &&
-              apiResp.payload.response
-            ) {
-              const curr = prev.get(apiResp.payload.id);
+    // Changing the state of the page
+    setJobInterviewQuestions((prev) => {
+      if (prev !== "loading" && prev !== "error") {
+        const curr = prev.get(resp.id);
 
-              if (!curr) {
-                return prev;
-              }
-
-              const updatedMap = new Map(prev);
-              updatedMap.set(apiResp.payload.id, {
-                ...curr,
-                response: apiResp.payload.response,
-              });
-
-              return updatedMap;
-            }
-
-            return prev;
-          });
+        if (!curr) {
+          return prev;
         }
-      })
-      .catch((error) => console.error(error));
+
+        const updatedMap = new Map(prev);
+        updatedMap.set(resp.id, {
+          ...curr,
+          response: resp.response,
+        });
+
+        return updatedMap;
+      }
+
+      return prev;
+    });
   };
 
   useEffect(() => {
@@ -87,7 +75,7 @@ const InterviewQuestions = ({ jobUlid }: InterviewQuestionsProps) => {
             );
 
             setJobInterviewQuestions(jiqm);
-            addJobInterviewQuestions(jiqm);
+            addJobInterviewQuestions(jobUlid, jiqm);
             return;
           }
         }
@@ -96,10 +84,12 @@ const InterviewQuestions = ({ jobUlid }: InterviewQuestionsProps) => {
       }
     };
 
-    if (jiqs.size === 0) {
+    const jobIqs = jiqs[jobUlid];
+
+    if (jobIqs === undefined || jobIqs.size === 0) {
       fetchQuestions();
     } else {
-      setJobInterviewQuestions(jiqs);
+      setJobInterviewQuestions(jobIqs);
     }
   }, [jobUlid, jiqs, addJobInterviewQuestions]);
 
@@ -119,7 +109,7 @@ const InterviewQuestions = ({ jobUlid }: InterviewQuestionsProps) => {
           <Accordion.Body>
             <h5 className="text-primary">Response</h5>
             <EntityPatchForm
-              url={`${BACKEND_URL}/jobs/${jobUlid}/job-interview-questions/${jic.id}`}
+              url={`${BACKEND_URL}/interview-questions/${jic.id}`}
               currentPatchVariable={jic.response}
               toPatchAttrName="response"
               formControlPlaceholder="Reflect on your experiences..."

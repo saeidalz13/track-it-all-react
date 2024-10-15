@@ -43,3 +43,7 @@ export type JobInterviewQuestionsState =
   | "loading"
   | "error"
   | Map<number, JobInterviewQuestion>;
+
+export interface IJobInterviewQuestionsCtx {
+  [job_id: string]: Map<number, JobInterviewQuestion>;
+}

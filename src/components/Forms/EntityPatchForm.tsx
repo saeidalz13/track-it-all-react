@@ -14,7 +14,7 @@ interface EntityPatchFormProps {
   formControlPlaceholder: string;
   editButtonVariant?: TButtonVariant;
   handleRefetch?: () => void;
-  onUpdate?: (resp: Response) => void;
+  onUpdate?: (resp: { id: number; response: string }) => void;
 }
 
 const EntityPatchForm = ({
@@ -52,8 +52,11 @@ const EntityPatchForm = ({
           handleRefetch();
         }
 
-        if (onUpdate) {
-          onUpdate(resp);
+        if (onUpdate && newPatchVar) {
+          const splited = url.split("/");
+          const idString = splited[splited.length - 1];
+          const id = parseInt(idString, 10);
+          onUpdate({ id: id, response: newPatchVar });
         }
 
         setEditDesc(false);

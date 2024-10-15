@@ -1,5 +1,9 @@
 import { createContext } from "react";
-import { JobApplication, JobInterviewQuestion } from "../../models/Job/Job";
+import {
+  IJobInterviewQuestionsCtx,
+  JobApplication,
+  JobInterviewQuestion,
+} from "../../models/Job/Job";
 
 export interface IJobContext {
   jobsGroupedByOffset: Map<number, JobApplication[]>;
@@ -19,9 +23,16 @@ export interface IJobContext {
 
   refetchJobData: (jobUlid: string) => void;
 
-  jobInterviewQuestions: Map<number, JobInterviewQuestion>;
-  updateJobInterviewResponse: (id: number, response: string) => void;
-  addJobInterviewQuestions: (jiqs: Map<number, JobInterviewQuestion>) => void;
+  jobInterviewQuestions: IJobInterviewQuestionsCtx;
+  updateJobInterviewResponse: (
+    id: number,
+    jobId: string,
+    response: string
+  ) => void;
+  addJobInterviewQuestions: (
+    jobId: string,
+    jiqs: Map<number, JobInterviewQuestion>
+  ) => void;
 }
 
 export const JobContext = createContext<IJobContext>({
@@ -37,7 +48,7 @@ export const JobContext = createContext<IJobContext>({
   createNewJob: () => {},
   refetchJobData: () => {},
 
-  jobInterviewQuestions: new Map<number, JobInterviewQuestion>(),
+  jobInterviewQuestions: {},
   updateJobInterviewResponse: () => {},
   addJobInterviewQuestions: () => {},
 });

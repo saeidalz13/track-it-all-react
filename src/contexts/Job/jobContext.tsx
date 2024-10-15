@@ -1,6 +1,10 @@
 import React, { ReactNode, useState } from "react";
 import { JobContext } from "./jobContext";
-import { JobApplication, JobInterviewQuestion } from "../../models/Job/Job";
+import {
+  IJobInterviewQuestionsCtx,
+  JobApplication,
+  JobInterviewQuestion,
+} from "../../models/Job/Job";
 
 const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [jobCount, setJobCount] = useState<number>(0);
@@ -12,9 +16,8 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     Map<number, JobApplication[]>
   >(new Map<number, JobApplication[]>());
 
-  const [jobInterviewQuestions, setJobInterviewQuestions] = useState<
-    Map<number, JobInterviewQuestion>
-  >(new Map<number, JobInterviewQuestion>());
+  const [jobInterviewQuestions, setJobInterviewQuestions] =
+    useState<IJobInterviewQuestionsCtx>({});
 
   const createNewJob = () => {
     setJobsGroupedByOffset(new Map<number, JobApplication[]>());
@@ -44,27 +47,29 @@ const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   };
 
   const addJobInterviewQuestions = (
+    jobId: string,
     jiqs: Map<number, JobInterviewQuestion>
   ) => {
     setJobInterviewQuestions((current) => {
-      const updatedMap = new Map(current);
-      jiqs.forEach((value, key) => {
-        updatedMap.set(key, value);
-      });
-
-      return updatedMap;
+      const newQs = { ...current, [jobId]: jiqs };
+      return newQs;
     });
   };
 
-  const updateJobInterviewResponse = (id: number, response: string) => {
+  const updateJobInterviewResponse = (
+    id: number,
+    jobId: string,
+    response: string
+  ) => {
     setJobInterviewQuestions((prev) => {
-      const curr = prev.get(id);
+      const jobMap = prev[jobId];
+      const curr = jobMap.get(id);
       if (!curr) {
         return prev;
       }
 
       curr.response = response;
-      prev.set(id, curr);
+      prev[jobId].set(id, curr);
       return prev;
     });
   };

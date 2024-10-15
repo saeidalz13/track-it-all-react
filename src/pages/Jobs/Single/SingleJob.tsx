@@ -22,7 +22,7 @@ const SingleJob = () => {
   const { jobUlid } = useParams();
   const navigate = useNavigate();
   const jobContext = useJobContext();
-  const authParams = useAuthContext();
+  const authContext = useAuthContext();
   const [job, setjob] = useState<"loading" | JobApplication>("loading");
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const SingleJob = () => {
         );
 
         if (resp.status === StatusCodes.UNAUTHORIZED) {
-          authParams.setUserUnauth();
+          authContext.setUserUnauth();
           navigate(AuthRoutes.Login);
           return;
         }
@@ -47,6 +47,7 @@ const SingleJob = () => {
           const data: ApiResp<JobApplication> = await resp.json();
 
           if (data.payload) {
+            authContext.setUserAuth();
             setjob(data.payload);
             jobContext.insertToJobLookup(data.payload);
             return;
@@ -67,7 +68,7 @@ const SingleJob = () => {
     } else {
       setjob(cachedJob);
     }
-  }, [jobUlid, navigate, jobContext, authParams]);
+  }, [jobUlid, navigate, jobContext, authContext]);
 
   if (jobUlid === undefined) {
     navigate(JobsRoutes.Jobs);
