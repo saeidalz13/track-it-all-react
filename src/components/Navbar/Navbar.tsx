@@ -20,9 +20,12 @@ const BasicExample = () => {
       .then((resp) => {
         if (resp.status === StatusCodes.NO_CONTENT) {
           console.log("Deleted token in backend");
+          authContext.setUserUnauth();
+          navigate(GeneralRoutes.Home);
           return;
         }
 
+        alert("Not signed out successfully!");
         resp
           .json()
           .then((data: ApiResp<NoPayload>) => {
@@ -31,9 +34,6 @@ const BasicExample = () => {
           .catch((error) => console.log(error));
       })
       .catch((error) => console.log(`failed to delete server token: ${error}`));
-
-    authContext.setUserUnauth();
-    navigate(GeneralRoutes.Home);
   };
 
   // useEffect(() => {
