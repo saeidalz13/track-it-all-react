@@ -47,6 +47,7 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
 
       alert(`Error in deleting job, status: ${resp.status}`);
     } catch (error) {
+      console.error(error);
       alert(error);
     }
   };
@@ -74,9 +75,9 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
       throw new FetchError("Resume Not Fetched", resp.status);
     } catch (error) {
       if (error instanceof FetchError) {
+        setShowFetchErrorModal(true);
         setFetchModalContent(error.fetchModalContent());
       } else {
-        console.log(error);
         setFetchModalContent(FetchError.fetchModalContentUnknownError());
         setShowFetchErrorModal(true);
       }
@@ -103,9 +104,10 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
       throw new FetchError("Resume Not Deleted", resp.status);
     } catch (error) {
       if (error instanceof FetchError) {
+        setShowFetchErrorModal(true);
         setFetchModalContent(error.fetchModalContent());
       } else {
-        console.log(error);
+        setShowFetchErrorModal(true);
         setFetchModalContent(FetchError.fetchModalContentUnknownError());
       }
     }
@@ -141,6 +143,7 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
         return;
       }
 
+      event.target.files = null;
       console.error(resp.status);
     } catch (error) {
       console.error("Unexpected error while uploading resume", error);

@@ -86,25 +86,30 @@ const AiInsightSection = ({ aiInsight, jobUlid }: AiInsightSectionProps) => {
 
       eventSource.onerror = (event) => {
         const errorEvent = event as EventContent;
-        const err = JSON.parse(errorEvent.data).error;
-        switch (err) {
-          case "Unauthorized":
-            setAiBtnDisabled(false);
-            eventSource.close();
-            navigate(AuthRoutes.Login);
-            return;
+        try {
+          const err = JSON.parse(errorEvent.data).error;
+          switch (err) {
+            case "Unauthorized":
+              setAiBtnDisabled(false);
+              eventSource.close();
+              navigate(AuthRoutes.Login);
+              return;
 
-          case "Job description is missing":
-            setAiBtnDisabled(false);
-            eventSource.close();
-            alert("You need to provide job description first!");
-            return;
+            case "Job description is missing":
+              setAiBtnDisabled(false);
+              eventSource.close();
+              alert("You need to provide job description first!");
+              return;
 
-          default:
-            setAiBtnDisabled(false);
-            eventSource.close();
-            console.error(err);
-            return;
+            default:
+              setAiBtnDisabled(false);
+              eventSource.close();
+              console.error(err);
+              return;
+          }
+        } catch (error) {
+          console.error(error);
+          eventSource.close();
         }
       };
     } catch (error) {
