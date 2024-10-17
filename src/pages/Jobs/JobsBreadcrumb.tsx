@@ -10,6 +10,7 @@ const breadContainerStyle: React.CSSProperties = {
 
 interface JobsBreadcrumbProps {
   jobUlid: string | null;
+  isInterviewStages?: boolean;
 }
 
 const JobsBreadcrumb: React.FC<JobsBreadcrumbProps> = (props) => {
@@ -28,9 +29,17 @@ const JobsBreadcrumb: React.FC<JobsBreadcrumbProps> = (props) => {
       </Breadcrumb.Item>
       <Breadcrumb.Item
         hidden={props.jobUlid === null}
-        active={props.jobUlid !== null}
+        active={props.jobUlid !== null && props.isInterviewStages === undefined}
+        onClick={() => navigate(`${JobsRoutes.Jobs}/${props.jobUlid}`)}
       >
         Job
+      </Breadcrumb.Item>
+
+      <Breadcrumb.Item
+        hidden={props.isInterviewStages === undefined}
+        active={props.isInterviewStages !== undefined}
+      >
+        Interview
       </Breadcrumb.Item>
     </Breadcrumb>
   );

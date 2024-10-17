@@ -15,7 +15,6 @@ import { useAuthContext } from "contexts/Auth/useAuthContext";
 import SingleJobDesc from "./SingleJobDesc";
 import PageHeader from "@components/Headers/PageHeader";
 import { StringProcessor } from "@utils/stringUtils";
-import InterviewSection from "./InterviewSection";
 import AiInsightSection from "./AiInsightSection";
 
 const SingleJob = () => {
@@ -27,7 +26,6 @@ const SingleJob = () => {
 
   useEffect(() => {
     if (jobUlid === undefined) {
-      navigate(ProfileRoutes.Profile);
       return;
     }
 
@@ -95,7 +93,7 @@ const SingleJob = () => {
         jobUlid={jobUlid}
       />
 
-      <InterviewSection jobUlid={jobUlid} />
+      {/* <InterviewSection jobUlid={jobUlid} /> */}
     </>
   );
 };

@@ -153,14 +153,26 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
   return (
     <>
       <Container className="mt-3 mb-4">
-        <Row className="mb-3">
-          <CommonButton
-            text="Delete 🗑️"
-            variant="dark"
-            style={{ padding: "10px 65px" }}
-            onClick={handleDeleteJob}
-            divStyle={{ textAlign: "center" }}
-          />
+        <Row className="mb-3 justify-content-md-center">
+          <Col xl={3}>
+            <CommonButton
+              text="Delete 🗑️"
+              variant="dark"
+              style={{ padding: "10px 50px" }}
+              onClick={handleDeleteJob}
+              divStyle={{ textAlign: "center" }}
+            />
+          </Col>
+
+          <Col xl={3}>
+            <CommonButton
+              text="Interview Stages"
+              variant="success"
+              style={{ padding: "10px 50px" }}
+              divStyle={{ textAlign: "center" }}
+              onClick={() => navigate(`/jobs/${props.job.id}/interview-stages`)}
+            />
+          </Col>
         </Row>
 
         <Row>

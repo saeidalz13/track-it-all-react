@@ -10,6 +10,7 @@ export const GeneralRoutes = {
 export const JobsRoutes = {
   Jobs: "/jobs",
   SingleJob: "/jobs/:jobUlid",
+  InterviewStages: "/jobs/:jobUlid/interview-stages"
 };
 
 export const ProfileRoutes = {

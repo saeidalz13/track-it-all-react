@@ -98,6 +98,7 @@ const IqPatchForm = ({
         setCurrResponse(data.payload!.response);
         setDescChars(data.payload!.response.length);
         setEditDesc(true);
+        return
       }
 
       console.log(resp.status);
