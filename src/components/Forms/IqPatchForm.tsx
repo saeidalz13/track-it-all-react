@@ -82,7 +82,10 @@ const IqPatchForm = ({
 
     try {
       const resp = await DataFetcher.getData(
-        `${BACKEND_URL}/ai/iq-response-suggestion?iq_id=${iqId}`
+        `${BACKEND_URL}/ai/iq-response-suggestion?iq_id=${iqId}`,
+        undefined,
+        10000,
+        undefined
       );
 
       if (resp.status === StatusCodes.UNAUTHORIZED) {
