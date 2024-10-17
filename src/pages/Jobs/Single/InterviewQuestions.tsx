@@ -1,4 +1,3 @@
-import EntityPatchForm from "@components/Forms/EntityPatchForm";
 import Loading from "@components/Misc/Loading";
 import ServerError from "@components/Misc/ServerError";
 import { BACKEND_URL } from "@constants/EnvConsts";
@@ -14,6 +13,7 @@ import {
 } from "models/Job/Job";
 import { useEffect, useState } from "react";
 import { Accordion } from "react-bootstrap";
+import IqPatchForm from "@components/Forms/IqPatchForm";
 
 const s: React.CSSProperties = {
   textAlign: "left",
@@ -107,13 +107,20 @@ const InterviewQuestions = ({ jobUlid }: InterviewQuestionsProps) => {
         <Accordion.Item key={String(key)} eventKey={String(idx)}>
           <Accordion.Header>{jic.question}</Accordion.Header>
           <Accordion.Body>
-            <h5 className="text-primary">Response</h5>
-            <EntityPatchForm
+            <h5
+              // style={{ fontWeight: "bold", fontSize: "20px" }}
+              className="text-dark"
+            >
+              Response
+            </h5>
+            <hr />
+            <IqPatchForm
               url={`${BACKEND_URL}/interview-questions/${jic.id}`}
-              currentPatchVariable={jic.response}
+              response={jic.response}
               toPatchAttrName="response"
               formControlPlaceholder="Reflect on your experiences..."
               onUpdate={updateData}
+              iqId={jic.id}
             />
           </Accordion.Body>
         </Accordion.Item>
