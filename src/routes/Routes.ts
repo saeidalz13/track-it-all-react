@@ -10,9 +10,13 @@ export const GeneralRoutes = {
 export const JobsRoutes = {
   Jobs: "/jobs",
   SingleJob: "/jobs/:jobUlid",
-  InterviewStages: "/jobs/:jobUlid/interview-stages"
+  InterviewStages: "/jobs/:jobUlid/interview-stages",
 };
 
 export const ProfileRoutes = {
   Profile: "/profile",
+};
+
+export const CodeEditorRoutes = {
+  Index: "/code-editor/:iqId",
 };

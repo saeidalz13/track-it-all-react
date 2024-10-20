@@ -12,6 +12,7 @@ import {
 } from "react-router-dom";
 import {
   AuthRoutes,
+  CodeEditorRoutes,
   GeneralRoutes,
   JobsRoutes,
   ProfileRoutes,
@@ -23,6 +24,7 @@ import SingleJob from "./pages/Jobs/Single/SingleJobSection";
 import Profile from "./pages/Profile/Profile";
 import AllJobs from "./pages/Jobs/All/AllJobs";
 import InterviewStages from "@pages/InterviewStages/InterviewStages";
+import CodeEditor from "@pages/CodeEditor/CodeEditor";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -40,6 +42,7 @@ const router = createBrowserRouter(
           element={<InterviewStages />}
         />
       </Route>
+      <Route path={CodeEditorRoutes.Index} element={<CodeEditor />} />
     </Route>
   )
 );

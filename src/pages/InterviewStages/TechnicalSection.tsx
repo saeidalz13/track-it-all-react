@@ -1,10 +1,16 @@
-import CommonButton from "@components/Buttons/CommonButton";
 import { BACKEND_URL } from "@constants/EnvConsts";
+import { TechnicallChallengeTag } from "@constants/InterviewConsts";
+import {
+  ITechnicalQuestions,
+  RespTechnicalChallenges,
+} from "@models/Interview/techChallengeModel";
 import { DataFetcher } from "@utils/fetcherUtils";
+import { useTechChallengeContext } from "contexts/TechChallenge/useTechChallengeContext";
 import { StatusCodes } from "http-status-codes";
 import { ApiResp } from "models/Api/ApiResp";
+
 import { useEffect, useState } from "react";
-import { ListGroup } from "react-bootstrap";
+import { ListGroup, Dropdown, Badge } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { AuthRoutes } from "routes/Routes";
 
@@ -20,15 +26,6 @@ interface TechnicalSectionProps {
   jobUlid: string;
 }
 
-interface ITechnicalQuestions {
-  id: number;
-  question: string;
-}
-
-interface RespTechnicalChallenges {
-  tech_challenges: Array<ITechnicalQuestions>;
-}
-
 const LIST_VARIANTS = ["info", "success", "danger", "dark", "warning"];
 
 const TechnicalSection: React.FC<TechnicalSectionProps> = (props) => {
@@ -37,12 +34,15 @@ const TechnicalSection: React.FC<TechnicalSectionProps> = (props) => {
     Array<ITechnicalQuestions>
   >([]);
   const [aiBtnDisabled, setAiBtnDisabled] = useState<boolean>(false);
+  const tcc = useTechChallengeContext();
 
-  const handleGenerateTechnicalQuestions = async () => {
+  const handleGenerateTechnicalQuestions = async (
+    tag: TechnicallChallengeTag
+  ) => {
     setAiBtnDisabled(true);
     try {
       const resp = await DataFetcher.getData(
-        `${BACKEND_URL}/ai/tech-questions?job_id=${props.jobUlid}`,
+        `${BACKEND_URL}/ai/tech-questions?job_id=${props.jobUlid}&tag=${tag}`,
         undefined,
         20000,
         undefined
@@ -56,6 +56,10 @@ const TechnicalSection: React.FC<TechnicalSectionProps> = (props) => {
       if (resp.status === StatusCodes.OK) {
         const data: ApiResp<RespTechnicalChallenges> = await resp.json();
         setTechQuestions(data.payload!.tech_challenges);
+        tcc.setTechChallengesLookup(
+          props.jobUlid,
+          data.payload!.tech_challenges
+        );
         return;
       }
 
@@ -81,7 +85,9 @@ const TechnicalSection: React.FC<TechnicalSectionProps> = (props) => {
 
         if (resp.status === StatusCodes.OK) {
           const data: ApiResp<RespTechnicalChallenges> = await resp.json();
-          setTechQuestions(data.payload!.tech_challenges);
+          const tqs = data.payload!.tech_challenges;
+          setTechQuestions(tqs);
+          tcc.setTechChallengesLookup(props.jobUlid, tqs);
           return;
         }
 
@@ -92,35 +98,99 @@ const TechnicalSection: React.FC<TechnicalSectionProps> = (props) => {
       }
     };
 
-    fetchTechQuestions();
-  }, [props.jobUlid, navigate]);
+    const jobTechQs = tcc.techChallengesLookup.get(props.jobUlid);
+
+    if (tcc.techChallengesLookup.size === 0 || jobTechQs === undefined) {
+      fetchTechQuestions();
+    } else {
+      setTechQuestions(Array.from(jobTechQs.values()));
+    }
+  }, [props.jobUlid, navigate, tcc]);
 
   return (
     <div style={TechnicalSectionStyle}>
       <h1 className="mt-3 mb-3 text-light">Technical Questions</h1>
-      <CommonButton
-        variant="info"
-        text="Generate Technical Questions ✨"
-        divStyle={{ textAlign: "center" }}
-        style={{ padding: "15px 20px", fontSize: "clamp(15px, 2vw, 20px)" }}
-        disabled={aiBtnDisabled}
-        onClick={handleGenerateTechnicalQuestions}
-      />
-
-      <ListGroup className="mt-3 mb-4">
-        {techQuestions.map((tq, idx) => (
-          <ListGroup.Item
-            key={idx}
-            style={{ textAlign: "left" }}
-            variant={LIST_VARIANTS[idx % 5]}
-            action
+      <Dropdown>
+        <Dropdown.Toggle
+          style={{ padding: "15px 15px", fontSize: "clamp(15px, 2vw, 20px)" }}
+          variant="info"
+          disabled={aiBtnDisabled}
+        >
+          Generate Techincal Challenges ✨
+        </Dropdown.Toggle>
+        <Dropdown.Menu className="bg-dark">
+          <Dropdown.Item
+            className="text-light"
+            onClick={() =>
+              handleGenerateTechnicalQuestions(TechnicallChallengeTag.LEETCODE)
+            }
           >
-            {idx + 1}. {tq.question}
-          </ListGroup.Item>
-        ))}
+            LeetCode Style
+          </Dropdown.Item>
+          <Dropdown.Item
+            className="text-light"
+            onClick={() =>
+              handleGenerateTechnicalQuestions(TechnicallChallengeTag.PROJECT)
+            }
+          >
+            Project Style
+          </Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+
+      <ListGroup className="mt-3 mb-5">
+        {techQuestions.length !== 0 ? (
+          techQuestions.map((tq, idx) => (
+            <ListGroup.Item
+              key={idx}
+              style={{ textAlign: "left" }}
+              variant={LIST_VARIANTS[idx % 5]}
+              action={tq.tag === TechnicallChallengeTag.LEETCODE}
+              onClick={() => {
+                if (tq.tag === TechnicallChallengeTag.LEETCODE) {
+                  localStorage.setItem(
+                    `${tq.id}_codeEditorData`,
+                    JSON.stringify({ [tq.id]: tq })
+                  );
+                  window.open(`/code-editor/${tq.id}`, "_blank");
+                }
+              }}
+            >
+              <div>
+                <div className="mb-2">
+                  <Badge
+                    bg={
+                      tq.tag === TechnicallChallengeTag.LEETCODE
+                        ? "dark"
+                        : "danger"
+                    }
+                    pill
+                  >
+                    {tq.tag}
+                  </Badge>{" "}
+                  {tq.tag === TechnicallChallengeTag.LEETCODE ? "->" : ""}
+                </div>
+                {idx + 1}. {tq.question}
+              </div>
+            </ListGroup.Item>
+          ))
+        ) : (
+          <h4 className="mt-3 text-warning">NO CHALLENGES YET</h4>
+        )}
       </ListGroup>
     </div>
   );
 };
 
 export default TechnicalSection;
+
+{
+  /* <CommonButton
+variant="info"
+text="Generate Technical Questions ✨"
+divStyle={{ textAlign: "center" }}
+style={{ padding: "15px 20px", fontSize: "clamp(15px, 2vw, 20px)" }}
+disabled={aiBtnDisabled}
+onClick={handleGenerateTechnicalQuestions}
+/> */
+}

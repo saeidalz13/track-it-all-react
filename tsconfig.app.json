@@ -21,16 +21,35 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "baseUrl" : "./src",
+    "baseUrl": "./src",
     "paths": {
-      "@components/*": ["./components/*"],
-      "@ui/*": ["./components/common/ui/*"],
-      "@pages/*": ["./pages/*"],
-      "@hooks/*": ["./hooks/*"],
-      "@api/*": ["./api/*"],
-      "@utils/*": ["./utils/*"],
-      "@constants/*": ["./constants/*"],
-      "@assets/*": ["./assets/*"]
+      "@components/*": [
+        "./components/*"
+      ],
+      "@ui/*": [
+        "./components/common/ui/*"
+      ],
+      "@pages/*": [
+        "./pages/*"
+      ],
+      "@hooks/*": [
+        "./hooks/*"
+      ],
+      "@api/*": [
+        "./api/*"
+      ],
+      "@utils/*": [
+        "./utils/*"
+      ],
+      "@constants/*": [
+        "./constants/*"
+      ],
+      "@assets/*": [
+        "./assets/*"
+      ],
+      "@models/*": [
+        "./models/*"
+      ],
     }
   },
   "include": [

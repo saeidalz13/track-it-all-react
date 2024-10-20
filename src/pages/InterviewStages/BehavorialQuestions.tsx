@@ -17,7 +17,7 @@ import IqPatchForm from "@components/Forms/IqPatchForm";
 
 const s: React.CSSProperties = {
   textAlign: "left",
-  maxWidth: "1000px",
+  maxWidth: "1200px",
   margin: "0 auto",
 };
 
