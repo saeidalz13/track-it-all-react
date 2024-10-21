@@ -8,7 +8,6 @@ import { DataFetcher } from "@utils/fetcherUtils";
 import { useTechChallengeContext } from "contexts/TechChallenge/useTechChallengeContext";
 import { StatusCodes } from "http-status-codes";
 import { ApiResp } from "models/Api/ApiResp";
-
 import { useEffect, useState } from "react";
 import { ListGroup, Dropdown, Badge } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
@@ -55,7 +54,6 @@ const TechnicalSection: React.FC<TechnicalSectionProps> = (props) => {
 
       if (resp.status === StatusCodes.OK) {
         const data: ApiResp<RespTechnicalChallenges> = await resp.json();
-        //setTechQuestions(data.payload!.tech_challenges);
         tcc.setTechChallengesLookup(
           props.jobUlid,
           data.payload!.tech_challenges
@@ -195,13 +193,3 @@ const TechnicalSection: React.FC<TechnicalSectionProps> = (props) => {
 
 export default TechnicalSection;
 
-{
-  /* <CommonButton
-variant="info"
-text="Generate Technical Questions ✨"
-divStyle={{ textAlign: "center" }}
-style={{ padding: "15px 20px", fontSize: "clamp(15px, 2vw, 20px)" }}
-disabled={aiBtnDisabled}
-onClick={handleGenerateTechnicalQuestions}
-/> */
-}

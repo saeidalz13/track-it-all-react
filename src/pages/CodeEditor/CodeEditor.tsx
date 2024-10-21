@@ -1,6 +1,10 @@
 import CodeEditorSegment from "@components/Misc/CodeEditorSegment";
+import { BACKEND_URL } from "@constants/EnvConsts";
 import { useDebouncedSearch } from "@hooks/searchHooks";
+import { ApiResp } from "@models/Api/ApiResp";
 import { ITechnicalQuestions } from "@models/Interview/techChallengeModel";
+import { DataFetcher } from "@utils/fetcherUtils";
+import { StatusCodes } from "http-status-codes";
 import { useEffect, useState } from "react";
 import {
   Button,
@@ -10,9 +14,12 @@ import {
   Dropdown,
   DropdownButton,
   Row,
+  Image,
 } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { AuthRoutes } from "routes/Routes";
+import loadingSpinner from "@assets/loading_spinner.svg"
+import ReactMarkdown from "react-markdown";
 
 const DescSectionStyle: React.CSSProperties = {
   backgroundColor: "wheat",
@@ -36,7 +43,7 @@ const LANGUAGES = ["Javascript", "Python", "Java", "C++", "Go"];
 
 const CodeEditor = () => {
   const navigate = useNavigate();
-  const { iqId } = useParams();
+  const { tcId } = useParams();
   const [techChallenge, setTechChallenge] =
     useState<ITechnicalQuestions | null>(null);
   const [language, setLanguage] = useState(LANGUAGES[0]);
@@ -46,6 +53,36 @@ const CodeEditor = () => {
     setSearchValue: setCode,
     dbncValue: dbncCode,
   } = useDebouncedSearch(1000);
+  const [aiHint, setAiHint] = useState<string>("")
+  const [btnsDisabled, setBtnsDisabled] = useState(false)
+
+  const handleGetHint = async () => {
+    setBtnsDisabled(true)
+    setAiHint("loading")
+    try {
+      const resp = await DataFetcher.getData(`${BACKEND_URL}/ai/get-hint-tc?tc_id=${tcId}`, undefined, 10000, undefined)
+
+      if (resp.status === StatusCodes.UNAUTHORIZED) {
+        navigate(AuthRoutes.Login);
+        return
+      }
+
+      if (resp.status === StatusCodes.OK) {
+        const data: ApiResp<{ hint: string }> = await resp.json()
+        setAiHint(data.payload!.hint)
+        return
+      }
+
+      setAiHint("Error Occurred! Try again later please!")
+      console.error(resp.status)
+
+    } catch (error) {
+      setAiHint("Error Occurred! Try again later please!")
+      console.log(error)
+    } finally {
+      setBtnsDisabled(false)
+    }
+  }
 
   const onCodeChange = (value: string | undefined) => {
     if (value !== undefined) {
@@ -53,29 +90,18 @@ const CodeEditor = () => {
     }
   };
 
-  useEffect(() => {
-    if (dbncCode !== "") {
-      localStorage.setItem(`${iqId}_code`, dbncCode);
-    }
-  }, [dbncCode, iqId]);
-
   const runCode = () => {
     try {
       const consoleLog = console.log;
       const capturedLogs: string[] = [];
 
-      // Override console.log to capture the logs.
       console.log = (message) => {
         capturedLogs.push(String(message));
       };
 
-      // Create a new function and execute the code.
       const result = new Function(code)();
-
-      // Restore the original console.log.
       console.log = consoleLog;
 
-      // Set the captured logs or the result as output.
       setCodeOutput(
         capturedLogs.length > 0 ? capturedLogs.join("\n") : String(result)
       );
@@ -84,35 +110,42 @@ const CodeEditor = () => {
     }
   };
 
+  // Saving the code to localStorage with debouncer
+  useEffect(() => {
+    if (dbncCode !== "") {
+      localStorage.setItem(`${tcId}_code`, dbncCode);
+    }
+  }, [dbncCode, tcId]);
+
   // For the tech challenge data, MUST exist!
   useEffect(() => {
-    if (iqId === undefined) {
+    if (tcId === undefined) {
       return;
     }
 
-    const storedData = localStorage.getItem(`${iqId}_codeEditorData`);
+    const storedData = localStorage.getItem(`${tcId}_codeEditorData`);
     if (storedData === null) {
       console.log("no tech challenge data! Fetch by ID");
     } else {
       const data: { [id: string]: ITechnicalQuestions } =
         JSON.parse(storedData);
 
-      setTechChallenge(data[iqId]);
+      setTechChallenge(data[tcId]);
     }
-  }, [iqId]);
+  }, [tcId]);
 
   // For stored code
   useEffect(() => {
-    const storedCode = localStorage.getItem(`${iqId}_code`);
+    const storedCode = localStorage.getItem(`${tcId}_code`);
 
     if (storedCode === null) {
       setCode("");
     } else {
       setCode(storedCode);
     }
-  }, [iqId, setCode]);
+  }, [tcId, setCode]);
 
-  if (iqId === undefined) {
+  if (tcId === undefined) {
     navigate(AuthRoutes.Login);
     return;
   }
@@ -122,7 +155,7 @@ const CodeEditor = () => {
       <Container>
         <Row>
           <Col sm={4}>
-            <Container style={{ marginTop: "70px" }}>
+            <Container style={{ marginTop: "70px", maxHeight: "80vh", overflowY: "auto", borderRadius: "10px" }}>
               <Row style={DescSectionStyle}>
                 <div>
                   <h2>Question</h2>
@@ -133,6 +166,7 @@ const CodeEditor = () => {
               <Row style={AiHintSectionStyle}>
                 <div>
                   <h2>AI Hint</h2>
+                  {aiHint === "" ? <div>Click on "Get Hint" to ask AI for help</div> : aiHint === "loading" ? <Image src={loadingSpinner} height="50px" width="50px" /> : <ReactMarkdown>{aiHint}</ReactMarkdown>}
                 </div>
               </Row>
             </Container>
@@ -141,12 +175,14 @@ const CodeEditor = () => {
             <Container>
               <div className="text-center mt-4">
                 <ButtonGroup className="mb-2">
-                  <Button onClick={runCode} variant="success" className="px-4">
+                  <Button disabled={btnsDisabled} onClick={runCode} variant="success" className="px-4">
                     Run ▶
                   </Button>
-                  <Button variant="info">Get Hint ✨</Button>
-                  <Button variant="dark">Get Final Code ✨</Button>
-                  <DropdownButton variant="warning" title="Language">
+
+                  <Button disabled={btnsDisabled} onClick={handleGetHint} variant="info">Get Hint ✨</Button>
+
+                  <Button disabled={btnsDisabled} variant="dark">Get Final Code ✨</Button>
+                  <DropdownButton variant="warning" title={`Language (${language})`}>
                     {LANGUAGES.map((lang) => (
                       <Dropdown.Item
                         active={lang.toLowerCase() === language}
@@ -177,7 +213,7 @@ const CodeEditor = () => {
           </Col>
         </Row>
       </Container>
-    </div>
+    </div >
   );
 };
 
