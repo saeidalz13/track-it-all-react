@@ -55,7 +55,7 @@ const TechnicalSection: React.FC<TechnicalSectionProps> = (props) => {
 
       if (resp.status === StatusCodes.OK) {
         const data: ApiResp<RespTechnicalChallenges> = await resp.json();
-        setTechQuestions(data.payload!.tech_challenges);
+        //setTechQuestions(data.payload!.tech_challenges);
         tcc.setTechChallengesLookup(
           props.jobUlid,
           data.payload!.tech_challenges
@@ -103,7 +103,18 @@ const TechnicalSection: React.FC<TechnicalSectionProps> = (props) => {
     if (tcc.techChallengesLookup.size === 0 || jobTechQs === undefined) {
       fetchTechQuestions();
     } else {
-      setTechQuestions(Array.from(jobTechQs.values()));
+      const tqs = [];
+      const keys = Array.from(jobTechQs.keys()).sort()
+
+      for (let i = 0; i < keys.length; i++) {
+        const element = jobTechQs.get(keys[i])
+        if (element === undefined) {
+          continue
+        }
+        tqs.push(element)
+      }
+
+      setTechQuestions(tqs);
     }
   }, [props.jobUlid, navigate, tcc]);
 

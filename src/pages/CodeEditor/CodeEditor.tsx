@@ -45,7 +45,7 @@ const CodeEditor = () => {
     searchValue: code,
     setSearchValue: setCode,
     dbncValue: dbncCode,
-  } = useDebouncedSearch(2000);
+  } = useDebouncedSearch(1000);
 
   const onCodeChange = (value: string | undefined) => {
     if (value !== undefined) {
@@ -54,7 +54,9 @@ const CodeEditor = () => {
   };
 
   useEffect(() => {
-    localStorage.setItem(`${iqId}_code`, dbncCode);
+    if (dbncCode !== "") {
+      localStorage.setItem(`${iqId}_code`, dbncCode);
+    }
   }, [dbncCode, iqId]);
 
   const runCode = () => {
@@ -139,12 +141,12 @@ const CodeEditor = () => {
             <Container>
               <div className="text-center mt-4">
                 <ButtonGroup className="mb-2">
-                  <Button onClick={runCode} variant="success" className="px-3">
-                    Run
+                  <Button onClick={runCode} variant="success" className="px-4">
+                    Run ▶
                   </Button>
                   <Button variant="info">Get Hint ✨</Button>
                   <Button variant="dark">Get Final Code ✨</Button>
-                  <DropdownButton variant="secondary" title="Language">
+                  <DropdownButton variant="warning" title="Language">
                     {LANGUAGES.map((lang) => (
                       <Dropdown.Item
                         active={lang.toLowerCase() === language}
