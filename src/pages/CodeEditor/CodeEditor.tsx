@@ -2,7 +2,7 @@ import CodeEditorSegment from "@components/Misc/CodeEditorSegment";
 import { BACKEND_URL } from "@constants/EnvConsts";
 import { useDebouncedSearch } from "@hooks/searchHooks";
 import { ApiResp } from "@models/Api/ApiResp";
-import { ITechnicalQuestions } from "@models/Interview/techChallengeModel";
+import { ITechnicalChallenge } from "@models/Interview/techChallengeModel";
 import { DataFetcher } from "@utils/fetcherUtils";
 import { StatusCodes } from "http-status-codes";
 import { useEffect, useState } from "react";
@@ -18,8 +18,10 @@ import {
 } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { AuthRoutes } from "routes/Routes";
-import loadingSpinner from "@assets/loading_spinner.svg"
+import loadingSpinner from "@assets/loading_spinner.svg";
 import ReactMarkdown from "react-markdown";
+import { useTechChallengeContext } from "contexts/TechChallenge/useTechChallengeContext";
+import JobsBreadcrumb from "@pages/Jobs/JobsBreadcrumb";
 
 const DescSectionStyle: React.CSSProperties = {
   backgroundColor: "wheat",
@@ -42,10 +44,16 @@ const CodeOutputSectionStyle: React.CSSProperties = {
 const LANGUAGES = ["Javascript", "Python", "Java", "C++", "Go"];
 
 const CodeEditor = () => {
+  // parameters
+  const { tcId, jobUlid } = useParams();
+  const { updateTechChallengeAiHint, techChallengesLookup } =
+    useTechChallengeContext();
+
   const navigate = useNavigate();
-  const { tcId } = useParams();
+
+  // useState
   const [techChallenge, setTechChallenge] =
-    useState<ITechnicalQuestions | null>(null);
+    useState<ITechnicalChallenge | null>(null);
   const [language, setLanguage] = useState(LANGUAGES[0]);
   const [codeOutput, setCodeOutput] = useState<string>("");
   const {
@@ -53,36 +61,49 @@ const CodeEditor = () => {
     setSearchValue: setCode,
     dbncValue: dbncCode,
   } = useDebouncedSearch(1000);
-  const [aiHint, setAiHint] = useState<string>("")
-  const [btnsDisabled, setBtnsDisabled] = useState(false)
+  const [aiHint, setAiHint] = useState<string | null>(null);
+  const [btnsDisabled, setBtnsDisabled] = useState(false);
 
   const handleGetHint = async () => {
-    setBtnsDisabled(true)
-    setAiHint("loading")
+    setBtnsDisabled(true);
+    setAiHint("loading");
     try {
-      const resp = await DataFetcher.getData(`${BACKEND_URL}/ai/get-hint-tc?tc_id=${tcId}`, undefined, 10000, undefined)
+      const resp = await DataFetcher.getData(
+        `${BACKEND_URL}/ai/get-hint-tc?tc_id=${tcId}`,
+        undefined,
+        10000,
+        undefined
+      );
 
       if (resp.status === StatusCodes.UNAUTHORIZED) {
         navigate(AuthRoutes.Login);
-        return
+        return;
       }
 
       if (resp.status === StatusCodes.OK) {
-        const data: ApiResp<{ hint: string }> = await resp.json()
-        setAiHint(data.payload!.hint)
-        return
+        const data: ApiResp<{ ai_hint: string }> = await resp.json();
+        setAiHint(data.payload!.ai_hint);
+
+        const tcIdNum = parseInt(tcId!);
+        updateTechChallengeAiHint(
+          tcIdNum,
+          techChallenge!.job_id,
+          data.payload!.ai_hint
+        );
+
+        console.log(techChallengesLookup.get(techChallenge!.job_id));
+        return;
       }
 
-      setAiHint("Error Occurred! Try again later please!")
-      console.error(resp.status)
-
+      setAiHint("Error Occurred! Try again later please!");
+      console.error(resp.status);
     } catch (error) {
-      setAiHint("Error Occurred! Try again later please!")
-      console.log(error)
+      setAiHint("Error Occurred! Try again later please!");
+      console.log(error);
     } finally {
-      setBtnsDisabled(false)
+      setBtnsDisabled(false);
     }
-  }
+  };
 
   const onCodeChange = (value: string | undefined) => {
     if (value !== undefined) {
@@ -119,43 +140,74 @@ const CodeEditor = () => {
 
   // For the tech challenge data, MUST exist!
   useEffect(() => {
-    if (tcId === undefined) {
+    if (tcId === undefined || jobUlid === undefined) {
       return;
     }
 
-    const storedData = localStorage.getItem(`${tcId}_codeEditorData`);
-    if (storedData === null) {
-      console.log("no tech challenge data! Fetch by ID");
-    } else {
-      const data: { [id: string]: ITechnicalQuestions } =
-        JSON.parse(storedData);
+    const fetchTcData = async () => {
+      try {
+        const resp = await DataFetcher.getData(
+          `${BACKEND_URL}/technical-challenges/${tcId}`
+        );
 
-      setTechChallenge(data[tcId]);
+        if (resp.status === StatusCodes.UNAUTHORIZED) {
+          navigate(AuthRoutes.Login);
+          return;
+        }
+
+        if (resp.status === StatusCodes.OK) {
+          const data: ApiResp<{ tech_challenge: ITechnicalChallenge }> =
+            await resp.json();
+
+          setTechChallenge(data.payload!.tech_challenge);
+          setAiHint(data.payload!.tech_challenge.ai_hint);
+
+          return;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const tcs = techChallengesLookup.get(jobUlid);
+    if (tcs === undefined) {
+      fetchTcData();
+      return;
     }
-  }, [tcId]);
 
-  // For stored code
-  useEffect(() => {
-    const storedCode = localStorage.getItem(`${tcId}_code`);
-
-    if (storedCode === null) {
-      setCode("");
-    } else {
-      setCode(storedCode);
+    const tc = tcs.get(parseInt(tcId));
+    if (tc === undefined) {
+      fetchTcData();
+      return;
     }
-  }, [tcId, setCode]);
 
-  if (tcId === undefined) {
+    setTechChallenge(tc);
+    setAiHint(tc.ai_hint);
+  }, [tcId, jobUlid, navigate, techChallengesLookup]);
+
+  if (tcId === undefined || jobUlid === undefined) {
     navigate(AuthRoutes.Login);
     return;
   }
 
   return (
     <div>
+      <JobsBreadcrumb
+        jobUlid={jobUlid}
+        isInterviewStages={false}
+        isTechChallenge={true}
+      />
       <Container>
         <Row>
           <Col sm={4}>
-            <Container style={{ marginTop: "70px", maxHeight: "80vh", overflowY: "auto", borderRadius: "10px" }}>
+            <Container
+              style={{
+                marginTop: "70px",
+                maxHeight: "80vh",
+                overflowY: "auto",
+                borderRadius: "10px",
+              }}
+            >
               <Row style={DescSectionStyle}>
                 <div>
                   <h2>Question</h2>
@@ -166,7 +218,13 @@ const CodeEditor = () => {
               <Row style={AiHintSectionStyle}>
                 <div>
                   <h2>AI Hint</h2>
-                  {aiHint === "" ? <div>Click on "Get Hint" to ask AI for help</div> : aiHint === "loading" ? <Image src={loadingSpinner} height="50px" width="50px" /> : <ReactMarkdown>{aiHint}</ReactMarkdown>}
+                  {aiHint === null ? (
+                    <div>Click on "Get Hint" to ask AI for help</div>
+                  ) : aiHint === "loading" ? (
+                    <Image src={loadingSpinner} height="50px" width="50px" />
+                  ) : (
+                    <ReactMarkdown>{aiHint}</ReactMarkdown>
+                  )}
                 </div>
               </Row>
             </Container>
@@ -175,14 +233,30 @@ const CodeEditor = () => {
             <Container>
               <div className="text-center mt-4">
                 <ButtonGroup className="mb-2">
-                  <Button disabled={btnsDisabled} onClick={runCode} variant="success" className="px-4">
+                  <Button
+                    disabled={btnsDisabled}
+                    onClick={runCode}
+                    variant="success"
+                    className="px-4"
+                  >
                     Run ▶
                   </Button>
 
-                  <Button disabled={btnsDisabled} onClick={handleGetHint} variant="info">Get Hint ✨</Button>
+                  <Button
+                    disabled={btnsDisabled}
+                    onClick={handleGetHint}
+                    variant="info"
+                  >
+                    Get Hint ✨
+                  </Button>
 
-                  <Button disabled={btnsDisabled} variant="dark">Get Final Code ✨</Button>
-                  <DropdownButton variant="warning" title={`Language (${language})`}>
+                  <Button disabled={btnsDisabled} variant="dark">
+                    Get Final Code ✨
+                  </Button>
+                  <DropdownButton
+                    variant="warning"
+                    title={`Language (${language})`}
+                  >
                     {LANGUAGES.map((lang) => (
                       <Dropdown.Item
                         active={lang.toLowerCase() === language}
@@ -213,7 +287,7 @@ const CodeEditor = () => {
           </Col>
         </Row>
       </Container>
-    </div >
+    </div>
   );
 };
 

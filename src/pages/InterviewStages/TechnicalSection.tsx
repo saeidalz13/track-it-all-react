@@ -1,7 +1,7 @@
 import { BACKEND_URL } from "@constants/EnvConsts";
 import { TechnicallChallengeTag } from "@constants/InterviewConsts";
 import {
-  ITechnicalQuestions,
+  ITechnicalChallenge,
   RespTechnicalChallenges,
 } from "@models/Interview/techChallengeModel";
 import { DataFetcher } from "@utils/fetcherUtils";
@@ -30,7 +30,7 @@ const LIST_VARIANTS = ["info", "success", "danger", "dark", "warning"];
 const TechnicalSection: React.FC<TechnicalSectionProps> = (props) => {
   const navigate = useNavigate();
   const [techQuestions, setTechQuestions] = useState<
-    Array<ITechnicalQuestions>
+    Array<ITechnicalChallenge>
   >([]);
   const [aiBtnDisabled, setAiBtnDisabled] = useState<boolean>(false);
   const tcc = useTechChallengeContext();
@@ -102,14 +102,14 @@ const TechnicalSection: React.FC<TechnicalSectionProps> = (props) => {
       fetchTechQuestions();
     } else {
       const tqs = [];
-      const keys = Array.from(jobTechQs.keys()).sort()
+      const keys = Array.from(jobTechQs.keys()).sort();
 
       for (let i = 0; i < keys.length; i++) {
-        const element = jobTechQs.get(keys[i])
+        const element = jobTechQs.get(keys[i]);
         if (element === undefined) {
-          continue
+          continue;
         }
-        tqs.push(element)
+        tqs.push(element);
       }
 
       setTechQuestions(tqs);
@@ -157,11 +157,7 @@ const TechnicalSection: React.FC<TechnicalSectionProps> = (props) => {
               action={tq.tag === TechnicallChallengeTag.LEETCODE}
               onClick={() => {
                 if (tq.tag === TechnicallChallengeTag.LEETCODE) {
-                  localStorage.setItem(
-                    `${tq.id}_codeEditorData`,
-                    JSON.stringify({ [tq.id]: tq })
-                  );
-                  window.open(`/code-editor/${tq.id}`, "_blank");
+                  navigate(`/code-editor/${props.jobUlid}/${tq.id}`);
                 }
               }}
             >
@@ -192,4 +188,3 @@ const TechnicalSection: React.FC<TechnicalSectionProps> = (props) => {
 };
 
 export default TechnicalSection;
-

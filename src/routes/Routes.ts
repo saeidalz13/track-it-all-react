@@ -18,5 +18,5 @@ export const ProfileRoutes = {
 };
 
 export const CodeEditorRoutes = {
-  Index: "/code-editor/:tcId",
+  Index: "/code-editor/:jobUlid/:tcId",
 };

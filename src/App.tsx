@@ -41,8 +41,8 @@ const router = createBrowserRouter(
           path={JobsRoutes.InterviewStages}
           element={<InterviewStages />}
         />
+        <Route path={CodeEditorRoutes.Index} element={<CodeEditor />} />
       </Route>
-      <Route path={CodeEditorRoutes.Index} element={<CodeEditor />} />
     </Route>
   )
 );

@@ -11,6 +11,7 @@ const breadContainerStyle: React.CSSProperties = {
 interface JobsBreadcrumbProps {
   jobUlid: string | null;
   isInterviewStages?: boolean;
+  isTechChallenge?: boolean;
 }
 
 const JobsBreadcrumb: React.FC<JobsBreadcrumbProps> = (props) => {
@@ -37,9 +38,19 @@ const JobsBreadcrumb: React.FC<JobsBreadcrumbProps> = (props) => {
 
       <Breadcrumb.Item
         hidden={props.isInterviewStages === undefined}
-        active={props.isInterviewStages !== undefined}
+        active={props.isInterviewStages}
+        onClick={() =>
+          navigate(`${JobsRoutes.Jobs}/${props.jobUlid}/interview-stages`)
+        }
       >
         Interview
+      </Breadcrumb.Item>
+
+      <Breadcrumb.Item
+        hidden={props.isTechChallenge === undefined}
+        active={props.isTechChallenge !== undefined}
+      >
+        Tech Challenge
       </Breadcrumb.Item>
     </Breadcrumb>
   );

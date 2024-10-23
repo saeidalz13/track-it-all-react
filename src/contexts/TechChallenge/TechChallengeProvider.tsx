@@ -1,5 +1,5 @@
 import React, { ReactNode, useState } from "react";
-import { ITechnicalQuestions } from "@models/Interview/techChallengeModel";
+import { ITechnicalChallenge } from "@models/Interview/techChallengeModel";
 import {
   TechChallengeContext,
   TTechnicalChallengesLookup,
@@ -10,21 +10,39 @@ const TechChallengeProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [techChallengesLookupUseState, setTechChallengesLookupUseState] =
     useState<TTechnicalChallengesLookup>(
-      new Map<string, Map<number, ITechnicalQuestions>>()
+      new Map<string, Map<number, ITechnicalChallenge>>()
     );
 
-  const updateTechChallengesLookup = (tq: ITechnicalQuestions) => {
+  const updateTechChallengeAiHint = (
+    id: number,
+    jobId: string,
+    aiHint: string
+  ) => {
     setTechChallengesLookupUseState((prev) => {
-      return { ...prev, [tq.id]: tq };
+      const jobTcs = prev.get(jobId);
+      if (jobTcs === undefined) {
+        return prev;
+      }
+
+      const tc = jobTcs.get(id);
+      if (tc === undefined) {
+        return prev;
+      }
+
+      tc.ai_hint = aiHint;
+      jobTcs.set(id, tc);
+      prev.set(jobId, jobTcs);
+
+      return prev;
     });
   };
 
   const setTechChallengesLookup = (
     jobId: string,
-    tqs: Array<ITechnicalQuestions>
+    tqs: Array<ITechnicalChallenge>
   ) => {
-    const map = new Map<string, Map<number, ITechnicalQuestions>>();
-    const innerMap = new Map<number, ITechnicalQuestions>();
+    const map = new Map<string, Map<number, ITechnicalChallenge>>();
+    const innerMap = new Map<number, ITechnicalChallenge>();
 
     for (let i = 0; i < tqs.length; i++) {
       innerMap.set(tqs[i].id, tqs[i]);
@@ -38,7 +56,7 @@ const TechChallengeProvider: React.FC<{ children: ReactNode }> = ({
     <TechChallengeContext.Provider
       value={{
         techChallengesLookup: techChallengesLookupUseState,
-        updateTechChallengesLookup: updateTechChallengesLookup,
+        updateTechChallengeAiHint: updateTechChallengeAiHint,
         setTechChallengesLookup: setTechChallengesLookup,
       }}
     >
