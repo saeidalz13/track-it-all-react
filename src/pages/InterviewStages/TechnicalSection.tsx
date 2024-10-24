@@ -41,7 +41,7 @@ const TechnicalSection: React.FC<TechnicalSectionProps> = (props) => {
     setAiBtnDisabled(true);
     try {
       const resp = await DataFetcher.getData(
-        `${BACKEND_URL}/ai/tech-questions?job_id=${props.jobUlid}&tag=${tag}`,
+        `${BACKEND_URL}/ai/tc?job_id=${props.jobUlid}&tag=${tag}`,
         undefined,
         20000,
         undefined

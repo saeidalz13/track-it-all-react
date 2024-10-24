@@ -13,6 +13,11 @@ export interface ITechChallengeContext {
     jobId: string,
     aiHint: string
   ) => void;
+  updateTechChallengeAiSolution: (
+    id: number,
+    jobId: string,
+    aiSolution: string
+  ) => void;
   setTechChallengesLookup: (
     jobId: string,
     tqs: Array<ITechnicalChallenge>
@@ -22,5 +27,6 @@ export interface ITechChallengeContext {
 export const TechChallengeContext = createContext<ITechChallengeContext>({
   techChallengesLookup: new Map<string, Map<number, ITechnicalChallenge>>(),
   updateTechChallengeAiHint: () => {},
+  updateTechChallengeAiSolution: () => {},
   setTechChallengesLookup: () => {},
 });

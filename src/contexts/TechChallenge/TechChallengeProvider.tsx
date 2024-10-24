@@ -37,6 +37,30 @@ const TechChallengeProvider: React.FC<{ children: ReactNode }> = ({
     });
   };
 
+  const updateTechChallengeAiSolution = (
+    id: number,
+    jobId: string,
+    aiSolution: string
+  ) => {
+    setTechChallengesLookupUseState((prev) => {
+      const jobTcs = prev.get(jobId);
+      if (jobTcs === undefined) {
+        return prev;
+      }
+
+      const tc = jobTcs.get(id);
+      if (tc === undefined) {
+        return prev;
+      }
+
+      tc.ai_solution = aiSolution;
+      jobTcs.set(id, tc);
+      prev.set(jobId, jobTcs);
+
+      return prev;
+    });
+  };
+
   const setTechChallengesLookup = (
     jobId: string,
     tqs: Array<ITechnicalChallenge>
@@ -57,6 +81,7 @@ const TechChallengeProvider: React.FC<{ children: ReactNode }> = ({
       value={{
         techChallengesLookup: techChallengesLookupUseState,
         updateTechChallengeAiHint: updateTechChallengeAiHint,
+        updateTechChallengeAiSolution: updateTechChallengeAiSolution,
         setTechChallengesLookup: setTechChallengesLookup,
       }}
     >

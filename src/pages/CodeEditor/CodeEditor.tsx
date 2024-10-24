@@ -44,32 +44,40 @@ const CodeOutputSectionStyle: React.CSSProperties = {
 const LANGUAGES = ["Javascript", "Python", "Java", "C++", "Go"];
 
 const CodeEditor = () => {
-  // parameters
+  // * parameters
   const { tcId, jobUlid } = useParams();
-  const { updateTechChallengeAiHint, techChallengesLookup } =
-    useTechChallengeContext();
+  const {
+    updateTechChallengeAiHint,
+    techChallengesLookup,
+    updateTechChallengeAiSolution,
+  } = useTechChallengeContext();
 
+  // * navigation
   const navigate = useNavigate();
 
-  // useState
+  // * useState
   const [techChallenge, setTechChallenge] =
     useState<ITechnicalChallenge | null>(null);
   const [language, setLanguage] = useState(LANGUAGES[0]);
   const [codeOutput, setCodeOutput] = useState<string>("");
+  const [aiHint, setAiHint] = useState<string | null>(null);
+  const [btnsDisabled, setBtnsDisabled] = useState(false);
+  const [commentSign, setCommentSign] = useState<string>("//");
+
+  // * Custom Hooks
   const {
     searchValue: code,
     setSearchValue: setCode,
     dbncValue: dbncCode,
   } = useDebouncedSearch(1000);
-  const [aiHint, setAiHint] = useState<string | null>(null);
-  const [btnsDisabled, setBtnsDisabled] = useState(false);
 
+  // * Functions
   const handleGetHint = async () => {
     setBtnsDisabled(true);
     setAiHint("loading");
     try {
       const resp = await DataFetcher.getData(
-        `${BACKEND_URL}/ai/get-hint-tc?tc_id=${tcId}`,
+        `${BACKEND_URL}/ai/tc/hint?tc_id=${tcId}`,
         undefined,
         10000,
         undefined
@@ -91,7 +99,6 @@ const CodeEditor = () => {
           data.payload!.ai_hint
         );
 
-        console.log(techChallengesLookup.get(techChallenge!.job_id));
         return;
       }
 
@@ -100,6 +107,49 @@ const CodeEditor = () => {
     } catch (error) {
       setAiHint("Error Occurred! Try again later please!");
       console.log(error);
+    } finally {
+      setBtnsDisabled(false);
+    }
+  };
+
+  const handleGetSolution = async () => {
+    setBtnsDisabled(true);
+
+    try {
+      const resp = await DataFetcher.getData(
+        `${BACKEND_URL}/ai/tc/solution?tc_id=${tcId}&language=${language}`,
+        undefined,
+        10_000,
+        undefined
+      );
+
+      if (resp.status === StatusCodes.UNAUTHORIZED) {
+        navigate(AuthRoutes.Login);
+        return;
+      }
+
+      if (resp.status === StatusCodes.OK) {
+        const data: ApiResp<{ solution: string }> = await resp.json();
+        setCode(
+          (prev) =>
+            prev +
+            `\n\n\n\n${commentSign} AI Solution:\n\n${data.payload!.solution}`
+        );
+
+        const tcIdNum = parseInt(tcId!);
+        updateTechChallengeAiSolution(
+          tcIdNum,
+          techChallenge!.job_id,
+          data.payload!.solution
+        );
+
+        console.log(techChallengesLookup.get(techChallenge!.job_id));
+        return;
+      }
+
+      console.error(resp.status);
+    } catch (error) {
+      console.error(error);
     } finally {
       setBtnsDisabled(false);
     }
@@ -131,6 +181,13 @@ const CodeEditor = () => {
     }
   };
 
+  // * useEffects
+  useEffect(() => {
+    if (["Python", "Ruby"].includes(language)) {
+      setCommentSign("#");
+    }
+  }, [language]);
+
   // Saving the code to localStorage with debouncer
   useEffect(() => {
     if (dbncCode !== "") {
@@ -161,6 +218,13 @@ const CodeEditor = () => {
 
           setTechChallenge(data.payload!.tech_challenge);
           setAiHint(data.payload!.tech_challenge.ai_hint);
+          setCode(
+            (prev) =>
+              prev +
+              `\n\n\n\n${commentSign} AI Solution:\n\n${
+                data.payload!.tech_challenge.ai_solution
+              }`
+          );
 
           return;
         }
@@ -183,7 +247,24 @@ const CodeEditor = () => {
 
     setTechChallenge(tc);
     setAiHint(tc.ai_hint);
-  }, [tcId, jobUlid, navigate, techChallengesLookup]);
+    setCode(
+      (prev) =>
+        prev +
+        `\n\n\n\n${commentSign} AI Solution:\n\n${
+          tc.ai_solution === null
+            ? `${commentSign} No Solution Yet`
+            : tc.ai_solution
+        }`
+    );
+  }, [
+    tcId,
+    jobUlid,
+    navigate,
+    techChallengesLookup,
+    language,
+    setCode,
+    commentSign,
+  ]);
 
   if (tcId === undefined || jobUlid === undefined) {
     navigate(AuthRoutes.Login);
@@ -250,8 +331,12 @@ const CodeEditor = () => {
                     Get Hint ✨
                   </Button>
 
-                  <Button disabled={btnsDisabled} variant="dark">
-                    Get Final Code ✨
+                  <Button
+                    disabled={btnsDisabled}
+                    onClick={handleGetSolution}
+                    variant="dark"
+                  >
+                    Get Solution ✨
                   </Button>
                   <DropdownButton
                     variant="warning"
