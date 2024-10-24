@@ -22,6 +22,8 @@ import loadingSpinner from "@assets/loading_spinner.svg";
 import ReactMarkdown from "react-markdown";
 import { useTechChallengeContext } from "contexts/TechChallenge/useTechChallengeContext";
 import JobsBreadcrumb from "@pages/Jobs/JobsBreadcrumb";
+import AiSolutionModal from "@components/Modals/AiSolutionModal";
+import { useAuthContext } from "contexts/Auth/useAuthContext";
 
 const DescSectionStyle: React.CSSProperties = {
   backgroundColor: "wheat",
@@ -62,7 +64,9 @@ const CodeEditor = () => {
   const [codeOutput, setCodeOutput] = useState<string>("");
   const [aiHint, setAiHint] = useState<string | null>(null);
   const [btnsDisabled, setBtnsDisabled] = useState(false);
-  const [commentSign, setCommentSign] = useState<string>("//");
+  const [showAiSolutionModal, setShowAiSolutionModal] =
+    useState<boolean>(false);
+  const { setUserAuth } = useAuthContext();
 
   // * Custom Hooks
   const {
@@ -130,12 +134,6 @@ const CodeEditor = () => {
 
       if (resp.status === StatusCodes.OK) {
         const data: ApiResp<{ solution: string }> = await resp.json();
-        setCode(
-          (prev) =>
-            prev +
-            `\n\n\n\n${commentSign} AI Solution:\n\n${data.payload!.solution}`
-        );
-
         const tcIdNum = parseInt(tcId!);
         updateTechChallengeAiSolution(
           tcIdNum,
@@ -143,7 +141,7 @@ const CodeEditor = () => {
           data.payload!.solution
         );
 
-        console.log(techChallengesLookup.get(techChallenge!.job_id));
+        setShowAiSolutionModal(true);
         return;
       }
 
@@ -182,18 +180,22 @@ const CodeEditor = () => {
   };
 
   // * useEffects
-  useEffect(() => {
-    if (["Python", "Ruby"].includes(language)) {
-      setCommentSign("#");
-    }
-  }, [language]);
-
   // Saving the code to localStorage with debouncer
   useEffect(() => {
     if (dbncCode !== "") {
       localStorage.setItem(`${tcId}_code`, dbncCode);
     }
   }, [dbncCode, tcId]);
+
+  // Setting code if exists in localStorage
+  useEffect(() => {
+    const storedCode = localStorage.getItem(`${tcId}_code`);
+    if (storedCode === null) {
+      return;
+    }
+
+    setCode(storedCode);
+  }, [tcId, setCode]);
 
   // For the tech challenge data, MUST exist!
   useEffect(() => {
@@ -213,19 +215,12 @@ const CodeEditor = () => {
         }
 
         if (resp.status === StatusCodes.OK) {
+          setUserAuth();
           const data: ApiResp<{ tech_challenge: ITechnicalChallenge }> =
             await resp.json();
 
           setTechChallenge(data.payload!.tech_challenge);
           setAiHint(data.payload!.tech_challenge.ai_hint);
-          setCode(
-            (prev) =>
-              prev +
-              `\n\n\n\n${commentSign} AI Solution:\n\n${
-                data.payload!.tech_challenge.ai_solution
-              }`
-          );
-
           return;
         }
       } catch (error) {
@@ -247,24 +242,11 @@ const CodeEditor = () => {
 
     setTechChallenge(tc);
     setAiHint(tc.ai_hint);
-    setCode(
-      (prev) =>
-        prev +
-        `\n\n\n\n${commentSign} AI Solution:\n\n${
-          tc.ai_solution === null
-            ? `${commentSign} No Solution Yet`
-            : tc.ai_solution
-        }`
-    );
-  }, [
-    tcId,
-    jobUlid,
-    navigate,
-    techChallengesLookup,
-    language,
-    setCode,
-    commentSign,
-  ]);
+  }, [tcId, jobUlid, navigate, techChallengesLookup, setUserAuth]);
+
+  useEffect(() => {
+    console.log(techChallenge);
+  }, [techChallenge]);
 
   if (tcId === undefined || jobUlid === undefined) {
     navigate(AuthRoutes.Login);
@@ -324,19 +306,39 @@ const CodeEditor = () => {
                   </Button>
 
                   <Button
-                    disabled={btnsDisabled}
+                    disabled={btnsDisabled || techChallenge?.ai_hint !== null}
                     onClick={handleGetHint}
                     variant="info"
                   >
-                    Get Hint ✨
+                    {btnsDisabled ? (
+                      <Image src={loadingSpinner} />
+                    ) : (
+                      "Get Hint ✨"
+                    )}
                   </Button>
 
                   <Button
                     disabled={btnsDisabled}
-                    onClick={handleGetSolution}
+                    onClick={() => {
+                      if (
+                        techChallenge !== null &&
+                        techChallenge.ai_solution !== null
+                      ) {
+                        setShowAiSolutionModal(true);
+                      } else {
+                        handleGetSolution();
+                      }
+                    }}
                     variant="dark"
                   >
-                    Get Solution ✨
+                    {btnsDisabled ? (
+                      <Image src={loadingSpinner} />
+                    ) : techChallenge !== null &&
+                      techChallenge.ai_solution !== null ? (
+                      "Show Solution ✨"
+                    ) : (
+                      "Get Solution ✨"
+                    )}
                   </Button>
                   <DropdownButton
                     variant="warning"
@@ -372,6 +374,12 @@ const CodeEditor = () => {
           </Col>
         </Row>
       </Container>
+
+      <AiSolutionModal
+        show={showAiSolutionModal}
+        onHide={() => setShowAiSolutionModal(false)}
+        solution={techChallenge ? techChallenge.ai_solution! : ""}
+      />
     </div>
   );
 };

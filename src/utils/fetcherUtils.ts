@@ -49,13 +49,23 @@ export class DataFetcher {
     credentials: Credentials = "include",
     timeout: number = 5000,
     contentType: string = "application/json"
-  ) {
-    return fetch(url, {
-      method: HttpMethods.GET,
-      headers: { "Content-Type": contentType },
-      credentials: credentials,
-      signal: AbortSignal.timeout(timeout),
-    });
+  ): Promise<Response> {
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+
+    try {
+      const response = fetch(url, {
+        method: "GET",
+        headers: { "Content-Type": contentType },
+        credentials: credentials,
+        signal: controller.signal,
+      });
+      clearTimeout(id);
+      return response;
+    } catch (error) {
+      clearTimeout(id);
+      throw error;
+    }
   }
 
   public static deleteData(

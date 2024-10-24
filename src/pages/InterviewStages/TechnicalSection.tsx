@@ -9,9 +9,10 @@ import { useTechChallengeContext } from "contexts/TechChallenge/useTechChallenge
 import { StatusCodes } from "http-status-codes";
 import { ApiResp } from "models/Api/ApiResp";
 import { useEffect, useState } from "react";
-import { ListGroup, Dropdown, Badge } from "react-bootstrap";
+import { ListGroup, Dropdown, Badge, Image } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { AuthRoutes } from "routes/Routes";
+import loadingSpinner from "@assets/loading_spinner.svg";
 
 const TechnicalSectionStyle: React.CSSProperties = {
   backgroundColor: "rgba(2, 255, 255, 0.17)",
@@ -125,7 +126,11 @@ const TechnicalSection: React.FC<TechnicalSectionProps> = (props) => {
           variant="info"
           disabled={aiBtnDisabled}
         >
-          Generate Techincal Challenges ✨
+          {aiBtnDisabled ? (
+            <Image src={loadingSpinner} />
+          ) : (
+            "Generate Techincal Challenges ✨"
+          )}
         </Dropdown.Toggle>
         <Dropdown.Menu className="bg-dark">
           <Dropdown.Item
