@@ -60,3 +60,18 @@ export const reformatJobsForContainer = (
 
   return modified;
 };
+
+export const uppdateJobSpec = async (
+  jobUlid: string,
+  key: string,
+  value: string | Date
+): Promise<Response> => {
+  try {
+    const resp = await DataFetcher.patchData(`${BACKEND_URL}/jobs/${jobUlid}`, {
+      [key]: value,
+    });
+    return resp;
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+};

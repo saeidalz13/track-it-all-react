@@ -6,6 +6,7 @@ import {
   FetchError,
   FetchErrorModalContent,
 } from "@utils/fetcherUtils";
+import { uppdateJobSpec as updateJobSpec } from "@utils/jobUtils";
 import { useAuthContext } from "contexts/Auth/useAuthContext";
 import { useJobContext } from "contexts/Job/useJobContext";
 import { StatusCodes } from "http-status-codes";
@@ -17,6 +18,7 @@ import {
   Col,
   Container,
   Form,
+  InputGroup,
   Row,
   Stack,
 } from "react-bootstrap";
@@ -31,9 +33,39 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
   const navigate = useNavigate();
   const jobContext = useJobContext();
   const authContext = useAuthContext();
+
+  // UseState
   const [showFetchErrorModal, setShowFetchErrorModal] = useState(false);
   const [fetchModalContent, setFetchModalContent] =
     useState<FetchErrorModalContent>({ title: "", body: "" });
+  const [editMode, setEditMode] = useState(false);
+  const [editValue, setEditValue] = useState<string | null | Date>(null);
+
+  // Functions
+  const handleUpdateJobSpec = async (key: string) => {
+    if (editValue === null) {
+      return;
+    }
+
+    try {
+      const resp = await updateJobSpec(props.job.id, key, editValue);
+
+      if (resp.status === StatusCodes.UNAUTHORIZED) {
+        navigate(AuthRoutes.Login);
+        return;
+      }
+
+      if (resp.status === StatusCodes.OK) {
+        jobContext.refetchJobData(props.job.id);
+        setEditMode(false);
+        return;
+      }
+
+      alert(resp.status);
+    } catch (error) {
+      alert(error);
+    }
+  };
 
   const handleGetResume = async () => {
     try {
@@ -139,12 +171,39 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
         <Row className="justify-content-center">
           <Row>
             <Col className="mb-1" xl>
-              <Stack className="fancy-circle-div" direction="horizontal">
-                <Badge bg="dark" className="me-2 p-2">
-                  👨‍💼 Position
-                </Badge>
-                <span className="text-light">{props.job.position}</span>
-              </Stack>
+              {editMode ? (
+                <Stack className="fancy-circle-div" direction="horizontal">
+                  <InputGroup style={{ maxWidth: "400px", margin: "0 5px" }}>
+                    <Form.Control
+                      placeholder="Type new position"
+                      onChange={(e) => setEditValue(e.target.value)}
+                    />
+                    <Button
+                      onClick={() => handleUpdateJobSpec("position")}
+                      variant="warning"
+                      id="button-addon2"
+                    >
+                      Submit
+                    </Button>
+                    <Button onClick={() => setEditMode(false)} variant="danger">
+                      Cancel
+                    </Button>
+                  </InputGroup>
+                </Stack>
+              ) : (
+                <Stack
+                  onClick={() => setEditMode(true)}
+                  className="fancy-circle-div"
+                  direction="horizontal"
+                >
+                  <Badge bg="dark" className="me-2 p-2">
+                    👨‍💼 Position
+                  </Badge>
+                  <div onClick={() => setEditMode(true)}>
+                    <span className="text-light">{props.job.position}</span>
+                  </div>
+                </Stack>
+              )}
             </Col>
 
             <Col className="mb-1" xl>

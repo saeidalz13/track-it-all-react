@@ -1,7 +1,6 @@
 import CommonButton from "@components/Buttons/CommonButton";
 import { MaxChar } from "@constants/AppConsts";
-import { BACKEND_URL } from "@constants/EnvConsts";
-import { DataFetcher } from "@utils/fetcherUtils";
+import { uppdateJobSpec } from "@utils/jobUtils";
 import { useJobContext } from "contexts/Job/useJobContext";
 import { StatusCodes } from "http-status-codes";
 import React, { useState } from "react";
@@ -29,7 +28,12 @@ const SingleJobDesc: React.FC<SingleJobDescProps> = (props) => {
     setDescChars(e.target.value.length);
   };
 
-  const handleUpdateJobDesc = async () => {
+  const handleUpdateJobSpec = async (key: string, value: string | null) => {
+    if (value === null) {
+      setEditDesc(false);
+      return;
+    }
+
     setSubmitError("");
 
     if (descChars > MaxChar.JOB_DESC) {
@@ -39,12 +43,7 @@ const SingleJobDesc: React.FC<SingleJobDescProps> = (props) => {
     }
 
     try {
-      const resp = await DataFetcher.patchData(
-        `${BACKEND_URL}/jobs/${props.jobUlid}`,
-        {
-          description: description,
-        }
-      );
+      const resp = await uppdateJobSpec(props.jobUlid, key, value);
 
       if (resp.status == StatusCodes.OK) {
         // TODO: update the job on client side
@@ -111,7 +110,7 @@ const SingleJobDesc: React.FC<SingleJobDescProps> = (props) => {
                 text="Submit"
                 variant="success"
                 divStyle={{ marginTop: "10px" }}
-                onClick={handleUpdateJobDesc}
+                onClick={() => handleUpdateJobSpec("description", description)}
                 disabled={description === props.jobDescription ? true : false}
               />
               <Form.Text className="text-danger">{submitError}</Form.Text>
