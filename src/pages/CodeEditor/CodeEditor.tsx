@@ -43,7 +43,10 @@ const CodeOutputSectionStyle: React.CSSProperties = {
   marginLeft: "1px",
 };
 
-const LANGUAGES = ["Javascript", "Python", "Java", "C++", "Go"];
+const LANGUAGES = [
+  "Javascript",
+  // "Python", "Java", "C++", "Go"
+];
 
 const CodeEditor = () => {
   // * parameters
@@ -346,9 +349,9 @@ const CodeEditor = () => {
                   >
                     {LANGUAGES.map((lang) => (
                       <Dropdown.Item
-                        active={lang.toLowerCase() === language}
+                        active={lang === language}
                         key={lang}
-                        onClick={() => setLanguage(lang.toLowerCase())}
+                        onClick={() => setLanguage(lang)}
                       >
                         {lang}
                       </Dropdown.Item>
