@@ -33,7 +33,6 @@
   );
 
   text-align: center;
-  /* padding: 1vh; */
   box-shadow: rgba(250, 253, 255, 0.12) 0px 2px 4px 0px,
     rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
   transition: all 0.3s ease;

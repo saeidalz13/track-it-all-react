@@ -138,7 +138,7 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
       <Container className="mt-3 mb-2">
         <Row className="justify-content-center">
           <Row>
-            <Col className="mb-1" md>
+            <Col className="mb-1" xl>
               <Stack className="fancy-circle-div" direction="horizontal">
                 <Badge bg="dark" className="me-2 p-2">
                   👨‍💼 Position
@@ -147,7 +147,7 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
               </Stack>
             </Col>
 
-            <Col className="mb-1" md>
+            <Col className="mb-1" xl>
               <Stack className="fancy-circle-div" direction="horizontal">
                 <Badge bg="dark" className="me-2 p-2">
                   📅 Date Applied
@@ -160,7 +160,7 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
           </Row>
 
           <Row>
-            <Col className="mb-1" md>
+            <Col className="mb-1" xl>
               <Stack className="fancy-circle-div" direction="horizontal">
                 <Badge bg="dark" className="me-2 p-2">
                   🔗 Link
@@ -175,7 +175,7 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
               </Stack>
             </Col>
 
-            <Col md>
+            <Col xl>
               <Stack className="fancy-circle-div" direction="horizontal">
                 <Badge bg="dark" className="me-2 p-2">
                   📄 Resume
