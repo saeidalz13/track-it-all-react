@@ -38,10 +38,29 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
   const [showFetchErrorModal, setShowFetchErrorModal] = useState(false);
   const [fetchModalContent, setFetchModalContent] =
     useState<FetchErrorModalContent>({ title: "", body: "" });
-  const [editMode, setEditMode] = useState(false);
+  const [editModePosition, setEditModePosition] = useState(false);
+  const [editModeLink, setEditModeLink] = useState(false);
+
   const [editValue, setEditValue] = useState<string | null | Date>(null);
 
   // Functions
+  const cancelEditMode = (what: "position" | "link" | "date") => {
+    switch (what) {
+      case "position":
+        setEditModePosition(false);
+        return;
+
+      case "link":
+        setEditModeLink(false);
+        return;
+
+      case "date":
+      // TODO: date
+    }
+
+    setEditValue(null);
+  };
+
   const handleUpdateJobSpec = async (key: string) => {
     if (editValue === null) {
       return;
@@ -57,7 +76,9 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
 
       if (resp.status === StatusCodes.OK) {
         jobContext.refetchJobData(props.job.id);
-        setEditMode(false);
+        setEditModePosition(false);
+        setEditModeLink(false);
+        setEditValue(null);
         return;
       }
 
@@ -171,7 +192,7 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
         <Row className="justify-content-center">
           <Row>
             <Col className="mb-1" xl>
-              {editMode ? (
+              {editModePosition ? (
                 <Stack className="fancy-circle-div" direction="horizontal">
                   <InputGroup style={{ maxWidth: "400px", margin: "0 5px" }}>
                     <Form.Control
@@ -185,23 +206,26 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
                     >
                       Submit
                     </Button>
-                    <Button onClick={() => setEditMode(false)} variant="danger">
+                    <Button
+                      onClick={() => cancelEditMode("position")}
+                      variant="danger"
+                    >
                       Cancel
                     </Button>
                   </InputGroup>
                 </Stack>
               ) : (
-                <Stack
-                  onClick={() => setEditMode(true)}
-                  className="fancy-circle-div"
-                  direction="horizontal"
-                >
+                <Stack className="fancy-circle-div" direction="horizontal">
                   <Badge bg="dark" className="me-2 p-2">
                     👨‍💼 Position
                   </Badge>
-                  <div onClick={() => setEditMode(true)}>
-                    <span className="text-light">{props.job.position}</span>
-                  </div>
+
+                  <span
+                    onClick={() => setEditModePosition(true)}
+                    className="text-light"
+                  >
+                    {props.job.position}
+                  </span>
                 </Stack>
               )}
             </Col>
@@ -220,18 +244,47 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
 
           <Row>
             <Col className="mb-1" xl>
-              <Stack className="fancy-circle-div" direction="horizontal">
-                <Badge bg="dark" className="me-2 p-2">
-                  🔗 Link
-                </Badge>
-                {props.job.link ? (
-                  <a href={props.job.link} target="_blank">
-                    Go To Link
-                  </a>
-                ) : (
-                  <span className="text-warning">No Link!</span>
-                )}
-              </Stack>
+              {editModeLink ? (
+                <Stack className="fancy-circle-div" direction="horizontal">
+                  <InputGroup style={{ maxWidth: "400px", margin: "0 5px" }}>
+                    <Form.Control
+                      placeholder="Type new link"
+                      onChange={(e) => setEditValue(e.target.value)}
+                    />
+                    <Button
+                      onClick={() => handleUpdateJobSpec("link")}
+                      variant="warning"
+                      id="button-addon2"
+                    >
+                      Submit
+                    </Button>
+                    <Button
+                      onClick={() => cancelEditMode("link")}
+                      variant="danger"
+                    >
+                      Cancel
+                    </Button>
+                  </InputGroup>
+                </Stack>
+              ) : (
+                <Stack className="fancy-circle-div" direction="horizontal">
+                  <Badge bg="dark" className="me-2 p-2">
+                    🔗 Link
+                  </Badge>
+                  {props.job.link ? (
+                    <a href={props.job.link} target="_blank">
+                      Go To Link
+                    </a>
+                  ) : (
+                    <span
+                      onClick={() => setEditModeLink(true)}
+                      className="text-warning"
+                    >
+                      No Link!
+                    </span>
+                  )}
+                </Stack>
+              )}
             </Col>
 
             <Col xl>
