@@ -11,9 +11,17 @@ import { useJobContext } from "contexts/Job/useJobContext";
 import { StatusCodes } from "http-status-codes";
 import { JobApplication } from "models/Job/Job";
 import { useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import {
+  Badge,
+  Button,
+  Col,
+  Container,
+  Form,
+  Row,
+  Stack,
+} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { AuthRoutes, JobsRoutes } from "routes/Routes";
+import { AuthRoutes } from "routes/Routes";
 
 interface SingleJobCardProps {
   job: JobApplication;
@@ -26,31 +34,6 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
   const [showFetchErrorModal, setShowFetchErrorModal] = useState(false);
   const [fetchModalContent, setFetchModalContent] =
     useState<FetchErrorModalContent>({ title: "", body: "" });
-
-  const handleDeleteJob = async () => {
-    try {
-      const resp = await DataFetcher.deleteData(
-        `${BACKEND_URL}/jobs/${props.job.id}`
-      );
-
-      if (resp.status === StatusCodes.UNAUTHORIZED) {
-        authContext.setUserUnauth();
-        navigate(AuthRoutes.Login);
-        return;
-      }
-
-      if (resp.status == StatusCodes.NO_CONTENT) {
-        jobContext.refetchJobData(props.job.id);
-        navigate(JobsRoutes.Jobs);
-        return;
-      }
-
-      alert(`Error in deleting job, status: ${resp.status}`);
-    } catch (error) {
-      console.error(error);
-      alert(error);
-    }
-  };
 
   const handleGetResume = async () => {
     try {
@@ -152,88 +135,88 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
 
   return (
     <>
-      <Container className="mt-3 mb-4">
-        <Row className="mb-3 justify-content-md-center">
-          <Col xl={3}>
-            <CommonButton
-              text="Delete 🗑️"
-              variant="dark"
-              style={{ padding: "10px 50px" }}
-              onClick={handleDeleteJob}
-              divStyle={{ textAlign: "center" }}
-            />
-          </Col>
+      <Container className="mt-3 mb-2">
+        <Row className="justify-content-center">
+          <Row>
+            <Col className="mb-1" md>
+              <Stack className="fancy-circle-div" direction="horizontal">
+                <Badge bg="dark" className="me-2 p-2">
+                  👨‍💼 Position
+                </Badge>
+                <span className="text-light">{props.job.position}</span>
+              </Stack>
+            </Col>
 
-          <Col xl={3}>
-            <CommonButton
-              text="Interview Stages"
-              variant="success"
-              style={{ padding: "10px 50px" }}
-              divStyle={{ textAlign: "center" }}
-              onClick={() => navigate(`/jobs/${props.job.id}/interview-stages`)}
-            />
-          </Col>
-        </Row>
+            <Col className="mb-1" md>
+              <Stack className="fancy-circle-div" direction="horizontal">
+                <Badge bg="dark" className="me-2 p-2">
+                  📅 Date Applied
+                </Badge>
+                <span className="text-light">
+                  {new Date(props.job.applied_date).toISOString().split("T")[0]}
+                </span>
+              </Stack>
+            </Col>
+          </Row>
 
-        <Row>
-          <Col className="mb-1" md>
-            <div className="fancy-circle-div">
-              <span className="fancy-circle-title">👨‍💼 Position</span> <br />
-              {props.job.position}
-            </div>
-          </Col>
-
-          <Col className="mb-1" md>
-            <div className="fancy-circle-div">
-              <span className="fancy-circle-title">📅 Date Applied</span> <br />
-              {new Date(props.job.applied_date).toISOString().split("T")[0]}
-            </div>
-          </Col>
-
-          <Col className="mb-1" md>
-            <div className="fancy-circle-div">
-              <span className="fancy-circle-title">🔗 Link</span> <br />
-              {props.job.link ? (
-                <a href={props.job.link} target="_blank">
-                  Go To Link
-                </a>
-              ) : (
-                <span style={{ color: "maroon" }}>No Link!</span>
-              )}
-            </div>
-          </Col>
-        </Row>
-
-        <Row className="mt-3">
-          <Col style={{ maxWidth: "500px", margin: "0 auto" }} md>
-            <div className="resume-upload-div">
-              <h3>Resume</h3>
-              <div>
-                {props.job.resume_path === null ? (
-                  <Form.Control
-                    type="file"
-                    accept=".pdf"
-                    onChange={handleUploadResume}
-                  />
+          <Row>
+            <Col className="mb-1" md>
+              <Stack className="fancy-circle-div" direction="horizontal">
+                <Badge bg="dark" className="me-2 p-2">
+                  🔗 Link
+                </Badge>
+                {props.job.link ? (
+                  <a href={props.job.link} target="_blank">
+                    Go To Link
+                  </a>
                 ) : (
-                  <div>
-                    <Button variant="info" onClick={handleGetResume}>
-                      See File
-                    </Button>
-                    <Button
-                      className="ms-1"
-                      variant="warning"
-                      onClick={handleDeleteResume}
-                    >
-                      🗑️
-                    </Button>
-                  </div>
+                  <span className="text-warning">No Link!</span>
                 )}
-              </div>
-            </div>
-          </Col>
+              </Stack>
+            </Col>
+
+            <Col md>
+              <Stack className="fancy-circle-div" direction="horizontal">
+                <Badge bg="dark" className="me-2 p-2">
+                  📄 Resume
+                </Badge>
+                <span>
+                  {props.job.resume_path === null ? (
+                    <Form.Control
+                      type="file"
+                      accept=".pdf"
+                      onChange={handleUploadResume}
+                    />
+                  ) : (
+                    <span>
+                      <Button variant="info" onClick={handleGetResume}>
+                        See File
+                      </Button>
+                      <Button
+                        className="ms-2"
+                        variant="warning"
+                        onClick={handleDeleteResume}
+                      >
+                        🗑️
+                      </Button>
+                    </span>
+                  )}
+                </span>
+              </Stack>
+            </Col>
+          </Row>
         </Row>
       </Container>
+
+      <Stack direction="horizontal" className="mb-4 justify-content-center">
+        <CommonButton
+          text="Go to Interview Stages ->"
+          variant="info"
+          style={{ padding: "10px 40px" }}
+          divStyle={{ textAlign: "center" }}
+          onClick={() => navigate(`/jobs/${props.job.id}/interview-stages`)}
+        />
+      </Stack>
 
       <FetchErrorModal
         show={showFetchErrorModal}

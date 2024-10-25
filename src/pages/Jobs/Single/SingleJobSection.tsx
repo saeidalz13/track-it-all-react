@@ -16,6 +16,7 @@ import SingleJobDesc from "./SingleJobDesc";
 import PageHeader from "@components/Headers/PageHeader";
 import { StringProcessor } from "@utils/stringUtils";
 import AiInsightSection from "./AiInsightSection";
+import SingleJobDeletion from "./SingleJobDeletion";
 
 const SingleJob = () => {
   const { jobUlid } = useParams();
@@ -93,7 +94,7 @@ const SingleJob = () => {
         jobUlid={jobUlid}
       />
 
-      {/* <InterviewSection jobUlid={jobUlid} /> */}
+      <SingleJobDeletion jobId={job.id} />
     </>
   );
 };
