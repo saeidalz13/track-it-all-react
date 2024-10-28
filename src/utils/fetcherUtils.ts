@@ -20,13 +20,23 @@ export class DataFetcher {
     timeout: number = 5000,
     contentType: string = "application/json"
   ): Promise<Response> {
-    return fetch(url, {
-      method: HttpMethods.POST,
-      body: JSON.stringify(data),
-      headers: { "Content-Type": contentType },
-      signal: AbortSignal.timeout(timeout),
-      credentials: credentials,
-    });
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+
+    try {
+      const resp = fetch(url, {
+        method: HttpMethods.POST,
+        body: JSON.stringify(data),
+        headers: { "Content-Type": contentType },
+        signal: controller.signal,
+        credentials: credentials,
+      });
+      clearTimeout(id);
+      return resp;
+    } catch (error) {
+      clearTimeout(id);
+      throw error;
+    }
   }
 
   public static patchData<T>(

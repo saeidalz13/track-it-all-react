@@ -1,5 +1,8 @@
 import { BACKEND_URL } from "@constants/EnvConsts";
-import { TechnicallChallengeTag } from "@constants/InterviewConsts";
+import {
+  SOLVABLE_CHALLENGES,
+  TechnicallChallengeTag,
+} from "@constants/InterviewConsts";
 import {
   ITechnicalChallenge,
   RespTechnicalChallenges,
@@ -13,6 +16,7 @@ import { ListGroup, Dropdown, Badge, Image } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { AuthRoutes } from "routes/Routes";
 import loadingSpinner from "@assets/loading_spinner.svg";
+import AiTechChallCustomModal from "@components/Modals/AiTechChallCustomModal";
 
 const TechnicalSectionStyle: React.CSSProperties = {
   backgroundColor: "rgba(2, 255, 255, 0.17)",
@@ -30,11 +34,20 @@ const LIST_VARIANTS = ["info", "success", "danger", "dark", "warning"];
 
 const TechnicalSection: React.FC<TechnicalSectionProps> = (props) => {
   const navigate = useNavigate();
+
   const [techQuestions, setTechQuestions] = useState<
     Array<ITechnicalChallenge>
   >([]);
   const [aiBtnDisabled, setAiBtnDisabled] = useState<boolean>(false);
+  const [showCustomModal, setShowCustomModal] = useState<boolean>(false);
+
+  // context
   const tcc = useTechChallengeContext();
+
+  // Functions
+  const onCustomTechChallenge = (data: ITechnicalChallenge[]) => {
+    tcc.setTechChallengesLookup(props.jobUlid, data);
+  };
 
   const handleGenerateTechnicalQuestions = async (
     tag: TechnicallChallengeTag
@@ -149,6 +162,12 @@ const TechnicalSection: React.FC<TechnicalSectionProps> = (props) => {
           >
             Project Style
           </Dropdown.Item>
+          <Dropdown.Item
+            className="text-light"
+            onClick={() => setShowCustomModal(true)}
+          >
+            Make Your Style...
+          </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
 
@@ -159,9 +178,9 @@ const TechnicalSection: React.FC<TechnicalSectionProps> = (props) => {
               key={idx}
               style={{ textAlign: "left" }}
               variant={LIST_VARIANTS[idx % 5]}
-              action={tq.tag === TechnicallChallengeTag.LEETCODE}
+              action={SOLVABLE_CHALLENGES.includes(tq.tag)}
               onClick={() => {
-                if (tq.tag === TechnicallChallengeTag.LEETCODE) {
+                if (SOLVABLE_CHALLENGES.includes(tq.tag)) {
                   navigate(`/code-editor/${props.jobUlid}/${tq.id}`);
                 }
               }}
@@ -172,13 +191,15 @@ const TechnicalSection: React.FC<TechnicalSectionProps> = (props) => {
                     bg={
                       tq.tag === TechnicallChallengeTag.LEETCODE
                         ? "dark"
+                        : tq.tag === TechnicallChallengeTag.CUSTOM
+                        ? "success"
                         : "danger"
                     }
                     pill
                   >
                     {tq.tag}
                   </Badge>{" "}
-                  {tq.tag === TechnicallChallengeTag.LEETCODE ? "->" : ""}
+                  {SOLVABLE_CHALLENGES.includes(tq.tag) ? "->" : ""}
                 </div>
                 {idx + 1}. {tq.question}
               </div>
@@ -188,6 +209,13 @@ const TechnicalSection: React.FC<TechnicalSectionProps> = (props) => {
           <h4 className="mt-3 text-warning">NO CHALLENGES YET</h4>
         )}
       </ListGroup>
+
+      <AiTechChallCustomModal
+        show={showCustomModal}
+        onHide={() => setShowCustomModal(false)}
+        jobId={props.jobUlid}
+        setData={onCustomTechChallenge}
+      />
     </div>
   );
 };
