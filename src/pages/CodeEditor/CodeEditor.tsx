@@ -18,7 +18,7 @@ import {
 } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { AuthRoutes } from "routes/Routes";
-import loadingSpinner from "@assets/loading_spinner.svg";
+import loadingSpinner from "/assets/loading_spinner.svg";
 import ReactMarkdown from "react-markdown";
 import { useTechChallengeContext } from "contexts/TechChallenge/useTechChallengeContext";
 import JobsBreadcrumb from "@pages/Jobs/JobsBreadcrumb";

@@ -2,7 +2,6 @@ import CommonButton from "@components/Buttons/CommonButton";
 import ConfirmModal from "@components/Modals/ConfimModal";
 import { BACKEND_URL } from "@constants/EnvConsts";
 import { DataFetcher } from "@utils/fetcherUtils";
-import { useAuthContext } from "contexts/Auth/useAuthContext";
 import { StatusCodes } from "http-status-codes";
 import { ApiResp, NoPayload } from "models/Api/ApiResp";
 import { useState } from "react";
@@ -10,15 +9,12 @@ import { useNavigate } from "react-router-dom";
 import { AuthRoutes } from "routes/Routes";
 
 const DeleteProfile = () => {
-  const authContext = useAuthContext();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
   const handleDeleteProfile = async () => {
     try {
-      const resp = await DataFetcher.deleteData(
-        `${BACKEND_URL}/users/${authContext.userId}`
-      );
+      const resp = await DataFetcher.deleteData(`${BACKEND_URL}/users`);
 
       if (resp.status === StatusCodes.UNAUTHORIZED) {
         navigate(AuthRoutes.Login);

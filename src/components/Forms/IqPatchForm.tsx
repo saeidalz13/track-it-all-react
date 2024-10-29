@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Button, Form, Image } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { AuthRoutes } from "routes/Routes";
-import loadingImage from "@assets/loading_spinner.svg";
+import loadingImage from "/assets/loading_spinner.svg";
 import { BACKEND_URL } from "@constants/EnvConsts";
 import { ApiResp } from "models/Api/ApiResp";
 
@@ -98,7 +98,7 @@ const IqPatchForm = ({
         setCurrResponse(data.payload!.response);
         setDescChars(data.payload!.response.length);
         setEditDesc(true);
-        return
+        return;
       }
 
       console.log(resp.status);

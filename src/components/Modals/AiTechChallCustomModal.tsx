@@ -11,7 +11,7 @@ import { useState } from "react";
 import { Form, Modal, Image } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { AuthRoutes } from "routes/Routes";
-import loadingSpinner from "@assets/loading_spinner.svg";
+import loadingSpinner from "/assets/loading_spinner.svg";
 
 interface AiTechChallCustomModalProps {
   show: boolean;
