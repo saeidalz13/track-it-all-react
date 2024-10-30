@@ -7,7 +7,6 @@ import JobProvider from "./contexts/Job/jobContext.tsx";
 import TechChallengeProvider from "contexts/TechChallenge/TechChallengeProvider.tsx";
 
 createRoot(document.getElementById("root")!).render(
-  // <StrictMode>
   <AuthProvider>
     <JobProvider>
       <TechChallengeProvider>
@@ -15,5 +14,4 @@ createRoot(document.getElementById("root")!).render(
       </TechChallengeProvider>
     </JobProvider>
   </AuthProvider>
-  // </StrictMode>
 );

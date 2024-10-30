@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { Button, Container, Form, InputGroup } from "react-bootstrap";
+import { Button, Container, Form, InputGroup, Image } from "react-bootstrap";
 import CommonButton from "../../components/Buttons/CommonButton";
 import NavigateButton from "../../components/Buttons/NavigateButton";
 import { AuthRoutes, GeneralRoutes, ProfileRoutes } from "../../routes/Routes";
@@ -11,6 +11,7 @@ import { ApiResp, NoPayload } from "../../models/Api/ApiResp";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../contexts/Auth/useAuthContext";
 import { AuthStatus } from "@constants/AuthConsts";
+import googleIcon from "/assets/google_icon.svg";
 
 const btnStyle: React.CSSProperties = {
   marginTop: "15px",
@@ -133,7 +134,12 @@ const Login = () => {
     <>
       <h1 className="common-h1 mt-5 text-center">Continue Tracking!</h1>
       <CommonButton
-        text="Log in Using Google"
+        text={
+          <span>
+            Google Sign In
+            <Image className="ms-1" src={googleIcon} height="50px" />
+          </span>
+        }
         variant="info"
         style={{ padding: "20px 40px", marginTop: "20px" }}
         divStyle={{ textAlign: "center" }}

@@ -14,6 +14,7 @@ export default defineConfig({
   // for fly.io
   server: {
     host: "0.0.0.0", // Allows access from the network
-    port: 80, // Runs on port 80
+    // port: 80, // Runs on port 80
+    port: 5173, // Runs on port 80
   },
 });

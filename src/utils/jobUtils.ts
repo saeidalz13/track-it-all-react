@@ -28,7 +28,7 @@ export const getJobsByLimitOffset = async (
     console.error(resp.status);
     return "otherError";
   } catch (error) {
-    console.error(error);
+    console.error(`Unkown error in job fetch: ${error}`);
     return "otherError";
   }
 };

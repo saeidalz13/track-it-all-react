@@ -16,16 +16,16 @@ import {
 
 const RecentJobs = () => {
   const authContext = useAuthContext();
-  const jobContext = useJobContext();
+  const { jobsGroupedByOffset, addToJobsGroupedByOffset, setJobCount } =
+    useJobContext();
   const navigate = useNavigate();
   const [jobs, setJobs] = useState<JobApplicationsState>("loading");
   const [defaultLimit, defaultOffset] = [6, 0];
 
   useEffect(() => {
     try {
-      if (jobContext.jobsGroupedByOffset.size === 0) {
-        const result = getJobsByLimitOffset(defaultLimit, defaultOffset, "");
-        result.then((res) => {
+      if (jobsGroupedByOffset.size === 0) {
+        getJobsByLimitOffset(defaultLimit, defaultOffset, "").then((res) => {
           switch (res) {
             case "authError":
               navigate(AuthRoutes.Login);
@@ -38,18 +38,14 @@ const RecentJobs = () => {
 
             default:
               authContext.setUserAuth();
-              jobContext.addToJobsGroupedByOffset(
-                defaultOffset,
-                res.jobs,
-                res.jobCount
-              );
-              jobContext.setJobCount(res.jobCount);
+              addToJobsGroupedByOffset(defaultOffset, res.jobs, res.jobCount);
+              setJobCount(res.jobCount);
               setJobs(reformatJobsForContainer(res.jobs.slice(0, 3)));
               return;
           }
         });
       } else {
-        const recentJobs = jobContext.jobsGroupedByOffset.get(defaultOffset);
+        const recentJobs = jobsGroupedByOffset.get(defaultOffset);
         if (recentJobs === undefined) {
           setJobs("error");
           return;
@@ -60,7 +56,15 @@ const RecentJobs = () => {
       console.log(error);
       setJobs("error");
     }
-  }, [navigate, jobContext, authContext, setJobs, defaultLimit, defaultOffset]);
+  }, [
+    navigate,
+    defaultLimit,
+    defaultOffset,
+    jobsGroupedByOffset,
+    authContext,
+    addToJobsGroupedByOffset,
+    setJobCount,
+  ]);
 
   if (jobs === "error") {
     return <ServerError />;

@@ -1,7 +1,7 @@
 import RecentJobs from "./RecentJobs";
 import ProfileSectionHeader from "../../../components/Headers/ProfileSectionHeader";
-import { useState } from "react";
-import OffCanvasExample from "../../../components/OffCanvas/ProfileOffCanvas";
+// import { useState } from "react";
+// import OffCanvasExample from "../../../components/OffCanvas/ProfileOffCanvas";
 import CommonButton from "../../../components/Buttons/CommonButton";
 import { JobsRoutes } from "../../../routes/Routes";
 import { useNavigate } from "react-router-dom";
@@ -17,10 +17,8 @@ const JobSectionStyle: React.CSSProperties = {
 };
 
 const Jobs = () => {
-  const [showOffCanvas, setShowOffCanvas] = useState(false);
+  // const [showOffCanvas, setShowOffCanvas] = useState(false);
   const navigate = useNavigate();
-  const dropDownItems = new Map();
-  dropDownItems.set("All Jobs", JobsRoutes.Jobs);
 
   return (
     <div style={JobSectionStyle}>
@@ -35,7 +33,7 @@ const Jobs = () => {
         divStyle={{ fontSize: "20px", marginTop: "10px" }}
       />
 
-      <OffCanvasExample show={showOffCanvas} setShow={setShowOffCanvas} />
+      {/* <OffCanvasExample show={showOffCanvas} setShow={setShowOffCanvas} /> */}
     </div>
   );
 };

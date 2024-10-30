@@ -7,17 +7,19 @@ import {
   InputGroup,
   Button,
   Spinner,
+  Image,
 } from "react-bootstrap";
 import CommonButton from "../../components/Buttons/CommonButton";
 import NavigateButton from "../../components/Buttons/NavigateButton";
 import { AuthRoutes, GeneralRoutes, ProfileRoutes } from "../../routes/Routes";
 import { BACKEND_URL } from "../../constants/EnvConsts";
 import { ReqSignup, RespSignupPayload } from "../../models/Auth/Signup";
-import { ApiResp } from "../../models/Api/ApiResp";
+import { ApiResp, NoPayload } from "../../models/Api/ApiResp";
 import { useAuthContext } from "../../contexts/Auth/useAuthContext";
 import { useNavigate } from "react-router-dom";
 import { DataFetcher } from "../../utils/fetcherUtils";
 import { StatusCodes } from "http-status-codes";
+import googleIcon from "/assets/google_icon.svg";
 
 const btnStyle: React.CSSProperties = {
   marginTop: "15px",
@@ -41,6 +43,7 @@ const Signup = () => {
   const [pwConfErr, setPwConfErr] = useState<string>("");
   const [submitErr, setSubmitErr] = useState<string>("");
   const [submitBtnDisabled, setSubmitBtnDisabled] = useState<boolean>(false);
+  const [googleBtnDisabled, setGoogleBtnDisabled] = useState(false);
 
   const specialChars = /[`!@#$%^&*()_\-+=[\]{};':"\\|,.<>/?~ ]/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -166,9 +169,52 @@ const Signup = () => {
     }
   };
 
+  const handleGetOAuth2ServerUri = async () => {
+    try {
+      setGoogleBtnDisabled(true);
+      setSubmitBtnDisabled(true);
+      const resp = await DataFetcher.getData(
+        `${BACKEND_URL}/oauth2-auth-server-uri`
+      );
+
+      if (resp.status === StatusCodes.OK) {
+        const data: ApiResp<{ auth_server_uri: string }> = await resp.json();
+        location.assign(data.payload!.auth_server_uri);
+        return;
+      }
+
+      const data: ApiResp<NoPayload> = await resp.json();
+      alert(data.error!);
+      setGoogleBtnDisabled(false);
+      setSubmitBtnDisabled(false);
+    } catch (error) {
+      console.error(error);
+      alert("Connection error to server");
+      setGoogleBtnDisabled(false);
+      setSubmitBtnDisabled(false);
+    }
+  };
+
   return (
     <>
       <h1 className="common-h1 mt-5 text-center">Start Tracking Today!</h1>
+      <CommonButton
+        text={
+          <span>
+            Google Sign In
+            <Image className="ms-1" src={googleIcon} height="50px" />
+          </span>
+        }
+        variant="info"
+        style={{ padding: "20px 40px", marginTop: "20px" }}
+        divStyle={{ textAlign: "center" }}
+        disabled={googleBtnDisabled}
+        onClick={handleGetOAuth2ServerUri}
+      />
+
+      <div className="text-center mt-3" style={{ color: "white" }}>
+        OR
+      </div>
 
       <Container>
         <Row>
