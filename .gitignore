@@ -25,4 +25,3 @@ dist-ssr
 *.sw?
 
 tasks.md
-fly.toml
