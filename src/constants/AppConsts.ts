@@ -5,7 +5,14 @@ export type TButtonVariant =
   | "primary"
   | "link"
   | "danger"
-  | "light";
+  | "light"
+  | "outline-success"
+  | "outline-info"
+  | "outline-dark"
+  | "outline-primary"
+  | "outline-link"
+  | "outline-danger"
+  | "outline-light";
 
 export const MaxChar = {
   JOB_DESC: 15000,

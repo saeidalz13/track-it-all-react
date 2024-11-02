@@ -145,9 +145,11 @@ const AiInsightSection = ({ aiInsight, jobUlid }: AiInsightSectionProps) => {
             style={{ maxWidth: "1400px", margin: "0 auto" }}
             hidden={hideInsight}
           >
-            <ReactMarkdown className="mt-3 p-2">
-              {aiMessages.join("")}
-            </ReactMarkdown>
+            <div style={{ maxHeight: "40vh", overflowY: "auto" }}>
+              <ReactMarkdown className="mt-3 p-2">
+                {aiMessages.join("")}
+              </ReactMarkdown>
+            </div>
 
             {aiMessages.join("") === aiInsight.join("") ? (
               ""

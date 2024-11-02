@@ -4,7 +4,7 @@ import { uppdateJobSpec } from "@utils/jobUtils";
 import { useJobContext } from "contexts/Job/useJobContext";
 import { StatusCodes } from "http-status-codes";
 import React, { useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Stack } from "react-bootstrap";
 
 interface SingleJobDescProps {
   jobDescription: string | null;
@@ -64,13 +64,15 @@ const SingleJobDesc: React.FC<SingleJobDescProps> = (props) => {
 
   return (
     <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
-      <h2 className="text-center">Job Description</h2>
-      <CommonButton
-        text={hideDesc ? "Show Description 👀" : "Hide Description 😶‍🌫️"}
-        variant="success"
-        divStyle={{ margin: "10px 0", textAlign: "center" }}
-        onClick={() => setHideDesc((prev) => !prev)}
-      />
+      <Stack direction="horizontal">
+        <h2 className="text-center">Job Description</h2>
+        <CommonButton
+          text={hideDesc ? "👀" : "😶‍🌫️"}
+          variant="success"
+          divStyle={{ margin: "5px 0 10px 8px", textAlign: "center" }}
+          onClick={() => setHideDesc((prev) => !prev)}
+        />
+      </Stack>
 
       <div hidden={hideDesc}>
         <Button
@@ -116,7 +118,15 @@ const SingleJobDesc: React.FC<SingleJobDescProps> = (props) => {
               <Form.Text className="text-danger">{submitError}</Form.Text>
             </>
           ) : props.jobDescription ? (
-            <pre style={{ fontFamily: "Raleway" }}>{props.jobDescription}</pre>
+            <pre
+              style={{
+                fontFamily: "Raleway",
+                maxHeight: "30vh",
+                overflowY: "auto",
+              }}
+            >
+              {props.jobDescription}
+            </pre>
           ) : (
             "No Description Provided".toLocaleUpperCase()
           )}
