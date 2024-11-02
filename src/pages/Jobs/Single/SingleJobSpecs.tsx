@@ -222,7 +222,7 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
 
                   <span
                     onClick={() => setEditModePosition(true)}
-                    className="text-light"
+                    className="text-light job-spec-editable"
                   >
                     {props.job.position}
                   </span>
@@ -278,7 +278,7 @@ const SingleJobSpecs: React.FC<SingleJobCardProps> = (props) => {
                   ) : (
                     <span
                       onClick={() => setEditModeLink(true)}
-                      className="text-warning"
+                      className="text-warning job-spec-editable"
                     >
                       No Link!
                     </span>
