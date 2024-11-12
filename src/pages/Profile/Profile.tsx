@@ -2,6 +2,7 @@ import Jobs from "./Jobs/Jobs";
 import PageHeader from "../../components/Headers/PageHeader";
 import Courses from "./Courses/Courses";
 import UserContainer from "./User/UserContainer";
+import Leetcode from "./Leetcode/Leetcode";
 // import {
 // useLocation,
 // useNavigate,
@@ -27,6 +28,7 @@ const Profile = () => {
     <>
       <PageHeader text="Dashboard" />
       <Jobs />
+      <Leetcode />
       <Courses />
       <UserContainer />
     </>
