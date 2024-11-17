@@ -1,15 +1,10 @@
 import { FormEvent, useRef, useState } from "react";
 import { Form, FloatingLabel } from "react-bootstrap";
 import CommonButton from "../Buttons/CommonButton";
-import {
-  ReqJobApplication,
-  RespPostJobApplication,
-} from "../../models/Job/Job";
 import { DataFetcher } from "../../utils/fetcherUtils";
 import { BACKEND_URL } from "../../constants/EnvConsts";
-import { AuthRoutes, JobsRoutes } from "../../routes/Routes";
+import { AuthRoutes } from "../../routes/Routes";
 import { StatusCodes } from "http-status-codes";
-import { ApiResp } from "../../models/Api/ApiResp";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../contexts/Auth/useAuthContext";
 import { useJobContext } from "../../contexts/Job/useJobContext";
@@ -18,6 +13,17 @@ import { MaxChar } from "@constants/AppConsts";
 
 interface JobFormProps {
   onHide?: () => void;
+}
+
+interface createJobGQLResp {
+  data: {
+    createJob: {
+      id: string;
+      appliedDate: Date;
+      errors: Array<string>;
+    };
+  };
+  errors?: Array<string>;
 }
 
 const JobForm: React.FC<JobFormProps> = () => {
@@ -54,20 +60,37 @@ const JobForm: React.FC<JobFormProps> = () => {
       appliedDate = new Date(appliedDateRef.current.value);
     }
 
-    const reqData: ReqJobApplication = {
+    const mutation = `mutation CreateJob($position: String!, $companyName: String!, $appliedDate: ISO8601DateTime, $link: String, $description: String) {
+        createJob(input: {position: $position, companyName: $companyName, appliedDate: $appliedDate, link: $link, description: $description}) {
+            id
+            appliedDate
+            errors
+          }
+        }`;
+
+    const variables = {
       position: positionRef.current.value,
-      company_name: companyNameRef.current.value,
-      applied_date: appliedDate,
-      link: linkRef.current.value,
+      companyName: companyNameRef.current.value,
+      appliedDate: appliedDate,
+      link:
+        linkRef.current.value.trim() !== ""
+          ? linkRef.current.value.trim()
+          : null,
       description:
-        descRef.current.value.trim() !== "" ? descRef.current.value : null,
+        descRef.current.value.trim() !== ""
+          ? descRef.current.value.trim()
+          : null,
+    };
+
+    const b = {
+      query: mutation,
+      variables: variables,
     };
 
     try {
-      const resp = await DataFetcher.postData(
-        `${BACKEND_URL}${JobsRoutes.Jobs}`,
-        reqData
-      );
+      // const url = `${BACKEND_URL}${JobsRoutes.Jobs}`;
+      const url = `${BACKEND_URL}/graphql`;
+      const resp = await DataFetcher.postData(url, b);
 
       if (resp.status === StatusCodes.UNAUTHORIZED) {
         authContext.setUserUnauth();
@@ -75,39 +98,54 @@ const JobForm: React.FC<JobFormProps> = () => {
         return;
       }
 
-      if (resp.status === StatusCodes.CREATED) {
-        const respData: ApiResp<RespPostJobApplication> = await resp.json();
+      // const respData: ApiResp<RespPostJobApplication> = await resp.json();
+      const respData: createJobGQLResp = await resp.json();
+      const errors = respData.data.createJob.errors;
+      const id = respData.data.createJob.id;
+      const applied_date = respData.data.createJob.appliedDate;
 
-        if (respData.payload) {
-          createNewJob();
-          insertToJobLookup({
-            id: respData.payload.id,
-            position: reqData.position,
-            company_name: reqData.company_name,
-            applied_date: respData.payload.applied_date,
-            link: reqData.link,
-            ai_insight: null,
-            description: reqData.description,
-            resume_path: null,
-          });
-          setSendStatus("Success");
-          setShowModal(true);
-
-          descRef.current.value = "";
-          linkRef.current.value = "";
-          appliedDateRef.current.value = "";
-          companyNameRef.current.value = "";
-          positionRef.current.value = "";
-
-          await new Promise((r) => setTimeout(r, 1000));
-          navigate(`/jobs/${respData.payload.id}`);
-          return;
+      if (resp.status !== StatusCodes.OK || respData.errors) {
+        if (respData.errors) {
+          throw new Error(respData.errors.join(","));
         }
+
+        throw new Error(`Failed! Status Code: ${resp.status}`);
       }
 
+      if (errors.length === 0) {
+        createNewJob();
+        insertToJobLookup({
+          id: id,
+          position: variables.position,
+          company_name: variables.companyName,
+          applied_date: applied_date,
+          link: variables.link,
+          ai_insight: null,
+          description: variables.description,
+          resume_path: null,
+        });
+        setSendStatus("Success");
+        setShowModal(true);
+
+        descRef.current.value = "";
+        linkRef.current.value = "";
+        appliedDateRef.current.value = "";
+        companyNameRef.current.value = "";
+        positionRef.current.value = "";
+
+        await new Promise((r) => setTimeout(r, 1000));
+        navigate(`/jobs/${id}`);
+        return;
+      }
+
+      if (errors.length === 1 && errors[0] === "unauthorized") {
+        navigate(AuthRoutes.Login);
+        return;
+      }
+
+      console.error(errors);
       setSendStatus("Error");
       setShowModal(true);
-
       return;
     } catch (error) {
       console.error(error);
