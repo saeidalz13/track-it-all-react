@@ -16,7 +16,7 @@ const LeetcodeProblems = () => {
   return (
     <div>
       {problems.length === 0 ? (
-        <div style={noProblemDivStyle}>No Problems Yet!</div>
+        <div style={noProblemDivStyle}>No Solved Leetcode Yet!</div>
       ) : (
         ""
       )}
