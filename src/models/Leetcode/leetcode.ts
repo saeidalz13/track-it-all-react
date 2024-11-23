@@ -5,6 +5,11 @@ export interface IAttempts {
   createdAt: Date;
 }
 
+export interface ILeetcodeTag {
+  tag: string;
+  link: string;
+}
+
 export interface ILeetcode {
   id: number;
   title: string;
@@ -12,4 +17,5 @@ export interface ILeetcode {
   link: string;
   accRate: number;
   attempts: Array<IAttempts>;
+  tags: Array<ILeetcodeTag>;
 }

@@ -76,6 +76,10 @@ const LeetcodeAll = () => {
                 language
                 createdAt
               }
+              tags {
+                tag
+                link
+              }
             }
         }`;
 
@@ -88,6 +92,7 @@ const LeetcodeAll = () => {
 
         if (resp.status === StatusCodes.OK) {
           const respBody: GqlAllProblems = await resp.json();
+          console.log(respBody);
 
           if (respBody.errors === undefined) {
             setLeetcodes(respBody.data.leetcodes);
@@ -151,6 +156,7 @@ const LeetcodeAll = () => {
             <thead>
               <tr>
                 <th>Title</th>
+                <th>Tags</th>
                 <th>Difficulty</th>
                 <th>Acceptance Rate</th>
               </tr>
@@ -162,7 +168,6 @@ const LeetcodeAll = () => {
                     style={{
                       cursor: "pointer",
                       color: "lightblue",
-                      textDecoration: "underline",
                     }}
                     onClick={() => handleClickDetails(leetcode)}
                   >
@@ -178,6 +183,38 @@ const LeetcodeAll = () => {
                       </Badge>
                     )}
                   </td>
+                  <td>
+                    {leetcode.tags.length > 0
+                      ? leetcode.tags.map((tag, index) => (
+                          <span key={index}>
+                            |{" "}
+                            <a
+                              href={tag.link}
+                              target="_blank"
+                              style={{
+                                color: "#7FFFD4",
+                                textDecoration: "none",
+                              }}
+                              onMouseOver={(
+                                e: React.MouseEvent<HTMLAnchorElement>
+                              ) => {
+                                e.currentTarget.style.textDecoration =
+                                  "underline";
+                              }}
+                              onMouseOut={(
+                                e: React.MouseEvent<HTMLAnchorElement>
+                              ) => {
+                                e.currentTarget.style.textDecoration = "none";
+                              }}
+                            >
+                              {tag.tag}
+                            </a>{" "}
+                            {index === leetcode.tags.length - 1 && "|"}
+                          </span>
+                        ))
+                      : "No Tags"}
+                  </td>
+
                   <td>{leetcode.difficulty}</td>
                   <td>{leetcode.accRate.toPrecision(2)}%</td>
                 </tr>

@@ -28,7 +28,10 @@ interface LeetcodeDetailsProps {
 
 interface createLeetcodeAttemptGQLResp {
   data: {
-    leetcodeAttempt: IAttempts;
+    createLeetcodeAttempt: {
+      leetcodeAttempt: IAttempts;
+      errors: Array<string>;
+    };
   };
   errors?: Array<string>;
 }
@@ -101,7 +104,10 @@ const LeetcodeDetails: React.FC<LeetcodeDetailsProps> = (props) => {
         return;
       }
 
-      setCurrAttempts((prev) => [...prev, respBody.data.leetcodeAttempt]);
+      setCurrAttempts((prev) => [
+        ...prev,
+        respBody.data.createLeetcodeAttempt.leetcodeAttempt,
+      ]);
     } catch (error) {
       console.error(error);
     }
@@ -118,17 +124,32 @@ const LeetcodeDetails: React.FC<LeetcodeDetailsProps> = (props) => {
       </Modal.Header>
 
       <Modal.Body>
-        <div>
+        <div className="text-center">
           <a href={props.leetcode.link} target="_blank">
-            <Button variant="info">Solve On Leetcode 🔗</Button>
+            <Button className="px-4 py-2" variant="info">
+              Solve On Leetcode 🔗
+            </Button>
           </a>
         </div>
 
         {currAttempts.length > 0 ? (
           <ListGroup variant="flush" className="mt-3">
             {currAttempts.map((attempt, idx) => (
-              <ListGroup.Item key={idx}>
-                Attempt: {idx + 1}{" "}
+              <ListGroup.Item
+                key={idx}
+                style={{
+                  backgroundColor: "#FFEFD5",
+                  borderRadius: "20px",
+                  padding: "20px",
+                }}
+              >
+                <h5>Attempt Records</h5>
+                <Badge className="me-1" bg="dark" pill>
+                  Attempt {idx + 1}{" "}
+                </Badge>
+                <Badge className="me-1" text="dark" bg="info" pill>
+                  {attempt.createdAt.toLocaleString()}
+                </Badge>
                 {attempt.solved ? (
                   <Badge bg="success" pill>
                     Solved
@@ -138,11 +159,8 @@ const LeetcodeDetails: React.FC<LeetcodeDetailsProps> = (props) => {
                     Not Solved
                   </Badge>
                 )}{" "}
-                <Badge bg="primary" pill>
-                  {attempt.createdAt.toLocaleString()}
-                </Badge>
                 <br />
-                <i>{attempt.notes}</i>
+                <div className="mt-1">{attempt.notes}</div>
                 <hr />
               </ListGroup.Item>
             ))}
@@ -189,7 +207,7 @@ const LeetcodeDetails: React.FC<LeetcodeDetailsProps> = (props) => {
             text="Submit"
             variant="success"
             divStyle={{ textAlign: "center", marginTop: "10px" }}
-            style={{ padding: "10px 20px" }}
+            style={{ padding: "8px 20px" }}
             onClick={handleSubmitLeetcodeAttempt}
           />
         </Container>
