@@ -1,10 +1,12 @@
 export interface IAttempts {
   solved: boolean;
   notes?: string;
+  language: string;
+  createdAt: Date;
 }
 
 export interface ILeetcode {
-  id: string;
+  id: number;
   title: string;
   difficulty: string;
   link: string;

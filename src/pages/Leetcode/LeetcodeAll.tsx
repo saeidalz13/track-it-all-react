@@ -27,7 +27,7 @@ const LeetcodeAll = () => {
     Array<ILeetcode> | "error" | "loading"
   >("loading");
   const [offset, setOffset] = useState<number>(0);
-  const [difficulty, setDifficulty] = useState<string>("");
+  const [difficulty, setDifficulty] = useState<string>("easy");
   //   const [successRate, setSuccessRate] = useState<null | number>(null)
   const [showDetails, setShowDetails] = useState(false);
   const [clickedLeetcode, setClickedLeetcode] = useState<ILeetcode | null>(
@@ -72,6 +72,8 @@ const LeetcodeAll = () => {
               attempts {
                 solved
                 notes
+                language
+                createdAt
               }
             }
         }`;
@@ -130,7 +132,6 @@ const LeetcodeAll = () => {
                   value={difficulty}
                   onChange={handleDifficultyChange}
                 >
-                  <option value="">--</option>
                   <option value="easy">Easy</option>
                   <option value="medium">Medium</option>
                   <option value="hard">Hard</option>

@@ -1,5 +1,5 @@
 export class StringProcessor {
-  public static convertTitleCase(str: string) {
+  public static toTitleCase(str: string) {
     const strArr = str.toLowerCase().split(" ");
 
     for (let i = 0; i < strArr.length; i++) {

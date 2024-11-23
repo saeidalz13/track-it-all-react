@@ -2,6 +2,7 @@ import "./styles/App.css";
 import "./styles/Home.css";
 import "./styles/CommonClasses.css";
 import "./styles/Job.css";
+import "./styles/Leetcode.css";
 import "./styles/BootrstrapOverwrite.css";
 import Signup from "./pages/Auth/Signup";
 import {

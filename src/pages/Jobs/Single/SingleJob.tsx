@@ -81,7 +81,7 @@ const SingleJob = () => {
   return (
     <>
       <JobsBreadcrumb jobUlid={jobUlid} />
-      <PageHeader text={StringProcessor.convertTitleCase(job.company_name)} />
+      <PageHeader text={StringProcessor.toTitleCase(job.company_name)} />
 
       <SingleJobSpecs job={job} />
 
