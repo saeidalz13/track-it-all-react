@@ -10,6 +10,7 @@ import {
   InputGroup,
   Form,
   Row,
+  Badge,
 } from "react-bootstrap";
 import loadingImage from "/assets/loading_spinner.svg";
 import LeetcodeDetails from "@components/Modals/LeetcodeDetails";
@@ -166,6 +167,16 @@ const LeetcodeAll = () => {
                     onClick={() => handleClickDetails(leetcode)}
                   >
                     {leetcode.title}
+                    {"  "}
+                    {leetcode.attempts.length > 0 ? (
+                      <Badge bg="success" pill>
+                        {leetcode.attempts.length} Attempts
+                      </Badge>
+                    ) : (
+                      <Badge bg="warning" text="dark" pill>
+                        Not Attempted
+                      </Badge>
+                    )}
                   </td>
                   <td>{leetcode.difficulty}</td>
                   <td>{leetcode.accRate.toPrecision(2)}%</td>
