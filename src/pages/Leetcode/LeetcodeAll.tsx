@@ -12,14 +12,8 @@ import {
   Row,
 } from "react-bootstrap";
 import loadingImage from "/assets/loading_spinner.svg";
-
-interface ILeetcode {
-  id: string;
-  title: string;
-  difficulty: string;
-  link: string;
-  accRate: number;
-}
+import LeetcodeDetails from "@components/Modals/LeetcodeDetails";
+import { ILeetcode } from "@models/Leetcode/leetcode";
 
 interface GqlAllProblems {
   data: {
@@ -35,6 +29,10 @@ const LeetcodeAll = () => {
   const [offset, setOffset] = useState<number>(0);
   const [difficulty, setDifficulty] = useState<string>("");
   //   const [successRate, setSuccessRate] = useState<null | number>(null)
+  const [showDetails, setShowDetails] = useState(false);
+  const [clickedLeetcode, setClickedLeetcode] = useState<ILeetcode | null>(
+    null
+  );
   const limit = 15;
 
   function handlePrevPage() {
@@ -53,6 +51,11 @@ const LeetcodeAll = () => {
     setDifficulty(e.target.value);
   }
 
+  function handleClickDetails(leetcode: ILeetcode) {
+    setClickedLeetcode(leetcode);
+    setShowDetails(true);
+  }
+
   useEffect(() => {
     async function getAllProblems() {
       try {
@@ -61,11 +64,15 @@ const LeetcodeAll = () => {
             leetcodes(limit: ${limit}, offset: ${offset}, difficulty: ${
           difficulty ? `"${difficulty}"` : '""'
         }) {
-                id
-                title
-                difficulty
-                link
-                accRate
+              id
+              title
+              difficulty
+              link
+              accRate
+              attempts {
+                solved
+                notes
+              }
             }
         }`;
 
@@ -149,10 +156,15 @@ const LeetcodeAll = () => {
             <tbody>
               {leetcodes.map((leetcode) => (
                 <tr key={leetcode.id}>
-                  <td>
-                    <a href={leetcode.link} target="_blank">
-                      {leetcode.title}
-                    </a>
+                  <td
+                    style={{
+                      cursor: "pointer",
+                      color: "lightblue",
+                      textDecoration: "underline",
+                    }}
+                    onClick={() => handleClickDetails(leetcode)}
+                  >
+                    {leetcode.title}
                   </td>
                   <td>{leetcode.difficulty}</td>
                   <td>{leetcode.accRate.toPrecision(2)}%</td>
@@ -167,6 +179,12 @@ const LeetcodeAll = () => {
           </Pagination>
         </Container>
       )}
+
+      <LeetcodeDetails
+        show={showDetails}
+        onHide={() => setShowDetails(false)}
+        leetcode={clickedLeetcode}
+      />
     </div>
   );
 };

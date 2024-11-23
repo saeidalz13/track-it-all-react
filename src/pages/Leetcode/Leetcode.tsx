@@ -1,19 +1,21 @@
 import LeetcodeBreadcrumb from "@components/Breadcrumbs/LeetcodeBreadcrumb";
-import { useState } from "react";
-import { Nav } from "react-bootstrap";
+// import { useState } from "react";
+// import { Nav } from "react-bootstrap";
 import LeetcodeAll from "./LeetcodeAll";
-import LeetcodeSolved from "./LeetcodeSolved";
+// import LeetcodeSolved from "./LeetcodeSolved";
 
 const Leetcode = () => {
-  const [activeTab, setActiveTab] = useState<"allproblems" | "solvedproblems">(
-    "allproblems"
-  );
+  // const [activeTab, setActiveTab] = useState<"allproblems" | "solvedproblems">(
+  //   "allproblems"
+  // );
 
   return (
     <div>
       <LeetcodeBreadcrumb lcId={null} />
 
-      <Nav
+      <LeetcodeAll />
+
+      {/* <Nav
         style={{ color: "maroon" }}
         justify
         variant="tabs"
@@ -45,7 +47,7 @@ const Leetcode = () => {
         <LeetcodeSolved />
       ) : (
         ""
-      )}
+      )} */}
     </div>
   );
 };
