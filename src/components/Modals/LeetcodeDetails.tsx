@@ -134,16 +134,17 @@ const LeetcodeDetails: React.FC<LeetcodeDetailsProps> = (props) => {
 
         {currAttempts.length > 0 ? (
           <ListGroup variant="flush" className="mt-3">
+            <h5>Attempt Records</h5>
+
             {currAttempts.map((attempt, idx) => (
               <ListGroup.Item
                 key={idx}
                 style={{
                   backgroundColor: "#FFEFD5",
                   borderRadius: "20px",
-                  padding: "20px",
+                  padding: "12px 20px",
                 }}
               >
-                <h5>Attempt Records</h5>
                 <Badge className="me-1" bg="dark" pill>
                   Attempt {idx + 1}{" "}
                 </Badge>
@@ -161,7 +162,6 @@ const LeetcodeDetails: React.FC<LeetcodeDetailsProps> = (props) => {
                 )}{" "}
                 <br />
                 <div className="mt-1">{attempt.notes}</div>
-                <hr />
               </ListGroup.Item>
             ))}
           </ListGroup>
