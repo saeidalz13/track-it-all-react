@@ -15,6 +15,7 @@ import {
 import loadingImage from "/assets/loading_spinner.svg";
 import LeetcodeDetails from "@components/Modals/LeetcodeDetails";
 import { ILeetcode } from "@models/Leetcode/leetcode";
+import { StringProcessor } from "@utils/stringUtils";
 
 interface GqlAllProblems {
   data: {
@@ -92,7 +93,6 @@ const LeetcodeAll = () => {
 
         if (resp.status === StatusCodes.OK) {
           const respBody: GqlAllProblems = await resp.json();
-          console.log(respBody);
 
           if (respBody.errors === undefined) {
             setLeetcodes(respBody.data.leetcodes);
@@ -179,7 +179,7 @@ const LeetcodeAll = () => {
                       </Badge>
                     ) : (
                       <Badge bg="warning" text="dark" pill>
-                        Not Attempted
+                        No Attempts
                       </Badge>
                     )}
                   </td>
@@ -215,7 +215,20 @@ const LeetcodeAll = () => {
                       : "No Tags"}
                   </td>
 
-                  <td>{leetcode.difficulty}</td>
+                  <td>
+                    <span
+                      style={{
+                        color:
+                          leetcode.difficulty === "easy"
+                            ? "#00FA9A"
+                            : leetcode.difficulty === "medium"
+                            ? "#FFD700"
+                            : "#ed2139",
+                      }}
+                    >
+                      {StringProcessor.toTitleCase(leetcode.difficulty)}
+                    </span>
+                  </td>
                   <td>{leetcode.accRate.toPrecision(2)}%</td>
                 </tr>
               ))}
