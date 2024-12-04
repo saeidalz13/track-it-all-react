@@ -16,6 +16,8 @@ import loadingImage from "/assets/loading_spinner.svg";
 import LeetcodeDetails from "@components/Modals/LeetcodeDetails";
 import { ILeetcode } from "@models/Leetcode/leetcode";
 import { StringProcessor } from "@utils/stringUtils";
+import { LEETCODE_TAGS } from "@constants/LeetcodeConsts";
+import { useDebouncedSearch } from "@hooks/searchHooks";
 
 interface GqlAllProblems {
   data: {
@@ -32,8 +34,8 @@ const LeetcodeAll = () => {
     Array<ILeetcode> | "error" | "loading"
   >("loading");
   const [offset, setOffset] = useState<number>(0);
-  const [difficulty, setDifficulty] = useState<string>("easy");
-  //   const [successRate, setSuccessRate] = useState<null | number>(null)
+  const [difficulty, setDifficulty] = useState<string>("");
+  const [tagFilter, setTagFilter] = useState<string>("");
   const [showDetails, setShowDetails] = useState(false);
   const [clickedLeetcode, setClickedLeetcode] = useState<ILeetcode | null>(
     null
@@ -41,6 +43,12 @@ const LeetcodeAll = () => {
   const [leetcodesCount, setLeetcodesCount] = useState<number>(0);
   const [solvedFilter, setSolvedFilter] = useState<string>("all");
   const limit = 15;
+
+  const {
+    searchValue: titleFilter,
+    setSearchValue: setTitleFilter,
+    dbncValue: dbncTitleFilter,
+  } = useDebouncedSearch(1000);
 
   function handlePrevPage() {
     if (offset != 0) {
@@ -70,7 +78,7 @@ const LeetcodeAll = () => {
           query { 
             leetcodes(limit: ${limit}, offset: ${offset}, difficulty: ${
           difficulty ? `"${difficulty}"` : '""'
-        }, solvedFilter: "${solvedFilter}") {
+        }, solvedFilter: "${solvedFilter}", tagFilter: "${tagFilter}", titleFilter: "${dbncTitleFilter}") {
               count
               problems {
                 id
@@ -119,32 +127,44 @@ const LeetcodeAll = () => {
         console.error(error);
       }
     }
+
     getAllProblems();
 
     return () => {
       console.log("Clean up useEffect");
     };
-  }, [offset, difficulty, solvedFilter]);
+  }, [offset, difficulty, solvedFilter, tagFilter, dbncTitleFilter]);
 
   return (
     <div>
-      {leetcodes === "loading" ? (
-        <Image src={loadingImage} />
-      ) : leetcodes === "error" ? (
+      {leetcodes === "error" ? (
         <h1 className="text-danger mt-4 text-center">Server Error</h1>
       ) : (
         <Container className="mt-4">
           <Container className="mb-3">
-            <Row>
+            <Row className="mb-2">
               <h3 className="text-light me-3">Filters</h3>
             </Row>
             <Row>
+              <Form.Group as={Col} lg>
+                <Form.Label className="text-warning">Search Title</Form.Label>
+                <Form.Control
+                  value={titleFilter}
+                  onChange={(e) => {
+                    setLeetcodes("loading");
+                    setTitleFilter(e.target.value);
+                  }}
+                  placeholder="Start typing... 🔎"
+                ></Form.Control>
+              </Form.Group>
+
               <Form.Group as={Col} style={{ maxWidth: "500px" }}>
                 <Form.Label className="text-warning">Difficulty</Form.Label>
                 <Form.Select
                   value={difficulty}
                   onChange={handleDifficultyChange}
                 >
+                  <option value="">All</option>
                   <option value="easy">Easy</option>
                   <option value="medium">Medium</option>
                   <option value="hard">Hard</option>
@@ -152,29 +172,37 @@ const LeetcodeAll = () => {
               </Form.Group>
 
               <Form.Group as={Col}>
-                <Form.Label className="text-warning">Solved Status</Form.Label>
+                <Form.Label className="text-warning">Attempt Status</Form.Label>
                 <Form.Select
                   value={solvedFilter}
                   onChange={(e) => setSolvedFilter(e.target.value)}
                 >
                   <option value="all">All</option>
-                  <option value="solved">Solved</option>
-                  <option value="unsolved">Unsolved</option>
+                  <option value="solved">Attempted</option>
+                  <option value="unsolved">Not Attempted</option>
                 </Form.Select>
               </Form.Group>
 
               <Form.Group as={Col} style={{ maxWidth: "500px" }}>
-                <Form.Label className="text-warning">Success Rate</Form.Label>
-                <Form.Control
-                  disabled
-                  placeholder="Currently Not Available"
-                  // placeholder="Shows results higher than entry"
-                ></Form.Control>
+                <Form.Label className="text-warning">Tag</Form.Label>
+                <Form.Select
+                  value={tagFilter}
+                  onChange={(e) => setTagFilter(e.target.value)}
+                >
+                  <option value={""}>All</option>
+                  {LEETCODE_TAGS.map((tag) => (
+                    <option value={tag.toLowerCase()}>{tag}</option>
+                  ))}
+                </Form.Select>
               </Form.Group>
             </Row>
           </Container>
 
-          {leetcodesCount === 0 ? (
+          {leetcodes === "loading" ? (
+            <div className="text-center mt-4">
+              <Image height="300px" width="300px" src={loadingImage} />
+            </div>
+          ) : leetcodesCount === 0 ? (
             <h3 className="mt-5 text-center text-warning">
               No Problems With Current Filter
             </h3>
@@ -272,7 +300,7 @@ const LeetcodeAll = () => {
                 onClick={handlePrevPage}
               ></Pagination.Prev>
               <Pagination.Next
-                disabled={leetcodesCount / limit >= offset}
+                // disabled={leetcodesCount / limit >= offset}
                 onClick={handleNextPage}
               ></Pagination.Next>
             </Pagination>
