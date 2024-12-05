@@ -19,3 +19,10 @@ export interface ILeetcode {
   attempts: Array<IAttempts>;
   tags: Array<ILeetcodeTag>;
 }
+
+export interface IRecentLeetcode {
+  id: number;
+  title: string;
+  difficulty: string;
+  link: string;
+}
