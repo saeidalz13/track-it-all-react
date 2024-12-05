@@ -20,3 +20,7 @@ export const ProfileRoutes = {
 export const CodeEditorRoutes = {
   Index: "/code-editor/:jobUlid/:tcId",
 };
+
+export const LeetcodeRoutes = {
+  Index: "/leetcode",
+};

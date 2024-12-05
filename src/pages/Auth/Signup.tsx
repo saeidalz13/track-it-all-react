@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { DataFetcher } from "../../utils/fetcherUtils";
 import { StatusCodes } from "http-status-codes";
 import googleIcon from "/assets/google_icon.svg";
+import loadingImage from "/assets/loading_spinner.svg";
 
 const btnStyle: React.CSSProperties = {
   marginTop: "15px",
@@ -200,10 +201,16 @@ const Signup = () => {
       <h1 className="common-h1 mt-5 text-center">Start Tracking Today!</h1>
       <CommonButton
         text={
-          <span>
-            Google Sign In
-            <Image className="ms-1" src={googleIcon} height="50px" />
-          </span>
+          googleBtnDisabled ? (
+            <span>
+              <Image src={loadingImage} height="40px" width="40px" />
+            </span>
+          ) : (
+            <span>
+              Google Sign In
+              <Image className="ms-1" src={googleIcon} height="50px" />
+            </span>
+          )
         }
         variant="info"
         style={{ padding: "20px 40px", marginTop: "20px" }}

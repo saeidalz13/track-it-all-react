@@ -80,11 +80,11 @@ const InterviewStages = () => {
     <div>
       <JobsBreadcrumb jobUlid={jobUlid} isInterviewStages={true} />
       <PageHeader
-        text={`${StringProcessor.convertTitleCase(job.company_name)}.Interview`}
+        text={`${StringProcessor.toTitleCase(job.company_name)}.Interview`}
       />
 
       <BehavioralSection jobUlid={jobUlid} />
-			<TechnicalSection jobUlid={jobUlid} />
+      <TechnicalSection jobUlid={jobUlid} />
     </div>
   );
 };

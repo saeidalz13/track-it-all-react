@@ -2,6 +2,7 @@ import "./styles/App.css";
 import "./styles/Home.css";
 import "./styles/CommonClasses.css";
 import "./styles/Job.css";
+import "./styles/Leetcode.css";
 import "./styles/BootrstrapOverwrite.css";
 import Signup from "./pages/Auth/Signup";
 import {
@@ -15,6 +16,7 @@ import {
   CodeEditorRoutes,
   GeneralRoutes,
   JobsRoutes,
+  LeetcodeRoutes,
   ProfileRoutes,
 } from "./routes/Routes";
 import Home from "./pages/Home/Home";
@@ -25,6 +27,7 @@ import Profile from "./pages/Profile/Profile";
 import AllJobs from "./pages/Jobs/All/AllJobs";
 import InterviewStages from "@pages/InterviewStages/InterviewStages";
 import CodeEditor from "@pages/CodeEditor/CodeEditor";
+import Leetcode from "@pages/Leetcode/Leetcode";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -35,6 +38,8 @@ const router = createBrowserRouter(
       <Route element={<Navbar />} id="navbar">
         <Route path={GeneralRoutes.Home} element={<Home />} />
         <Route path={ProfileRoutes.Profile} element={<Profile />} />
+
+        {/* Jobs */}
         <Route path={JobsRoutes.SingleJob} element={<SingleJob />} />
         <Route path={JobsRoutes.Jobs} element={<AllJobs />} />
         <Route
@@ -42,6 +47,9 @@ const router = createBrowserRouter(
           element={<InterviewStages />}
         />
         <Route path={CodeEditorRoutes.Index} element={<CodeEditor />} />
+
+        {/* Leetcode */}
+        <Route path={LeetcodeRoutes.Index} element={<Leetcode />} />
       </Route>
     </Route>
   )
